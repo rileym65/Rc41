@@ -1,0 +1,106 @@
+      6   5   4   3   2   1   0
+    +---+---+---+---+---+---+---+
+1FF |       Top of memory       |
+    |                           |
+    |           Data            |
+    | R00                       | mno
+    +---------------------------+    
+    |    First user program     |
+    |                           |
+    |                           |
+    |    Last user program      |
+    |          .END.            | pqr
+    +---------------------------+    
+    |         Available         |
+    |                           |
+    +---------------------------+
+    |      Key assignments      |
+    |                           |
+0C0 +---------------------------+
+
+    +---------------------------+
+00F |      Status registers     |
+000 |                           |
+    +---------------------------+
+
+
+Status registers
+
+       6       5       4       3       2       1       0   
+   +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
+e  | shifted key assignments           |scratch|   line #  | 00F
+   +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
+d  |         user flags          |      system flags       | 00E
+   +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
+c  |   E reg   |scratch|   cold    |    R00    |   .END.   | 00D
+   +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
+b  |3rd ret|    2nd ret    |    1st ret    |    Adr Ptr    | 00C
+   +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
+a  |    6th ret    |    5th ret    |    4th ret    |3rd ret| 00B
+   +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
+|- | unshifted key assignments         |      scratch      | 00A
+   +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
+Q  |               Temporary alpha scratch                 | 009
+   +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
+P  |     scratch (alpha 25-28)     |      Alpha 22-24      | 008
+   +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
+O  |                     Alpha 15-21                       | 007
+   +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
+N  |                     Alpha  8-14                       | 006
+   +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
+M  |                     Alpha  1-7                        | 005
+   +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
+L  |                           L                           | 004
+   +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
+X  |                           X                           | 003
+   +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
+Y  |                           Y                           | 002
+   +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
+Z  |                           Z                           | 001
+   +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
+T  |                           T                           | 000
+   +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
+   |sgn| mantissa                              |sgn|  exp  |
+
+Flags
+00-10 - General purpose
+   11 - Automatic execution
+   12 - Printer double wide
+   13 - Printer lowercase
+   14 - Card reader overwrite
+   21 - Printer enable
+   22 - Numeric data input
+   23 - Alpha data input
+   24 - Range error ignore
+   25 - Ignore next error, error clears flag
+   26 - Audio enable
+   27 - User mode
+   28 - Decimal point, S=. C=,
+   29 - Digit grouping, C=no commas
+   30 - Catalog, always tests clear
+31-35 - Peripherals
+36-39 - Number of digits (fix, sci, eng) binary, 36=msb
+40-41 - Display format (fix=10, sci=00, eng=01) 40=msb
+   42 - Grads mode
+   43 - Radians mode
+   44 - Continuous on, set=no auto power off
+   45 - System data entry
+   46 - Partial key sequence
+   47 - Shift set
+   48 - Alpha mode
+   49 - Low battery
+   50 - Message (displaying error, or view/aview)
+   51 - SST
+   52 - Program mode
+   53 - I/O
+   54 - PSE, when set PAUSE is in progress
+   55 - Printer existance
+
+Statistics registers (EREG) Defaults 11-16
+EREG+0 Sum of X
+EREG+1 Sum of x^2
+EREG+2 Sum of Y
+EREG+3 Sum of Y^2
+EREG+4 Sum of products of X and Y
+EREG+5 Count
+

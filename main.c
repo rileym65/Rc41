@@ -1,0 +1,197 @@
+#define MAIN
+#include "header.h"
+#include <math.h>
+
+char *NextToken(char* line, char* token) {
+  int p;
+  int qt;
+  qt = 0;
+  while (*line == ' ') line++;
+  p = 0;
+  while (*line != 0 && ((*line > ' ' && qt == 0) || (qt != 0))) {
+    if (*line == '"') {
+      qt = (qt == 0) ? -1 : 0;
+      token[p++] = *line++;
+      }
+    else token[p++] = *line++;
+    }
+  token[p] = 0;
+  while (*line != 0 && *line <= ' ') line++;
+  return line;
+  }
+
+
+char *PostFix(byte flags, char* line, byte *b) {
+  int   n;
+  char  token[32];
+  line = NextToken(line, token);
+  if (token[0] >= '0' && token[0] <= '9') {
+    n = atoi(token);
+    if (n < 0) n = 0;
+    if (n > 99) n = 99;
+    *b = n;
+    }
+  else if (strcasecmp(token, "L") == 0) *b = 0x74;
+  else if (strcasecmp(token, "X") == 0) *b = 0x73;
+  else if (strcasecmp(token, "Y") == 0) *b = 0x72;
+  else if (strcasecmp(token, "Z") == 0) *b = 0x71;
+  else if (strcasecmp(token, "T") == 0) *b = 0x70;
+  else if (strcasecmp(token, "ind") == 0) {
+  line = NextToken(line, token);
+    if (token[0] >= '0' && token[0] <= '9') {
+      n = atoi(token);
+      if (n < 0) n = 0;
+      if (n > 99) n = 99;
+      *b = n+128;
+      }
+    else if (strcasecmp(token, "L") == 0) *b = 0xf4;
+    else if (strcasecmp(token, "X") == 0) *b = 0xf3;
+    else if (strcasecmp(token, "Y") == 0) *b = 0xf2;
+    else if (strcasecmp(token, "Z") == 0) *b = 0xf1;
+    else if (strcasecmp(token, "T") == 0) *b = 0xf0;
+    }
+  return line;
+  }
+
+char *InputRcl(char* line) {
+  byte  n;
+  line = PostFix(0x12, line, &n);
+  if (n < 16) {
+    ram[REG_R*7+1] = 0x20 + n;
+    }
+  else {
+    ram[REG_R*7+1] = 0x90;
+    ram[REG_R*7+0] = n;
+    }
+  return line;
+  }
+
+char *InputSto(char* line) {
+  byte  n;
+  line = PostFix(0x12, line, &n);
+  if (n < 16) {
+    ram[REG_R*7+1] = 0x30 + n;
+    }
+  else {
+    ram[REG_R*7+1] = 0x91;
+    ram[REG_R*7+0] = n;
+    }
+  return line;
+  }
+
+int main(int argc, char** argv) {
+  int   i;
+  int   j;
+  char  buffer[1024];
+  char  token[32];
+  int   isNumber;
+  int   p;
+  byte  b;
+  char *pchar;
+  int   file;
+  debug = 0;
+  ramClear = 0;
+  for (i=1; i<argc; i++) {
+    if (strcmp(argv[i],"-d") == 0) debug = -1;
+    if (strcmp(argv[i],"-rc") == 0) ramClear = -1;
+    }
+  Init();
+  if (ramClear == 0) {
+    file = open("hp41.ram", O_RDONLY);
+    if (file > 0) {
+      read(file, ram, sizeof(ram));
+      close(file);
+      if (debug) ShowStatRegs(0);
+      }
+    else Message("MEMORY LOST");
+    }
+  else Message("MEMORY LOST");
+
+  while (on) {
+    a = RecallNumber(REG_X);
+    printf("\n[[%s]]\n",Format(a,buffer));
+    if (debug) ShowStatRegs(0);
+    if (FlagSet(52)) printf("PRGM");
+    printf(">");
+    fgets(buffer, 1023, stdin);
+    while (strlen(buffer) > 0 && buffer[strlen(buffer)-1] < ' ')
+      buffer[strlen(buffer)-1] = 0;
+    pchar = buffer;
+    while (*pchar == ' ') pchar++;
+    if (*pchar == '\\') {
+      Debug(pchar);
+      *pchar = 0;
+      }
+    while (*pchar != 0) {
+      pchar = NextToken(pchar, token);
+      isNumber = -1;
+      for (i=0; i<strlen(token); i++)
+        if (token[i] != '.' && (token[i] < '0' || token[i] > '9')) isNumber = 0;
+      if (isNumber) {
+        for (i=0; i<strlen(token); i++) {
+          if (token[i] == '.') ram[REG_R*7+1] = 0x1a;
+            else ram[REG_R*7+1] = token[i] - '0' + 0x10;
+          Exec(0x100a);
+          }
+        }
+      else if (token[0] == '"') {
+        i = 1;
+        if (token[i] != '|') {
+          for (j=REG_M*7; j<=REG_P*7+2; j++) ram[j] = 0;
+          } else i++;
+        while (token[i] != '"' && token[i] != 0) {
+          for (j=REG_P*7+2; j>REG_M*7; j--)
+            ram[j] = ram[j-1];
+          ram[REG_M*7] = token[i++];
+          if (ram[REG_M*7] > 'e' && ram[REG_M*7] <= 'z')
+            ram[REG_M*7] -= 32;
+          }
+
+
+//        i = 1;
+//        ram[REG_R*7+1] = 0xf0;
+//        while (token[i] != '"' && token[i] != 0) {
+//          ram[REG_R*7+1]++;
+//          ram[REG_R*7+1-i] = token[i];
+//          if (ram[REG_R*7+1-i] > 'e' &&
+//              ram[REG_R*7+1-i] <= 'z') ram[REG_R*7+1-i] -= 32;
+//          i++;
+//          }
+//        Exec(0x100a);
+        }
+      else {
+        i = 0;
+        if (strcasecmp(token,"PRGM") == 0) {
+          if (FlagSet(52)) ClearFlag(52);
+            else SetFlag(52);
+          }
+        else {
+          while (catalog[i].flags != 0xff && strcasecmp(catalog[i].name, token) != 0) {
+            i++;
+            }
+          if (catalog[i].flags == 0xff) printf("NONEXISTENT");
+          else {
+            if (catalog[i].cmd == 0x20) pchar = InputRcl(pchar);
+            else if (catalog[i].cmd == 0x30) pchar = InputSto(pchar);
+            else {
+              ram[REG_R*7+1] = catalog[i].cmd;
+              if (catalog[i].flags & 0x3) {
+                pchar = PostFix(catalog[i].flags, pchar, &b);
+                ram[REG_R*7+0] = b;
+                }
+              }
+            Exec(0x100a);
+            }
+          }
+        }
+      }
+    }
+
+  file = open("hp41.ram", O_WRONLY | O_CREAT | O_TRUNC, 0666);
+  if (file >= 0) {
+    write(file, ram, sizeof(ram));
+    close(file);
+    }
+
+  }
+

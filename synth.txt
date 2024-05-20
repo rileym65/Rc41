@@ -1,0 +1,10 @@
+L      R^
+M      RDN       [
+N      LASTX     \
+O      CLX       ]
+P      X=Y?      ^
+Q      X<>Y?     _
+a      X<0?
+c      SDEV
+d      AVIEW
+
