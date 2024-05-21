@@ -872,6 +872,9 @@ int Exec(int addr) {
     case 0x84:                                             // STOP
          running = 0;
          break;
+    case 0x85:                                             // RTN
+         Rtn();
+         break;
     case 0x86:                                             // BEEP
          break;
     case 0x87:                                             // CLA

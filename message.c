@@ -2,6 +2,6 @@
 
 void Message(char* msg) {
   strcpy(display, msg);
-printf("%s\n",msg);
+  SetFlag(50);
   }
 

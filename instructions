@@ -139,7 +139,7 @@
 82  GRAD
 83  ENTER^
 84  STOP
-85
+85  RTN     (partial)
 86  BEEP
 87  CLA
 88  ASHF
@@ -269,3 +269,8 @@ FC
 FD
 FE
 FF
+
+Non-Programmable
+BST
+SST
+

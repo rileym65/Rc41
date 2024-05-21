@@ -108,9 +108,11 @@ int main(int argc, char** argv) {
   else Message("MEMORY LOST");
 
   while (on) {
-    a = RecallNumber(REG_X);
-    printf("\n[[%s]]\n",Format(a,buffer));
+//    a = RecallNumber(REG_X);
+//    printf("\n[[%s]]\n",Format(a,buffer));
+    printf("\n[[%s]]\n",Display(screen));
     if (debug) ShowStatRegs(0);
+    ClearFlag(50);
     if (FlagSet(52)) printf("PRGM");
     printf(">");
     fgets(buffer, 1023, stdin);
@@ -165,11 +167,17 @@ int main(int argc, char** argv) {
           if (FlagSet(52)) ClearFlag(52);
             else SetFlag(52);
           }
+        else if (strcasecmp(token,"SST") == 0) {
+          Sst();
+          }
+        else if (strcasecmp(token,"BST") == 0) {
+          Bst();
+          }
         else {
           while (catalog[i].flags != 0xff && strcasecmp(catalog[i].name, token) != 0) {
             i++;
             }
-          if (catalog[i].flags == 0xff) printf("NONEXISTENT");
+          if (catalog[i].flags == 0xff) Message("NONEXISTENT");
           else {
             if (catalog[i].cmd == 0x20) pchar = InputRcl(pchar);
             else if (catalog[i].cmd == 0x30) pchar = InputSto(pchar);
@@ -180,7 +188,8 @@ int main(int argc, char** argv) {
                 ram[REG_R*7+0] = b;
                 }
               }
-            Exec(0x100a);
+            if (FlagSet(52)) ProgramStep(pchar);
+              else Exec(0x100a);
             }
           }
         }

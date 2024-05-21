@@ -12,12 +12,14 @@ OBJS= \
 	asto.o \
 	aton.o \
 	aview.o \
+	bst.o \
 	cf.o \
 	cle.o \
 	clearflag.o \
 	clrg.o \
 	debug.o \
 	dec.o \
+	display.o \
 	div.o \
 	dse.o \
 	eminus.o \
@@ -33,6 +35,7 @@ OBJS= \
 	fractional.o \
 	fs.o \
 	fsqc.o \
+	gotoline.o \
 	hms.o \
 	hmsminus.o \
 	hmsplus.o \
@@ -51,9 +54,12 @@ OBJS= \
 	ntoa.o \
 	oct.o \
 	programbyte.o \
+	programline.o \
+	programstep.o \
 	rcl.o \
 	recallnumber.o \
 	rnd.o \
+	rtn.o \
 	sci.o \
 	sdev.o \
 	setflag.o \
@@ -61,6 +67,7 @@ OBJS= \
 	sf.o \
 	shownumber.o \
 	showstatregs.o \
+	sst.o \
 	sto.o \
 	storenumber.o \
 	sub.o \

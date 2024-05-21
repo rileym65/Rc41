@@ -8,30 +8,27 @@ void ProgramByte(byte b) {
   int reg;
   int lineNumber;
   int pqr;
+printf("Program byte\n"); fflush(stdout);
   addr = (ram[REG_B*7+1] << 8) | ram[REG_B*7+0];
   reg = (addr & 0xfff);
   byt = (addr >> 12) & 0xf;
   adr = (reg * 7) + byt;
-// **********************************************************
-// This needs to go at the beginning of inserting instruction
-// **********************************************************
-//  lineNumber = ram[REG_E*7+0] + ((ram[REG_E*7+1] &0x0f) << 8);
-//  if (lineNumber == 0) {
-//    adr--;
-//    }
-//  else {
-//    adr--;
-//    while (ram[adr] == 0) adr--;
-//    if (((ram[adr] & 0xf0) != 0xc0) || ((ram[adr-2] & 0xf0) != 0x20)) {
-//      adr -= isize(adr);
-//      }
-//    }
   if (ram[adr] != 0) {
+printf("need space\n"); fflush(stdout);
     pqr = ((ram[REG_C*7+1] & 0x0f) << 8) | ram[REG_C*7+0];
+printf(".end. = %x\n",pqr);
     pqr *= 7;
+    pqr -= 7;
     while (pqr < adr) {
-      ram[pqr-7] = ram[pqr];
+      ram[pqr] = ram[pqr+7];
+      pqr++;
       }
+    for (i=0; i<7; i++) ram[adr-i] = 0;
+    pqr = ((ram[REG_C*7+1] & 0x0f) << 8) | ram[REG_C*7+0];
+    pqr--;
+    ram[REG_C*7+0] = pqr & 0xff;
+    ram[REG_C*7+1] &= 0xf0;
+    ram[REG_C*7+1] |= ((pqr >> 8) & 0x0f);
     }
   ram[adr--] = b;
   reg = adr / 7;
