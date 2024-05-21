@@ -53,6 +53,101 @@ char *PostFix(byte flags, char* line, byte *b) {
   return line;
   }
 
+char *InputGtoXeq(char* line, byte base) {
+  int n;
+  char token[256];
+  line = NextToken(line, token);
+  if (token[0] == '.') {
+printf("non-programmable\n");
+    if (token[1] == '"') {
+      }
+    else {
+      n = atoi(token+1);
+      GotoLine(n);
+      }
+    ram[REG_R*7+1] = 0x00;
+    }
+  else {
+    if (token[0] == '"') {
+      ram[REG_R*7+1] = (base == 0xd0) ? 0x1d : 0x1e;
+      if (FlagSet(52)) {
+        sprintf(buffer,"GTO %s",token);
+        ProgramStep(buffer);
+        }
+      ram[REG_R*7+1] = 0x00;
+      }
+    if (token[0] >= '0' && token[0] <= '9') {
+      n = atoi(token);
+      if (n <= 14 && base == 0xd0) {
+        ram[REG_R*7+1] = 0xb1+n;
+        ram[REG_R*7+0] = 0;
+        }
+      else {
+        ram[REG_R*7+1] = base;
+        ram[REG_R*7+0] = 0;
+        ram[REG_E*7+2] &= 0xf0;
+        ram[REG_E*7+2] |= ((n & 0x70) >> 4);
+        ram[REG_E*7+1] &= 0x0f;
+        ram[REG_E*7+1] |= ((n & 0x0f) << 4);
+        }
+      }
+    else if (token[0] >= 'A' && token[0] <= 'J') {
+      n = token[0] - 'A' + 102;
+      ram[REG_R*7+1] = base;
+      ram[REG_R*7+0] = 0;
+      ram[REG_E*7+2] &= 0xf0;
+      ram[REG_E*7+2] |= ((n & 0x70) >> 4);
+      ram[REG_E*7+1] &= 0x0f;
+      ram[REG_E*7+1] |= ((n & 0x0f) << 4);
+      }
+    else if (token[0] >= 'a' && token[0] <= 'e') {
+      n = token[0] - 'a' + 123;
+      ram[REG_R*7+1] = base;
+      ram[REG_R*7+0] = 0;
+      ram[REG_E*7+2] &= 0xf0;
+      ram[REG_E*7+2] |= ((n & 0x70) >> 4);
+      ram[REG_E*7+1] &= 0x0f;
+      ram[REG_E*7+1] |= ((n & 0x0f) << 4);
+      }
+    }
+  return line;
+  }
+
+char *InputLbl(char* line) {
+  int n;
+  char token[256];
+  char buffer[256];
+  line = NextToken(line, token);
+  if (token[0] >= '0' && token[0] <= '9') {
+    n = atoi(token);
+    if (n <= 14) {
+      ram[REG_R*7+1] = 0x01+n;
+      ram[REG_R*7+0] = 0;
+      }
+    else {
+      ram[REG_R*7+1] = 0xcf;
+      ram[REG_R*7+0] = n & 0x7f;
+      }
+    }
+  else if (token[0] >= 'A' && token[0] <= 'J') {
+    ram[REG_R*7+1] = 0xcf;
+    ram[REG_R*7+0] = token[0] - 'A' + 102;
+    }
+  else if (token[0] >= 'a' && token[0] <= 'e') {
+    ram[REG_R*7+1] = 0xcf;
+    ram[REG_R*7+0] = token[0] - 'a' + 123;
+    }
+  else if (token[0] == '"') {
+    ram[REG_R*7+1] = 0xc0;
+    if (FlagSet(52)) {
+      sprintf(buffer,"LBL %s",token);
+      ProgramStep(buffer);
+      }
+    ram[REG_R*7+1] = 0x00;
+    }
+  return line;
+  }
+
 char *InputRcl(char* line) {
   byte  n;
   line = PostFix(0x12, line, &n);
@@ -63,6 +158,15 @@ char *InputRcl(char* line) {
     ram[REG_R*7+1] = 0x90;
     ram[REG_R*7+0] = n;
     }
+  return line;
+  }
+
+char *InputEnd(char* line) {
+  ram[REG_R*7+1] = 0xc0;
+  if (FlagSet(52)) {
+    ProgramStep("END");
+    }
+  ram[REG_R*7+1] = 0x00;
   return line;
   }
 
@@ -181,6 +285,10 @@ int main(int argc, char** argv) {
           else {
             if (catalog[i].cmd == 0x20) pchar = InputRcl(pchar);
             else if (catalog[i].cmd == 0x30) pchar = InputSto(pchar);
+            else if (catalog[i].cmd == 0xb1) pchar = InputGtoXeq(pchar, 0xd0);
+            else if (catalog[i].cmd == 0x1e) pchar = InputGtoXeq(pchar, 0xe0);
+            else if (catalog[i].cmd == 0x01) pchar = InputLbl(pchar);
+            else if (catalog[i].cmd == 0xc0) pchar = InputEnd(pchar);
             else {
               ram[REG_R*7+1] = catalog[i].cmd;
               if (catalog[i].flags & 0x3) {
@@ -188,7 +296,7 @@ int main(int argc, char** argv) {
                 ram[REG_R*7+0] = b;
                 }
               }
-            if (FlagSet(52)) ProgramStep(pchar);
+            if (FlagSet(52)) ProgramStep(NULL);
               else Exec(0x100a);
             }
           }

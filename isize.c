@@ -21,6 +21,7 @@ int isize(int address) {
     }
   if (cmd >= 0xce && cmd <= 0xcf) return 2;
   if (cmd >= 0xd0 && cmd <= 0xdf) return 3;
+  if (cmd >= 0xe0 && cmd <= 0xef) return 3;
   if (cmd >= 0xf0 && cmd <= 0xff) return 1 + (cmd & 0xf);
   return 1;
   }

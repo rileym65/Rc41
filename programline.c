@@ -5,11 +5,24 @@ char* Postfix(byte i, int adr, char* buffer) {
   char tmp[256];
   sprintf(tmp, "%s ", reverse[i].name);
   strcat(buffer, tmp);
+  if ((reverse[i].size & 0xf0) == 0x40) return buffer;
   adr--;
   b = ram[adr];
   if (b >= 0x80) strcat(buffer,"IND ");
   b &= 0x7f;
-  if (b == 112) strcat(buffer,"T");
+  if ((reverse[i].size & 0xf0) == 0x90) {
+    if (b >= 102 && b <= 111) {
+      tmp[0] = b - 102 + 'A';
+      tmp[1] = 0;
+      strcat(buffer,tmp);
+      }
+    if (b >= 123 && b <= 127) {
+      tmp[0] = b - 123 + 'a';
+      tmp[1] = 0;
+      strcat(buffer,tmp);
+      }
+    }
+  else if (b == 112) strcat(buffer,"T");
   else if (b == 113) strcat(buffer,"Z");
   else if (b == 114) strcat(buffer,"Y");
   else if (b == 115) strcat(buffer,"X");
@@ -43,6 +56,7 @@ char* Postfix(byte i, int adr, char* buffer) {
   }
 
 char* ProgramLine(char* buffer) {
+  int i;
   int addr;
   int reg;
   int byt;
@@ -69,15 +83,29 @@ char* ProgramLine(char* buffer) {
     b = ram[adr];
     if (b >= 0xc0 && b < 0xce) {
       if (ram[adr-2] < 0xf0) {
-        if ((ram[adr] & 0x0f) == 0 || (ram[adr-1] == 0)) {
+        if ((ram[adr-2] & 0xf0) == 0x20) {
           sprintf(buffer,".END. REG %d", end - 0x0c0);
           }
         else{
-strcpy(buffer,"END");
+          if (lineNumber < 100) sprintf(buffer, "%02d END", lineNumber);
+            else sprintf(buffer,"%d END", lineNumber);
           }
         }
       else {
-strcpy(buffer,"Alpha text");
+        if (lineNumber < 100) sprintf(buffer, "%02d ", lineNumber);
+          else sprintf(buffer,"%d ", lineNumber);
+        strcat(buffer,"LBL\"");
+        adr -= 2;
+        b = ram[adr] - 1;
+        b &= 0xf;
+        adr -= 2;
+        for (i=0; i<b; i++) {
+          if (ram[adr] == 0) tmp[0] = '_';
+            else tmp[0] = ram[adr];
+          adr--;
+          tmp[1] = 0;
+          strcat(buffer,tmp);
+          }
         }
       }
     else {
@@ -87,6 +115,26 @@ strcpy(buffer,"Alpha text");
         }
       else if ((reverse[b].size & 0x0f) == 2) {
         Postfix(b, adr, buffer);
+        }
+      else if ((reverse[b].size & 0xf0) == 0x60) {
+        if (ram[adr-2] >= 102 && ram[adr-2] <= 111)
+          sprintf(tmp, "%s %c", reverse[b].name, ram[adr-2] - 102 + 'A');
+        else if (ram[adr-2] >= 123 && ram[adr-2] <= 127)
+          sprintf(tmp, "%s %c", reverse[b].name, ram[adr-2] - 123 + 'a');
+        else
+          sprintf(tmp, "%s %02d", reverse[b].name, ram[adr-2]);
+        strcat(buffer, tmp);
+        }
+      else if ((reverse[b].size & 0xf0) == 0x10) {
+        sprintf(tmp, "%s", reverse[b].name);
+        strcat(buffer, tmp);
+        b = ram[--adr] & 0x0f;
+        strcat(buffer,"\"");
+        for (i=0; i<b; i++) {
+          tmp[0] = ram[--adr];
+          tmp[1] = 0;
+          strcat(buffer,tmp);
+          }
         }
       else
 sprintf(buffer, "b=%02x, size=%d",b,reverse[b].size);

@@ -8,15 +8,12 @@ void ProgramByte(byte b) {
   int reg;
   int lineNumber;
   int pqr;
-printf("Program byte\n"); fflush(stdout);
   addr = (ram[REG_B*7+1] << 8) | ram[REG_B*7+0];
   reg = (addr & 0xfff);
   byt = (addr >> 12) & 0xf;
   adr = (reg * 7) + byt;
   if (ram[adr] != 0) {
-printf("need space\n"); fflush(stdout);
     pqr = ((ram[REG_C*7+1] & 0x0f) << 8) | ram[REG_C*7+0];
-printf(".end. = %x\n",pqr);
     pqr *= 7;
     pqr -= 7;
     while (pqr < adr) {

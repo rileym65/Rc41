@@ -272,5 +272,6 @@ FF
 
 Non-Programmable
 BST
+GTO .nnn
 SST
 

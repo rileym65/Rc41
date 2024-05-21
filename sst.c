@@ -20,7 +20,7 @@ void Sst() {
     adr = (reg * 7) + byt;
     adr--;
     while (ram[adr] == 0) adr--;
-    if (ram[adr] < 0xc0 || ram[adr] >= 0xce) {
+    if (ram[adr] < 0xc0 || ram[adr] >= 0xce || ram[adr-2] >= 0xf0) {
       adr -= isize(adr);
       adr++;
       reg = adr / 7;

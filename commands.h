@@ -72,6 +72,7 @@ CATALOG catalog[] = {
     { "DSE",     0x97,   00, 0x1a },
     { "E^X",     0x55,  -15,    0 },
     { "E^X-1",   0x58,   00,    0 },
+    { "END",     0xc0,   00,    0 },
     { "ENG",     0x9e,  -74, 0x11 },
     { "ENTER^",  0x83,   41,    0 },
     { "FACT",    0x62,   00,    0 },
@@ -82,7 +83,7 @@ CATALOG catalog[] = {
     { "FS?",     0xac,  -54, 0x12 },
     { "FS?C",    0xaa,   00, 0x12 },
     { "GRAD",    0x82,   00,    0 },
-    { "GTO",     0x1d,  -34,    0 },
+    { "GTO",     0xb1,  -34,    0 },
     { "HMS",     0x6c,   00,    0 },
     { "HMS+",    0x49,   00,    0 },
     { "HMS-",    0x4a,   00,    0 },
@@ -166,11 +167,13 @@ typedef struct {
 // 0x10 - Alpha destination follows
 // 0x20 - XROM follows
 // 0x30 - GTO IND/XEQ IND
-// 0x40 - 2-byte GTO
+// 0x40 - 2-byte GTO/LBL
 // 0x50 - GLOBAL
 // 0x60 - 3-byte GTO/XEQ
 // 0x70 - Text line
 // 0x80 - Second byte is 0-9
+// 0x90 - local label
+
 
 REV reverse[] = {
     { 0x00, "",           0x01 },
@@ -202,8 +205,8 @@ REV reverse[] = {
     { 0x1a, ".",          0x01 },
     { 0x1b, "EEX",        0x01 },
     { 0x1c, "CHS",        0x01 },
-    { 0x1d, "GTO",        0x12 },
-    { 0x1e, "XEQ",        0x12 },
+    { 0x1d, "GTO",        0x13 },
+    { 0x1e, "XEQ",        0x13 },
     { 0x1f, "",           0x01 },
     { 0x20, "RCL 00",     0x01 },
     { 0x21, "RCL 01",     0x01 },
@@ -380,7 +383,7 @@ REV reverse[] = {
     { 0xcc, "GLOBAL",     0x53 },
     { 0xcd, "GLOBAL",     0x53 },
     { 0xce, "X<>",        0x02 },
-    { 0xcf, "LBL",        0x02 },
+    { 0xcf, "LBL",        0x92 },
     { 0xd0, "GTO",        0x63 },
     { 0xd1, "GTO",        0x63 },
     { 0xd2, "GTO",        0x63 },
