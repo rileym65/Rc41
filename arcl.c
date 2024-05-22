@@ -8,8 +8,8 @@ void Arcl(int rreg) {
   int base;
   char buffer[32];
   NUMBER n;
-  base = ram[REG_C*7+2] << 4;
-  base |= ((ram[REG_C*7+1] >> 4) & 0xf);
+  base = ram[REG_C+2] << 4;
+  base |= ((ram[REG_C+1] >> 4) & 0xf);
   if (rreg < 0x70) {
     reg = base + rreg;
     }
@@ -44,8 +44,8 @@ void Arcl(int rreg) {
     }
   p = 0;
   while (buffer[p] != 0) {
-    for (i=(REG_P*7+2); i>(REG_M*7); i--) ram[i] = ram[i-1];
-    ram[REG_M*7] = buffer[p++];
+    for (i=(REG_P+2); i>(REG_M); i--) ram[i] = ram[i-1];
+    ram[REG_M] = buffer[p++];
     }
   }
 

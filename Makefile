@@ -31,15 +31,19 @@ OBJS= \
 	fact.o \
 	fcqc.o \
 	findend.o \
+	findglobal.o \
 	findnextglobal.o \
 	findstart.o \
 	fix.o \
+	fixlinenumber.o \
 	flagset.o \
 	format.o \
 	fractional.o \
+	fromptr.o \
 	fs.o \
 	fsqc.o \
 	gotoline.o \
+	gto2.o \
 	hms.o \
 	hmsminus.o \
 	hmsplus.o \
@@ -78,6 +82,7 @@ OBJS= \
 	tenscompliment.o \
 	tointeger.o \
 	tone.o \
+	toptr.o \
 	view.o \
 
 $(PROJECT): $(OBJS)

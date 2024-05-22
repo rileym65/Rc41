@@ -65,12 +65,16 @@ char* ProgramLine(char* buffer) {
   int lineNumber;
   int end;
   char tmp[256];
-  addr = (ram[REG_B*7+1] << 8) | ram[REG_B*7+0];
+  addr = (ram[REG_B+1] << 8) | ram[REG_B+0];
   reg = (addr & 0xfff);
   byt = (addr >> 12) & 0xf;
   adr = (reg * 7) + byt;
-  lineNumber = ram[REG_E*7+0] + ((ram[REG_E*7+1] &0x0f) << 8);
-  end = ((ram[REG_C*7+1] & 0x0f) << 8) | ram[REG_C*7+0];
+  lineNumber = ram[REG_E+0] + ((ram[REG_E+1] &0x0f) << 8);
+  if (lineNumber == 0xfff) {
+    FixLineNumber();
+    lineNumber = ram[REG_E+0] + ((ram[REG_E+1] &0x0f) << 8);
+    }
+  end = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
   if (lineNumber == 0) {
     sprintf(buffer,"00 REG %d", end - 0x0c0);
     }
@@ -110,7 +114,7 @@ char* ProgramLine(char* buffer) {
       }
     else {
       if (b >= 0x10 && b <= 0x1c) {
-strcpy(tmp," ");
+        strcpy(tmp," ");
         while (b >= 0x10 && b <= 0x1c) {
           strcat(tmp, reverse[b].name);
           adr--;

@@ -5,13 +5,13 @@ void Mean() {
   int ofs;
   NUMBER x;
   NUMBER y;
-  base = ram[REG_C*7+2] << 4;
-  base |= ((ram[REG_C*7+1] >> 4) & 0xf);
-  ofs = ram[REG_C*7+6] << 4;
-  ofs |= ((ram[REG_C*7+5] >> 4) & 0xf);
+  base = ram[REG_C+2] << 4;
+  base |= ((ram[REG_C+1] >> 4) & 0xf);
+  ofs = ram[REG_C+6] << 4;
+  ofs |= ((ram[REG_C+5] >> 4) & 0xf);
   base += ofs;
-  x = RecallNumber(REG_X);
-  StoreNumber(x, REG_L);
+  x = RecallNumber(R_X);
+  StoreNumber(x, R_L);
   y = RecallNumber(base+0);
   x = RecallNumber(base+5);
   if (IsZero(x)) {
@@ -19,10 +19,10 @@ void Mean() {
     return;
     }
   x = Div(y, x);
-  StoreNumber(x, REG_X);
+  StoreNumber(x, R_X);
   y = RecallNumber(base+2);
   x = RecallNumber(base+5);
   x = Div(y, x);
-  StoreNumber(x, REG_Y);
+  StoreNumber(x, R_Y);
   }
 

@@ -5,7 +5,7 @@ void Cat(char* token) {
   int i;
   int end;
   if (strcmp(token, "1") == 0) {
-    addr = (ram[REG_C*7+2] << 4) | ((ram[REG_C*7+1] & 0xf0) >> 4);
+    addr = (ram[REG_C+2] << 4) | ((ram[REG_C+1] & 0xf0) >> 4);
     addr = (addr * 7) - 1;
     while (ram[addr] < 0xc0 || ram[addr] >= 0xce || (ram[addr-2] & 0xf0) != 0x20) {
       if (ram[addr] >= 0xc0 && ram[addr] < 0xce) {
@@ -20,7 +20,7 @@ void Cat(char* token) {
         }
       addr -= isize(addr);
       }
-    end = ((ram[REG_C*7+1] & 0x0f) << 8) | ram[REG_C*7+0];
+    end = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
     printf(".END. REG %d\n",end - 0x0c0);
     }
   if (strcmp(token, "3") == 0) {

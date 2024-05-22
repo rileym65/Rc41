@@ -6,8 +6,8 @@ void Aview() {
   int p;
   char buffer[32];
   n = 0;
-  m = REG_P * 7 + 2;
-  while (m >= REG_M*7) {
+  m = REG_P + 2;
+  while (m >= REG_M) {
     if (n) {
       if (ram[m] == 0) buffer[p++] = 0xff;
         else buffer[p++] = ram[m];

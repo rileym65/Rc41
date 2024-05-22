@@ -66,7 +66,7 @@ void Debug(char* cmd) {
       }
     }
   if (strncasecmp(cmd, "dreg ", 5) == 0) {
-    base = (ram[REG_C*7+2] << 4) + ((ram[REG_C*7+1] >> 4) & 0x0f);
+    base = (ram[REG_C+2] << 4) + ((ram[REG_C+1] >> 4) & 0x0f);
     cmd += 5;
     cmd = Decimal(cmd, &start);
     end = start;
@@ -90,7 +90,7 @@ printf("Base: %x, start: %x, end: %x\n",base,start,end);
       }
     }
   if (strcasecmp(cmd, "size") == 0) {
-    base = (ram[REG_C*7+2] << 4) + ((ram[REG_C*7+1] >> 4) & 0x0f);
+    base = (ram[REG_C+2] << 4) + ((ram[REG_C+1] >> 4) & 0x0f);
     printf("Size=%d\n",0x1000 - base);
     }
   }

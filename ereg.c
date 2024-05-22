@@ -6,8 +6,8 @@ void EReg(byte post) {
   int e;
   NUMBER x;
   NUMBER y;
-  base = ram[REG_C*7+2] << 4;
-  base |= ((ram[REG_C*7+1] >> 4) & 0xf);
+  base = ram[REG_C+2] << 4;
+  base |= ((ram[REG_C+1] >> 4) & 0xf);
   e = 0xffff;
   if (post <0x70) e = post;
   if (post >= 0x80 && post <= 0xef) {
@@ -20,8 +20,8 @@ void EReg(byte post) {
     Message("NONEXISTENT");
     return;
     }
-  ram[REG_C*7+6] = (e >> 4) & 0xff;
-  ram[REG_C*7+5] &= 0x0f;
-  ram[REG_C*7+5] |= ((e & 0xf) << 4);
+  ram[REG_C+6] = (e >> 4) & 0xff;
+  ram[REG_C+5] &= 0x0f;
+  ram[REG_C+5] |= ((e & 0xf) << 4);
   }
 

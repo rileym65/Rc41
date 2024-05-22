@@ -21,21 +21,38 @@ typedef unsigned char byte;
 
 #define RAMSIZE 28672
 #define REG_T       0
-#define REG_Z       1
-#define REG_Y       2
-#define REG_X       3
-#define REG_L       4
-#define REG_M       5
-#define REG_N       6
-#define REG_O       7
-#define REG_P       8
-#define REG_Q       9
-#define REG_R      10
-#define REG_A      11
-#define REG_B      12
-#define REG_C      13
-#define REG_D      14
-#define REG_E      15
+#define REG_Z       7
+#define REG_Y      14
+#define REG_X      21
+#define REG_L      28
+#define REG_M      35
+#define REG_N      42
+#define REG_O      49
+#define REG_P      56
+#define REG_Q      63
+#define REG_R      70
+#define REG_A      77
+#define REG_B      84
+#define REG_C      91
+#define REG_D      98
+#define REG_E     105
+
+#define R_T         0
+#define R_Z         1
+#define R_Y         2
+#define R_X         3
+#define R_L         4
+#define R_M         5
+#define R_N         6
+#define R_O         7
+#define R_P         8
+#define R_Q         9
+#define R_R        10
+#define R_A        11
+#define R_B        12
+#define R_C        13
+#define R_D        14
+#define R_E        15
 
 typedef struct {
   byte sign;
@@ -94,16 +111,20 @@ extern int    Exec(int addr);
 extern NUMBER Fact(NUMBER a);
 extern int    FcQc(byte n);
 extern int    FindEnd(int address);
+extern int    FindGlobal(char* label);
 extern int    FindNextGlobal(int address);
 extern int    FindStart(int address);
 extern void   Fix(byte n);
+extern void   FixLineNumber();
 extern int    FlagSet(int f);
 extern char*  Format(NUMBER a, char* dest);
 extern NUMBER Fractional(NUMBER a);
+extern int    FromPtr(int ptr);
 extern int    Fs(byte n);
 extern int    FsQc(byte n);
 extern void   GetHms(NUMBER a, int* h, int* m, int *s, int *f);
 extern void   GotoLine(int line);
+extern int    Gto2(int address);
 extern NUMBER Hms(NUMBER a);
 extern NUMBER HmsMinus(NUMBER a, NUMBER b);
 extern NUMBER HmsPlus(NUMBER a, NUMBER b);
@@ -141,6 +162,7 @@ extern NUMBER Sub(NUMBER a, NUMBER b);
 extern NUMBER TensCompliment(NUMBER a);
 extern int    ToInteger(NUMBER a);
 extern void   Tone(byte n);
+extern int    ToPtr(int addr);
 extern void   View(byte post);
 
 

@@ -10,13 +10,13 @@ void Sdev() {
   NUMBER b;
   char   tmp[16];
   double x,x2,meanx,n;
-  base = ram[REG_C*7+2] << 4;
-  base |= ((ram[REG_C*7+1] >> 4) & 0xf);
-  ofs = ram[REG_C*7+6] << 4;
-  ofs |= ((ram[REG_C*7+5] >> 4) & 0xf);
+  base = ram[REG_C+2] << 4;
+  base |= ((ram[REG_C+1] >> 4) & 0xf);
+  ofs = ram[REG_C+6] << 4;
+  ofs |= ((ram[REG_C+5] >> 4) & 0xf);
   base += ofs;
-  a = RecallNumber(REG_X);
-  StoreNumber(a, REG_L);
+  a = RecallNumber(R_X);
+  StoreNumber(a, R_L);
 
   a = RecallNumber(base+0);
   NtoA(a, tmp);
@@ -35,7 +35,7 @@ void Sdev() {
   x = sqrt((x2 - (x * meanx)) / (n - 1));
   sprintf(tmp,"%.12e",x);
   a = AtoN(tmp);
-  StoreNumber(a, REG_X);
+  StoreNumber(a, R_X);
 
   a = RecallNumber(base+2);
   NtoA(a, tmp);
@@ -51,6 +51,6 @@ void Sdev() {
   x = sqrt((x2 - (x * meanx)) / (n - 1));
   sprintf(tmp,"%.12e",x);
   a = AtoN(tmp);
-  StoreNumber(a, REG_Y);
+  StoreNumber(a, R_Y);
   }
 

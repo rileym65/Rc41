@@ -15,7 +15,7 @@ void Rnd() {
   mode = 0;
   if (FlagSet(40)) mode |= 2;
   if (FlagSet(41)) mode |= 1;
-  a = RecallNumber(REG_X);
+  a = RecallNumber(R_X);
   if (mode == 0) {
     for (i=decimals; i<10; i++)
       if (i+1 < 10) a.mantissa[i+1] = 0;
@@ -31,6 +31,6 @@ void Rnd() {
     for (i=decimals+e; i<10; i++)
       if (i+1 < 10) a.mantissa[i+1] = 0;
     }
-  StoreNumber(a, REG_X);
+  StoreNumber(a, R_X);
   }
 

@@ -60,11 +60,11 @@ char *InputGtoXeq(char* line, byte base) {
   if (token[0] == '.') {
 printf("non-programmable\n");
     if (token[1] == '.') {
-      n = ((ram[REG_C*7+1] & 0x0f) << 8) | ram[REG_C*7+0];
-      ram[REG_B*7+0] = n & 0xff;
-      ram[REG_B*7+1] = 0x30 | ((n >> 8) & 0x0f);
-      ram[REG_E*7+0] = 0x00;
-      ram[REG_E*7+1] &= 0xf0;
+      n = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
+      ram[REG_B+0] = n & 0xff;
+      ram[REG_B+1] = 0x30 | ((n >> 8) & 0x0f);
+      ram[REG_E+0] = 0x00;
+      ram[REG_E+1] &= 0xf0;
       }
     else if (token[1] == '"') {
       }
@@ -72,49 +72,59 @@ printf("non-programmable\n");
       n = atoi(token+1);
       GotoLine(n);
       }
-    ram[REG_R*7+1] = 0x00;
+    ram[REG_R+1] = 0x00;
     }
   else {
     if (token[0] == '"') {
-      ram[REG_R*7+1] = (base == 0xd0) ? 0x1d : 0x1e;
+      ram[REG_R+1] = (base == 0xd0) ? 0x1d : 0x1e;
       if (FlagSet(52)) {
         sprintf(buffer,"GTO %s",token);
         ProgramStep(buffer);
         }
-      ram[REG_R*7+1] = 0x00;
+      else {
+        n = FindGlobal(token);
+        if (n != 0) {
+          n = ToPtr(n);
+          ram[REG_B+1] = (n >> 8) & 0xff;
+          ram[REG_B+0] = n & 0xff;
+          ram[REG_E+1] |= 0x0f;
+          ram[REG_E+0] = 0xff;
+          }
+        }
+      ram[REG_R+1] = 0x00;
       }
     if (token[0] >= '0' && token[0] <= '9') {
       n = atoi(token);
       if (n <= 14 && base == 0xd0) {
-        ram[REG_R*7+1] = 0xb1+n;
-        ram[REG_R*7+0] = 0;
+        ram[REG_R+1] = 0xb1+n;
+        ram[REG_R+0] = 0;
         }
       else {
-        ram[REG_R*7+1] = base;
-        ram[REG_R*7+0] = 0;
-        ram[REG_E*7+2] &= 0xf0;
-        ram[REG_E*7+2] |= ((n & 0x70) >> 4);
-        ram[REG_E*7+1] &= 0x0f;
-        ram[REG_E*7+1] |= ((n & 0x0f) << 4);
+        ram[REG_R+1] = base;
+        ram[REG_R+0] = 0;
+        ram[REG_E+2] &= 0xf0;
+        ram[REG_E+2] |= ((n & 0x70) >> 4);
+        ram[REG_E+1] &= 0x0f;
+        ram[REG_E+1] |= ((n & 0x0f) << 4);
         }
       }
     else if (token[0] >= 'A' && token[0] <= 'J') {
       n = token[0] - 'A' + 102;
-      ram[REG_R*7+1] = base;
-      ram[REG_R*7+0] = 0;
-      ram[REG_E*7+2] &= 0xf0;
-      ram[REG_E*7+2] |= ((n & 0x70) >> 4);
-      ram[REG_E*7+1] &= 0x0f;
-      ram[REG_E*7+1] |= ((n & 0x0f) << 4);
+      ram[REG_R+1] = base;
+      ram[REG_R+0] = 0;
+      ram[REG_E+2] &= 0xf0;
+      ram[REG_E+2] |= ((n & 0x70) >> 4);
+      ram[REG_E+1] &= 0x0f;
+      ram[REG_E+1] |= ((n & 0x0f) << 4);
       }
     else if (token[0] >= 'a' && token[0] <= 'e') {
       n = token[0] - 'a' + 123;
-      ram[REG_R*7+1] = base;
-      ram[REG_R*7+0] = 0;
-      ram[REG_E*7+2] &= 0xf0;
-      ram[REG_E*7+2] |= ((n & 0x70) >> 4);
-      ram[REG_E*7+1] &= 0x0f;
-      ram[REG_E*7+1] |= ((n & 0x0f) << 4);
+      ram[REG_R+1] = base;
+      ram[REG_R+0] = 0;
+      ram[REG_E+2] &= 0xf0;
+      ram[REG_E+2] |= ((n & 0x70) >> 4);
+      ram[REG_E+1] &= 0x0f;
+      ram[REG_E+1] |= ((n & 0x0f) << 4);
       }
     }
   return line;
@@ -128,29 +138,30 @@ char *InputLbl(char* line) {
   if (token[0] >= '0' && token[0] <= '9') {
     n = atoi(token);
     if (n <= 14) {
-      ram[REG_R*7+1] = 0x01+n;
-      ram[REG_R*7+0] = 0;
+      ram[REG_R+1] = 0x01+n;
+      ram[REG_R+0] = 0;
       }
     else {
-      ram[REG_R*7+1] = 0xcf;
-      ram[REG_R*7+0] = n & 0x7f;
+printf("2 byte label\n");
+      ram[REG_R+1] = 0xcf;
+      ram[REG_R+0] = n & 0x7f;
       }
     }
   else if (token[0] >= 'A' && token[0] <= 'J') {
-    ram[REG_R*7+1] = 0xcf;
-    ram[REG_R*7+0] = token[0] - 'A' + 102;
+    ram[REG_R+1] = 0xcf;
+    ram[REG_R+0] = token[0] - 'A' + 102;
     }
   else if (token[0] >= 'a' && token[0] <= 'e') {
-    ram[REG_R*7+1] = 0xcf;
-    ram[REG_R*7+0] = token[0] - 'a' + 123;
+    ram[REG_R+1] = 0xcf;
+    ram[REG_R+0] = token[0] - 'a' + 123;
     }
   else if (token[0] == '"') {
-    ram[REG_R*7+1] = 0xc0;
+    ram[REG_R+1] = 0xc0;
     if (FlagSet(52)) {
       sprintf(buffer,"LBL %s",token);
       ProgramStep(buffer);
       }
-    ram[REG_R*7+1] = 0x00;
+    ram[REG_R+1] = 0x00;
     }
   return line;
   }
@@ -159,21 +170,21 @@ char *InputRcl(char* line) {
   byte  n;
   line = PostFix(0x12, line, &n);
   if (n < 16) {
-    ram[REG_R*7+1] = 0x20 + n;
+    ram[REG_R+1] = 0x20 + n;
     }
   else {
-    ram[REG_R*7+1] = 0x90;
-    ram[REG_R*7+0] = n;
+    ram[REG_R+1] = 0x90;
+    ram[REG_R+0] = n;
     }
   return line;
   }
 
 char *InputEnd(char* line) {
-  ram[REG_R*7+1] = 0xc0;
+  ram[REG_R+1] = 0xc0;
   if (FlagSet(52)) {
     ProgramStep("END");
     }
-  ram[REG_R*7+1] = 0x00;
+  ram[REG_R+1] = 0x00;
   return line;
   }
 
@@ -181,11 +192,11 @@ char *InputSto(char* line) {
   byte  n;
   line = PostFix(0x12, line, &n);
   if (n < 16) {
-    ram[REG_R*7+1] = 0x30 + n;
+    ram[REG_R+1] = 0x30 + n;
     }
   else {
-    ram[REG_R*7+1] = 0x91;
-    ram[REG_R*7+0] = n;
+    ram[REG_R+1] = 0x91;
+    ram[REG_R+0] = n;
     }
   return line;
   }
@@ -219,8 +230,6 @@ int main(int argc, char** argv) {
   else Message("MEMORY LOST");
 
   while (on) {
-//    a = RecallNumber(REG_X);
-//    printf("\n[[%s]]\n",Format(a,buffer));
     printf("\n[[%s]]\n",Display(screen));
     if (debug) ShowStatRegs(0);
     ClearFlag(50);
@@ -246,38 +255,38 @@ int main(int argc, char** argv) {
           ProgramStep(token);
           }
         for (i=0; i<strlen(token); i++) {
-          if (token[i] == '.') ram[REG_R*7+1] = 0x1a;
-            else ram[REG_R*7+1] = token[i] - '0' + 0x10;
+          if (token[i] == '.') ram[REG_R+1] = 0x1a;
+            else ram[REG_R+1] = token[i] - '0' + 0x10;
           Exec(0x100a);
           }
         }
       else if (token[0] == '"') {
         if (FlagSet(52)) {
-          ram[REG_R*7+1] = 0xf0;
+          ram[REG_R+1] = 0xf0;
           ProgramStep(token);
           }
         else {
           i = 1;
           if (token[i] != '|') {
-            for (j=REG_M*7; j<=REG_P*7+2; j++) ram[j] = 0;
+            for (j=REG_M; j<=REG_P+2; j++) ram[j] = 0;
             } else i++;
           while (token[i] != '"' && token[i] != 0) {
-            for (j=REG_P*7+2; j>REG_M*7; j--)
+            for (j=REG_P+2; j>REG_M; j--)
               ram[j] = ram[j-1];
-            ram[REG_M*7] = token[i++];
-            if (ram[REG_M*7] > 'e' && ram[REG_M*7] <= 'z')
-              ram[REG_M*7] -= 32;
+            ram[REG_M] = token[i++];
+            if (ram[REG_M] > 'e' && ram[REG_M] <= 'z')
+              ram[REG_M] -= 32;
             }
           }
 
 
 //        i = 1;
-//        ram[REG_R*7+1] = 0xf0;
+//        ram[REG_R+1] = 0xf0;
 //        while (token[i] != '"' && token[i] != 0) {
-//          ram[REG_R*7+1]++;
-//          ram[REG_R*7+1-i] = token[i];
-//          if (ram[REG_R*7+1-i] > 'e' &&
-//              ram[REG_R*7+1-i] <= 'z') ram[REG_R*7+1-i] -= 32;
+//          ram[REG_R+1]++;
+//          ram[REG_R+1-i] = token[i];
+//          if (ram[REG_R+1-i] > 'e' &&
+//              ram[REG_R+1-i] <= 'z') ram[REG_R+1-i] -= 32;
 //          i++;
 //          }
 //        Exec(0x100a);
@@ -311,10 +320,10 @@ int main(int argc, char** argv) {
             else if (catalog[i].cmd == 0x01) pchar = InputLbl(pchar);
             else if (catalog[i].cmd == 0xc0) pchar = InputEnd(pchar);
             else {
-              ram[REG_R*7+1] = catalog[i].cmd;
+              ram[REG_R+1] = catalog[i].cmd;
               if (catalog[i].flags & 0x3) {
                 pchar = PostFix(catalog[i].flags, pchar, &b);
-                ram[REG_R*7+0] = b;
+                ram[REG_R+0] = b;
                 }
               }
             if (FlagSet(52)) ProgramStep(NULL);

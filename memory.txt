@@ -26,39 +26,39 @@
 
 Status registers
 
-       6       5       4       3       2       1       0   
+       6       5       4       3       2       1       0     R_     REG_
    +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
-e  | shifted key assignments           |scratch|   line #  | 00F
+e  | shifted key assignments           |scratch|   line #  | 00F     105
    +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
-d  |         user flags          |      system flags       | 00E
+d  |         user flags          |      system flags       | 00E      98
    +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
-c  |   E reg   |scratch|   cold    |    R00    |   .END.   | 00D
+c  |   E reg   |scratch|   cold    |    R00    |   .END.   | 00D      91
    +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
-b  |3rd ret|    2nd ret    |    1st ret    |    Adr Ptr    | 00C
+b  |3rd ret|    2nd ret    |    1st ret    |    Adr Ptr    | 00C      84
    +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
-a  |    6th ret    |    5th ret    |    4th ret    |3rd ret| 00B
+a  |    6th ret    |    5th ret    |    4th ret    |3rd ret| 00B      77
    +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
-|- | unshifted key assignments         |      scratch      | 00A
+|- | unshifted key assignments         |      scratch      | 00A      70
    +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
-Q  |               Temporary alpha scratch                 | 009
+Q  |               Temporary alpha scratch                 | 009      63
    +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
-P  |     scratch (alpha 25-28)     |      Alpha 22-24      | 008
+P  |     scratch (alpha 25-28)     |      Alpha 22-24      | 008      56
    +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
-O  |                     Alpha 15-21                       | 007
+O  |                     Alpha 15-21                       | 007      49
    +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
-N  |                     Alpha  8-14                       | 006
+N  |                     Alpha  8-14                       | 006      42
    +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
-M  |                     Alpha  1-7                        | 005
+M  |                     Alpha  1-7                        | 005      35
    +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
-L  |                           L                           | 004
+L  |                           L                           | 004      28
    +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
-X  |                           X                           | 003
+X  |                           X                           | 003      21
    +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
-Y  |                           Y                           | 002
+Y  |                           Y                           | 002      14
    +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
-Z  |                           Z                           | 001
+Z  |                           Z                           | 001       7
    +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
-T  |                           T                           | 000
+T  |                           T                           | 000       0
    +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
    |sgn| mantissa                              |sgn|  exp  |
 

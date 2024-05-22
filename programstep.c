@@ -56,12 +56,12 @@ void ProgramStep(char* line) {
   int dist;
   int d;
   byteCount = 0;
-  if (ram[REG_R*7+1] == 0x00) return;
-  addr = (ram[REG_B*7+1] << 8) | ram[REG_B*7+0];
+  if (ram[REG_R+1] == 0x00) return;
+  addr = (ram[REG_B+1] << 8) | ram[REG_B+0];
   reg = (addr & 0xfff);
   byt = (addr >> 12) & 0xf;
   adr = (reg * 7) + byt;
-  lineNumber = ram[REG_E*7+0] + ((ram[REG_E*7+1] &0x0f) << 8);
+  lineNumber = ram[REG_E+0] + ((ram[REG_E+1] &0x0f) << 8);
   if (lineNumber == 0) {
     adr--;
     }
@@ -70,7 +70,8 @@ void ProgramStep(char* line) {
 // printf("%02x %02x %02x\n",ram[adr],ram[adr-1],ram[adr-2]);
     while (ram[adr] == 0) adr--;
 // printf("%02x %02x %02x\n",ram[adr],ram[adr-1],ram[adr-2]);
-    if (((ram[adr] & 0xf0) != 0xc0) || ((ram[adr-2] & 0xf0) == 0xf0)) {
+//    if (((ram[adr] & 0xf0) != 0xc0) || ((ram[adr-2] & 0xf0) == 0xf0)) {
+    if (ram[adr] < 0xc0 || ram[adr] > 0xcd || ram[adr-2] >= 0xf0) {
       adr -= isize(adr);
       }
     }
@@ -83,10 +84,10 @@ void ProgramStep(char* line) {
   reg = adr / 7;
   byt = adr % 7;
   addr = (byt << 12) | reg;
-  ram[REG_B*7+1] = (addr >> 8) & 0xff;
-  ram[REG_B*7+0] = addr & 0xff;
+  ram[REG_B+1] = (addr >> 8) & 0xff;
+  ram[REG_B+0] = addr & 0xff;
   if (line == NULL) ClearFlag(22);
-  if (!FlagSet(22)) ProgramByte(ram[REG_R*7+1]);
+  if (!FlagSet(22)) ProgramByte(ram[REG_R+1]);
   if (line != NULL) {
     if (line[0] == '.' || (line[0] >= '0' && line[0] <= '9')) {
       for (i=0; i<strlen(line); i++) {
@@ -131,22 +132,22 @@ void ProgramStep(char* line) {
       Link(start-1);
       }
     }
-  else if (isize(REG_R*7+1) > 1) {
-    ProgramByte(ram[REG_R*7+0]);
+  else if (isize(REG_R+1) > 1) {
+    ProgramByte(ram[REG_R+0]);
     }
-  if (ram[REG_R*7+1] == 0xd0 || ram[REG_R*7+1] == 0xe0) {
-    ProgramByte(((ram[REG_E*7+2] & 0x0f) << 4) | 
-                ((ram[REG_E*7+1] & 0xf0) >> 4));
+  if (ram[REG_R+1] == 0xd0 || ram[REG_R+1] == 0xe0) {
+    ProgramByte(((ram[REG_E+2] & 0x0f) << 4) | 
+                ((ram[REG_E+1] & 0xf0) >> 4));
     }
   reg = start / 7;
   byt = start % 7;
   addr = (byt << 12) | reg;
-  ram[REG_B*7+1] = (addr >> 8) & 0xff;
-  ram[REG_B*7+0] = addr & 0xff;
+  ram[REG_B+1] = (addr >> 8) & 0xff;
+  ram[REG_B+0] = addr & 0xff;
   lineNumber++;
-  ram[REG_E*7+0] = lineNumber & 0xff;
-  ram[REG_E*7+1] &= 0xf0;
-  ram[REG_E*7+1] |= ((lineNumber >> 8) & 0x0f);
+  ram[REG_E+0] = lineNumber & 0xff;
+  ram[REG_E+1] &= 0xf0;
+  ram[REG_E+1] |= ((lineNumber >> 8) & 0x0f);
   if (byteCount != 0) {
 printf("Bytes: %d\n",byteCount);
 printf("Adjusting next global\n");
