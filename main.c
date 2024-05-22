@@ -59,7 +59,14 @@ char *InputGtoXeq(char* line, byte base) {
   line = NextToken(line, token);
   if (token[0] == '.') {
 printf("non-programmable\n");
-    if (token[1] == '"') {
+    if (token[1] == '.') {
+      n = ((ram[REG_C*7+1] & 0x0f) << 8) | ram[REG_C*7+0];
+      ram[REG_B*7+0] = n & 0xff;
+      ram[REG_B*7+1] = 0x30 | ((n >> 8) & 0x0f);
+      ram[REG_E*7+0] = 0x00;
+      ram[REG_E*7+1] &= 0xf0;
+      }
+    else if (token[1] == '"') {
       }
     else {
       n = atoi(token+1);
@@ -234,6 +241,10 @@ int main(int argc, char** argv) {
       for (i=0; i<strlen(token); i++)
         if (token[i] != '.' && (token[i] < '0' || token[i] > '9')) isNumber = 0;
       if (isNumber) {
+        if (FlagSet(52)) {
+          SetFlag(22);
+          ProgramStep(token);
+          }
         for (i=0; i<strlen(token); i++) {
           if (token[i] == '.') ram[REG_R*7+1] = 0x1a;
             else ram[REG_R*7+1] = token[i] - '0' + 0x10;
@@ -241,16 +252,22 @@ int main(int argc, char** argv) {
           }
         }
       else if (token[0] == '"') {
-        i = 1;
-        if (token[i] != '|') {
-          for (j=REG_M*7; j<=REG_P*7+2; j++) ram[j] = 0;
-          } else i++;
-        while (token[i] != '"' && token[i] != 0) {
-          for (j=REG_P*7+2; j>REG_M*7; j--)
-            ram[j] = ram[j-1];
-          ram[REG_M*7] = token[i++];
-          if (ram[REG_M*7] > 'e' && ram[REG_M*7] <= 'z')
-            ram[REG_M*7] -= 32;
+        if (FlagSet(52)) {
+          ram[REG_R*7+1] = 0xf0;
+          ProgramStep(token);
+          }
+        else {
+          i = 1;
+          if (token[i] != '|') {
+            for (j=REG_M*7; j<=REG_P*7+2; j++) ram[j] = 0;
+            } else i++;
+          while (token[i] != '"' && token[i] != 0) {
+            for (j=REG_P*7+2; j>REG_M*7; j--)
+              ram[j] = ram[j-1];
+            ram[REG_M*7] = token[i++];
+            if (ram[REG_M*7] > 'e' && ram[REG_M*7] <= 'z')
+              ram[REG_M*7] -= 32;
+            }
           }
 
 

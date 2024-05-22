@@ -5,6 +5,15 @@ int isize(int address) {
   byte cmd;
   byte b;
   cmd = ram[address];
+  if (cmd >= 0x10 && cmd <= 0x1c) {
+    size = 1;
+    address--;
+    while (ram[address] >= 0x10 && ram[address] <= 0x1c) {
+      address--;
+      size++;
+      }
+    return size;
+    }
   if (cmd == 0x1d || cmd == 0x1e) {
     b = ram[address-1];
     return 2 + (b & 0xf);

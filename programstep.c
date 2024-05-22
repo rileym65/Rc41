@@ -85,8 +85,25 @@ void ProgramStep(char* line) {
   addr = (byt << 12) | reg;
   ram[REG_B*7+1] = (addr >> 8) & 0xff;
   ram[REG_B*7+0] = addr & 0xff;
-  ProgramByte(ram[REG_R*7+1]);
+  if (line == NULL) ClearFlag(22);
+  if (!FlagSet(22)) ProgramByte(ram[REG_R*7+1]);
   if (line != NULL) {
+    if (line[0] == '.' || (line[0] >= '0' && line[0] <= '9')) {
+      for (i=0; i<strlen(line); i++) {
+        if (line[i] == '.') ProgramByte(0x1a);
+        else if (line[i] >= '0' && line[i] <= '9')
+          ProgramByte(line[i] - 32);
+        }
+      }
+    if (line[0] == '"') {
+      for (i=0; i<strlen(line); i++) {
+        if (line[i] != '"') {
+          if (line[i] > 'e' && line[i] <= 'z') ProgramByte(line[i]-32);
+          else ProgramByte(line[i]);
+          ram[start-1]++;
+          }
+        }
+      }
     if (strncasecmp(line, "LBL ",4) == 0) {
       ProgramByte(0x00);
       ProgramByte(0xf1);

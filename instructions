@@ -272,6 +272,7 @@ FF
 
 Non-Programmable
 BST
+CAT n
 GTO .nnn
 SST
 

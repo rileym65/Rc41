@@ -109,7 +109,17 @@ char* ProgramLine(char* buffer) {
         }
       }
     else {
-      if ((reverse[b].size & 0x0f) == 1) {
+      if (b >= 0x10 && b <= 0x1c) {
+strcpy(tmp," ");
+        while (b >= 0x10 && b <= 0x1c) {
+          strcat(tmp, reverse[b].name);
+          adr--;
+          b = ram[adr];
+          }
+        if (tmp[0] == ' ') strcat(buffer, tmp+1);
+          else strcat(buffer, tmp);
+        }
+      else if ((reverse[b].size & 0x0f) == 1) {
         sprintf(tmp, "%s", reverse[b].name);
         strcat(buffer, tmp);
         }
@@ -134,6 +144,15 @@ char* ProgramLine(char* buffer) {
           tmp[0] = ram[--adr];
           tmp[1] = 0;
           strcat(buffer,tmp);
+          }
+        }
+      else if (b >= 0xf0) {
+        adr--;
+        buffer[strlen(buffer)-1] = '"';
+        tmp[1] = 0;
+        for (i=0; i<(b&0x0f); i++) {
+          tmp[0] = ram[adr--];
+          strcat(buffer, tmp);
           }
         }
       else
