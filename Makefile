@@ -29,6 +29,9 @@ OBJS= \
 	exec.o \
 	fact.o \
 	fcqc.o \
+	findend.o \
+	findnextglobal.o \
+	findstart.o \
 	fix.o \
 	flagset.o \
 	format.o \

@@ -67,6 +67,7 @@ LINK int    on;
 LINK char   buffer[32];
 LINK int    ramClear;
 LINK char   screen[32];
+LINK int    byteCount;
 
 extern NUMBER Add(NUMBER a, NUMBER b);
 extern void   AddNumber(char n);
@@ -91,6 +92,9 @@ extern void   EReg(byte post);
 extern int    Exec(int addr);
 extern NUMBER Fact(NUMBER a);
 extern int    FcQc(byte n);
+extern int    FindEnd(int address);
+extern int    FindNextGlobal(int address);
+extern int    FindStart(int address);
 extern void   Fix(byte n);
 extern int    FlagSet(int f);
 extern char*  Format(NUMBER a, char* dest);

@@ -31,7 +31,6 @@ void Sst() {
       }
     else {
       GotoLine(1);
-printf("Wrap at end\n");
       }
     }
   }

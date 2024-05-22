@@ -26,6 +26,7 @@ void ProgramByte(byte b) {
     ram[REG_C*7+0] = pqr & 0xff;
     ram[REG_C*7+1] &= 0xf0;
     ram[REG_C*7+1] |= ((pqr >> 8) & 0x0f);
+    byteCount += 7;
     }
   ram[adr--] = b;
   reg = adr / 7;
