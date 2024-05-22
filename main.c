@@ -277,6 +277,10 @@ int main(int argc, char** argv) {
         else if (strcasecmp(token,"BST") == 0) {
           Bst();
           }
+        else if (strcasecmp(token,"CAT") == 0) {
+          pchar = NextToken(pchar, token);
+          Cat(token);
+          }
         else {
           while (catalog[i].flags != 0xff && strcasecmp(catalog[i].name, token) != 0) {
             i++;

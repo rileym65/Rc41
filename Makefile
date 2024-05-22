@@ -13,6 +13,7 @@ OBJS= \
 	aton.o \
 	aview.o \
 	bst.o \
+	cat.o \
 	cf.o \
 	cle.o \
 	clearflag.o \

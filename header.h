@@ -76,6 +76,7 @@ extern void   Asto(int rreg);
 extern NUMBER AtoN(char* number);
 extern void   Aview();
 extern void   Bst();
+extern void   Cat(char* token);
 extern void   Cf(byte n);
 extern void   Cle();
 extern void   ClearFlag(int f);
