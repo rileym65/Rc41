@@ -3,6 +3,7 @@
 void Cat(char* token) {
   int addr;
   int i;
+  int end;
   if (strcmp(token, "1") == 0) {
     addr = (ram[REG_C*7+2] << 4) | ((ram[REG_C*7+1] & 0xf0) >> 4);
     addr = (addr * 7) - 1;
@@ -19,7 +20,8 @@ void Cat(char* token) {
         }
       addr -= isize(addr);
       }
-    printf(".END. REG\n");
+    end = ((ram[REG_C*7+1] & 0x0f) << 8) | ram[REG_C*7+0];
+    printf(".END. REG %d\n",end - 0x0c0);
     }
   if (strcmp(token, "3") == 0) {
     i = 12;
