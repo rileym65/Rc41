@@ -6,6 +6,7 @@ void Aview() {
   int p;
   char buffer[32];
   n = 0;
+  p = 0;
   m = REG_P + 2;
   while (m >= REG_M) {
     if (n) {

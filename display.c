@@ -12,7 +12,7 @@ char* Display(char* buffer) {
    
     }
   else {
-    a = RecallNumber(REG_X);
+    a = RecallNumber(R_X);
     Format(a,buffer);
     }
   while (strlen(buffer) < 12) strcat(buffer," ");

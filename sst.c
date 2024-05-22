@@ -33,5 +33,16 @@ void Sst() {
       GotoLine(1);
       }
     }
+  else {
+    addr = (ram[REG_B+1] << 8) | ram[REG_B+0];
+    addr = FromPtr(addr) - 1;
+printf("exec [%04x]: %02x %02x %02x\n",addr,ram[addr],ram[addr-1],ram[addr-2]);
+    addr = Exec(addr);
+printf("exec [%04x]: %02x %02x %02x\n",addr,ram[addr],ram[addr-1],ram[addr-2]);
+    addr = ToPtr(addr + 1);
+    ram[REG_B+1] = (addr >> 8) & 0xff;
+    ram[REG_B+0] = addr & 0xff;
+    
+    }
   }
 

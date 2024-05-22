@@ -5,7 +5,6 @@ int Exec(int addr) {
   byte cmd;
   int  byt; 
   int  reg;
-  int  adr;
   int  flag;
   int  i;
   int  j;
@@ -14,12 +13,10 @@ int Exec(int addr) {
   double x;
   double y;
   char n[32];
-  reg = (addr & 0xfff);
-  byt = (addr >> 12) & 0xf;
-  adr = (reg * 7) + byt;
-  cmd = ram[adr--];
+  cmd = 0;
+  while (cmd == 0) cmd = ram[addr--];
   if (cmd == 0x54 && FlagSet(22)) cmd = 0x1c;
-  if (debug) printf("Exec: %02x %02x\n",cmd,ram[adr]);
+  if (debug) printf("Exec: %02x %02x\n",cmd,ram[addr]);
   if ((cmd < 0x10 || cmd > 0x1c) && FlagSet(22)) {
     StoreNumber(Normalize(RecallNumber(R_X)), R_X);
     ClearFlag(22);
@@ -281,7 +278,7 @@ int Exec(int addr) {
              else Message("NO");
            }
          else {
-           if (c.sign == 0) adr -= isize(adr);
+           if (c.sign == 0) addr -= isize(addr);
            }
          break;
     case 0x45:                                             // X>Y?
@@ -293,7 +290,7 @@ int Exec(int addr) {
              else Message("NO");
            }
          else {
-           if (c.sign == 0) adr -= isize(adr);
+           if (c.sign == 0) addr -= isize(addr);
            }
          break;
     case 0x46:                                             // X<=Y?
@@ -308,7 +305,7 @@ int Exec(int addr) {
              else Message("NO");
            }
          else {
-           if (flag == 0) adr -= isize(adr);
+           if (flag == 0) addr -= isize(addr);
            }
          break;
     case 0x47:                                             // E+
@@ -624,7 +621,7 @@ int Exec(int addr) {
              else Message("NO");
            }
          else {
-           if (flag == 0) adr -= isize(adr);
+           if (flag == 0) addr -= isize(addr);
            }
          break;
     case 0x64:                                             // X>0?
@@ -638,7 +635,7 @@ int Exec(int addr) {
              else Message("NO");
            }
          else {
-           if (flag == 0) adr -= isize(adr);
+           if (flag == 0) addr -= isize(addr);
            }
          break;
     case 0x65:                                             // LN1+X
@@ -662,7 +659,7 @@ int Exec(int addr) {
              else Message("NO");
            }
          else {
-           if (flag == 0) adr -= isize(adr);
+           if (flag == 0) addr -= isize(addr);
            }
          break;
     case 0x67:                                             // X=0?
@@ -675,7 +672,7 @@ int Exec(int addr) {
              else Message("NO");
            }
          else {
-           if (flag == 0) adr -= isize(adr);
+           if (flag == 0) addr -= isize(addr);
            }
          break;
     case 0x68:                                             // INT
@@ -786,7 +783,7 @@ int Exec(int addr) {
              else Message("NO");
            }
          else {
-           if (flag == 0) adr -= isize(adr);
+           if (flag == 0) addr -= isize(addr);
            }
          break;
     case 0x79:                                             // X<>Y?
@@ -804,7 +801,7 @@ int Exec(int addr) {
              else Message("NO");
            }
          else {
-           if (flag == 0) adr -= isize(adr);
+           if (flag == 0) addr -= isize(addr);
            }
          break;
     case 0x7a:                                             // SIGN
@@ -832,7 +829,7 @@ int Exec(int addr) {
              else Message("NO");
            }
          else {
-           if (flag == 0) adr -= isize(adr);
+           if (flag == 0) addr -= isize(addr);
            }
          break;
     case 0x7c:                                             // MEAN
@@ -905,124 +902,124 @@ int Exec(int addr) {
          break;
         
     case 0x90:                                             // RCL
-         b2 = ram[adr--];
+         b2 = ram[addr--];
          a = Rcl(b2);
          StoreNumber(a, R_X);
          break;
     case 0x91:                                             // STO
          a = RecallNumber(R_X);
-         b2 = ram[adr--];
+         b2 = ram[addr--];
          Sto(a, b2);
          break;
     case 0x92:                                             // ST+
-         b2 = ram[adr--];
+         b2 = ram[addr--];
          a = RecallNumber(R_X);
          b = Rcl(b2);
          a = Add(a,b);
          Sto(a, b2);
          break;
     case 0x93:                                             // ST-
-         b2 = ram[adr--];
+         b2 = ram[addr--];
          b = RecallNumber(R_X);
          a = Rcl(b2);
          a = Sub(a,b);
          Sto(a, b2);
          break;
     case 0x94:                                             // ST*
-         b2 = ram[adr--];
+         b2 = ram[addr--];
          a = RecallNumber(R_X);
          b = Rcl(b2);
          a = Mul(a,b);
          Sto(a, b2);
          break;
     case 0x95:                                             // ST/
-         b2 = ram[adr--];
+         b2 = ram[addr--];
          b = RecallNumber(R_X);
          a = Rcl(b2);
          a = Div(a,b);
          Sto(a, b2);
          break;
     case 0x96:                                             // ISG
-         i = Isg(ram[adr--]);
+         i = Isg(ram[addr--]);
          if (reg >= 0x0c0) {
-           if (i != 0) adr -= isize(adr);
+           if (i != 0) addr -= isize(addr);
            }
          break;
     case 0x97:                                             // DSE
-         i = Dse(ram[adr--]);
+         i = Dse(ram[addr--]);
          if (reg >= 0x0c0) {
-           if (i != 0) adr -= isize(adr);
+           if (i != 0) addr -= isize(addr);
            }
          break;
     case 0x98:                                             // VIEW
-         View(ram[adr--]);
+         View(ram[addr--]);
          break;
     case 0x99:                                             // EREG
-         EReg(ram[adr--]);
+         EReg(ram[addr--]);
          break;
     case 0x9a:                                             // ASTO
-         Asto(ram[adr--]);
+         Asto(ram[addr--]);
          break;
     case 0x9b:                                             // ARCL
-         Arcl(ram[adr--]);
+         Arcl(ram[addr--]);
          break;
     case 0x9c:                                             // FIX
-         Fix(ram[adr--]);
+         Fix(ram[addr--]);
          break;
     case 0x9d:                                             // SCI
-         Sci(ram[adr--]);
+         Sci(ram[addr--]);
          break;
     case 0x9e:                                             // ENG
-         Eng(ram[adr--]);
+         Eng(ram[addr--]);
          break;
     case 0x9f:                                             // TONE
-         Tone(ram[adr--]);
+         Tone(ram[addr--]);
          break;
    
     case 0xa8:                                             // SF
-         Sf(ram[adr--]);
+         Sf(ram[addr--]);
          break;
     case 0xa9:                                             // CF
-         Cf(ram[adr--]);
+         Cf(ram[addr--]);
          break;
     case 0xaa:                                             // FS?C
-         flag = FsQc(ram[adr--]);
+         flag = FsQc(ram[addr--]);
          if (reg < 0x0c0) {
            if (flag) Message("YES");
              else Message("NO");
            }
          else {
-           if (flag == 0) adr -= isize(adr);
+           if (flag == 0) addr -= isize(addr);
            }
          break;
     case 0xab:                                             // FC?C
-         flag = FsQc(ram[adr--]);
+         flag = FsQc(ram[addr--]);
          if (reg < 0x0c0) {
            if (flag) Message("NO");
              else Message("YES");
            }
          else {
-           if (flag != 0) adr -= isize(adr);
+           if (flag != 0) addr -= isize(addr);
            }
          break;
     case 0xac:                                             // FS?
-         flag = Fs(ram[adr--]);
+         flag = Fs(ram[addr--]);
          if (reg < 0x0c0) {
            if (flag) Message("YES");
              else Message("NO");
            }
          else {
-           if (flag == 0) adr -= isize(adr);
+           if (flag == 0) addr -= isize(addr);
            }
          break;
     case 0xad:                                             // FC?
-         flag = Fs(ram[adr--]);
+         flag = Fs(ram[addr--]);
          if (reg < 0x0c0) {
            if (flag) Message("NO");
              else Message("YES");
            }
          else {
-           if (flag != 0) adr -= isize(adr);
+           if (flag != 0) addr -= isize(addr);
            }
          break;
 
@@ -1041,7 +1038,7 @@ int Exec(int addr) {
     case 0xbd:                                             // GTO 12
     case 0xbe:                                             // GTO 13
     case 0xbf:                                             // GTO 14
-         adr = Gto2(adr+1);
+         addr = Gto2(addr+1);
          break;
 
     case 0xc0:                                             // GLOBAL
@@ -1058,23 +1055,24 @@ int Exec(int addr) {
     case 0xcb:
     case 0xcc:
     case 0xcd:
-         adr--;
-         b2 = ram[adr--];
+         addr--;
+         b2 = ram[addr];
+printf("3rd global: %02x\n",b2);
          if (b2 >= 0xf0) {                                 // Label
-           adr -= (b2 & 0xf);
+           addr -= (b2 & 0xf);
            }
          else {                                            // End
            running = 0;
            }
     case 0xce:                                             // X<>
-         b2 = ram[adr--];
+         b2 = ram[addr--];
          a = RecallNumber(R_X);
          b = Rcl(b2);
          Sto(a, b2);
          StoreNumber(b, R_X);
          break;
     case 0xcf:                                             // LBL
-         adr--;
+         addr--;
          break;
 
     case 0xf0:                                             // TEXT 0
@@ -1096,22 +1094,18 @@ int Exec(int addr) {
     case 0xfd:                                             // TEXT 13
     case 0xfe:                                             // TEXT 14
     case 0xff:                                             // TEXT 15
-         if (ram[adr] != 0x7f) {
+         if (ram[addr] != 0x7f) {
            for (i=REG_M; i<=REG_P+2; i++)
              ram[i] = 0;
            }
          for (i=0; i<(cmd & 0x0f); i++) {
            for (j=REG_P+2; j>REG_M; j--)
              ram[j] = ram[j-1];
-           ram[REG_M] = ram[adr--];
+           ram[REG_M] = ram[addr--];
            }
          break;
 
     }
-  reg = adr / 7;
-  byt = adr % 7;
-  addr = (byt << 12) | reg;
-//printf("Return = %x\n",addr);
   return addr;
   }
 

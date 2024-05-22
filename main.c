@@ -257,7 +257,7 @@ int main(int argc, char** argv) {
         for (i=0; i<strlen(token); i++) {
           if (token[i] == '.') ram[REG_R+1] = 0x1a;
             else ram[REG_R+1] = token[i] - '0' + 0x10;
-          Exec(0x100a);
+          Exec(71);
           }
         }
       else if (token[0] == '"') {
@@ -327,7 +327,7 @@ int main(int argc, char** argv) {
                 }
               }
             if (FlagSet(52)) ProgramStep(NULL);
-              else Exec(0x100a);
+              else Exec(71);
             }
           }
         }
