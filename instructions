@@ -28,8 +28,8 @@
 1A  .
 1B  EEX
 1C  CHS
-1D  GTO"      (partial)
-1E
+1D  GTO"
+1E  XEQ"      (partial, works in direct mode)
 1F
 
 20  RCL 00

@@ -239,9 +239,16 @@ int main(int argc, char** argv) {
       addr = (ram[REG_B+1] << 8) | ram[REG_B+0];
       addr = FromPtr(addr) - 1;
       addr = Exec(addr);
-      addr = ToPtr(addr + 1);
-      ram[REG_B+1] = (addr >> 8) & 0xff;
-      ram[REG_B+0] = addr & 0xff;
+      if (addr != 0) {
+        addr = ToPtr(addr + 1);
+        ram[REG_B+1] = (addr >> 8) & 0xff;
+        ram[REG_B+0] = addr & 0xff;
+        }
+      else {
+        running = 0;
+        ram[REG_E+0] = 0xff;
+        ram[REG_E+1] |= 0x0f;
+        }
       }
     else {
       printf("\n[[%s]]\n",Display(screen));

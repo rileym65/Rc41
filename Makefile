@@ -43,6 +43,7 @@ OBJS= \
 	fs.o \
 	fsqc.o \
 	gto2.o \
+	gtoalpha.o \
 	gotoline.o \
 	gtoxeq.o \
 	hms.o \

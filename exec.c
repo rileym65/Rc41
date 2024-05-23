@@ -98,6 +98,10 @@ int Exec(int addr) {
     case 0x1c:                                             // CHS
          AddNumber(12);
          break;
+    case 0x1d:                                             // GTO"
+         addr = GtoAlpha(addr);
+         break;
+         
 
     case 0x20:                                             // RCL 00
          a = Rcl(0);

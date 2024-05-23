@@ -126,6 +126,7 @@ extern int    Fs(byte n);
 extern int    FsQc(byte n);
 extern void   GetHms(NUMBER a, int* h, int* m, int *s, int *f);
 extern int    Gto2(int address);
+extern int    GtoAlpha(int address);
 extern void   GotoLine(int line);
 extern int    GtoXeq(int address);
 extern NUMBER Hms(NUMBER a);
