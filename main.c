@@ -89,6 +89,9 @@ printf("non-programmable\n");
           ram[REG_B+0] = n & 0xff;
           ram[REG_E+1] |= 0x0f;
           ram[REG_E+0] = 0xff;
+          if (base == 0xe0) {
+            running = -1;
+            }
           }
         }
       ram[REG_R+1] = 0x00;
@@ -142,7 +145,6 @@ char *InputLbl(char* line) {
       ram[REG_R+0] = 0;
       }
     else {
-printf("2 byte label\n");
       ram[REG_R+1] = 0xcf;
       ram[REG_R+0] = n & 0x7f;
       }
@@ -202,6 +204,7 @@ char *InputSto(char* line) {
   }
 
 int main(int argc, char** argv) {
+  int   addr;
   int   i;
   int   j;
   char  buffer[1024];
@@ -232,104 +235,122 @@ int main(int argc, char** argv) {
   else Message("MEMORY LOST");
 
   while (on) {
-    printf("\n[[%s]]\n",Display(screen));
-    if (debug) ShowStatRegs(0);
-    ClearFlag(50);
-    if (FlagSet(52)) printf("PRGM");
-    printf(">");
-    fgets(buffer, 1023, stdin);
-    while (strlen(buffer) > 0 && buffer[strlen(buffer)-1] < ' ')
-      buffer[strlen(buffer)-1] = 0;
-    pchar = buffer;
-    while (*pchar == ' ') pchar++;
-    if (*pchar == '\\') {
-      Debug(pchar);
-      *pchar = 0;
+    if (running) {
+      addr = (ram[REG_B+1] << 8) | ram[REG_B+0];
+      addr = FromPtr(addr) - 1;
+      addr = Exec(addr);
+      addr = ToPtr(addr + 1);
+      ram[REG_B+1] = (addr >> 8) & 0xff;
+      ram[REG_B+0] = addr & 0xff;
       }
-    while (*pchar != 0) {
-      pchar = NextToken(pchar, token);
-      isNumber = -1;
-      for (i=0; i<strlen(token); i++)
-        if (token[i] != '.' && (token[i] < '0' || token[i] > '9')) isNumber = 0;
-      if (isNumber) {
-        if (FlagSet(52)) {
-          SetFlag(22);
-          ProgramStep(token);
-          }
-        for (i=0; i<strlen(token); i++) {
-          if (token[i] == '.') ram[REG_R+1] = 0x1a;
-            else ram[REG_R+1] = token[i] - '0' + 0x10;
-          Exec(71);
-          }
+    else {
+      printf("\n[[%s]]\n",Display(screen));
+      if (debug) ShowStatRegs(0);
+      ClearFlag(50);
+      if (FlagSet(52)) printf("PRGM");
+      printf(">");
+      fgets(buffer, 1023, stdin);
+      while (strlen(buffer) > 0 && buffer[strlen(buffer)-1] < ' ')
+        buffer[strlen(buffer)-1] = 0;
+      pchar = buffer;
+      while (*pchar == ' ') pchar++;
+      if (*pchar == '\\') {
+        Debug(pchar);
+        *pchar = 0;
         }
-      else if (token[0] == '"') {
-        if (FlagSet(52)) {
-          ram[REG_R+1] = 0xf0;
-          ProgramStep(token);
-          }
-        else {
-          i = 1;
-          if (token[i] != '|') {
-            for (j=REG_M; j<=REG_P+2; j++) ram[j] = 0;
-            } else i++;
-          while (token[i] != '"' && token[i] != 0) {
-            for (j=REG_P+2; j>REG_M; j--)
-              ram[j] = ram[j-1];
-            ram[REG_M] = token[i++];
-            if (ram[REG_M] > 'e' && ram[REG_M] <= 'z')
-              ram[REG_M] -= 32;
+      while (*pchar != 0) {
+        pchar = NextToken(pchar, token);
+        isNumber = -1;
+        for (i=0; i<strlen(token); i++)
+          if (token[i] != '.' && (token[i] < '0' || token[i] > '9')) isNumber = 0;
+        if (isNumber) {
+          if (FlagSet(52)) {
+            SetFlag(22);
+            ProgramStep(token);
+            }
+          for (i=0; i<strlen(token); i++) {
+            if (token[i] == '.') ram[REG_R+1] = 0x1a;
+              else ram[REG_R+1] = token[i] - '0' + 0x10;
+            Exec(71);
             }
           }
-
-
-//        i = 1;
-//        ram[REG_R+1] = 0xf0;
-//        while (token[i] != '"' && token[i] != 0) {
-//          ram[REG_R+1]++;
-//          ram[REG_R+1-i] = token[i];
-//          if (ram[REG_R+1-i] > 'e' &&
-//              ram[REG_R+1-i] <= 'z') ram[REG_R+1-i] -= 32;
-//          i++;
-//          }
-//        Exec(0x100a);
-        }
-      else {
-        i = 0;
-        if (strcasecmp(token,"PRGM") == 0) {
-          if (FlagSet(52)) ClearFlag(52);
-            else SetFlag(52);
-          }
-        else if (strcasecmp(token,"SST") == 0) {
-          Sst();
-          }
-        else if (strcasecmp(token,"BST") == 0) {
-          Bst();
-          }
-        else if (strcasecmp(token,"CAT") == 0) {
-          pchar = NextToken(pchar, token);
-          Cat(token);
-          }
-        else {
-          while (catalog[i].flags != 0xff && strcasecmp(catalog[i].name, token) != 0) {
-            i++;
+        else if (token[0] == '"') {
+          if (FlagSet(52)) {
+            ram[REG_R+1] = 0xf0;
+            ProgramStep(token);
             }
-          if (catalog[i].flags == 0xff) Message("NONEXISTENT");
           else {
-            if (catalog[i].cmd == 0x20) pchar = InputRcl(pchar);
-            else if (catalog[i].cmd == 0x30) pchar = InputSto(pchar);
-            else if (catalog[i].cmd == 0xb1) pchar = InputGtoXeq(pchar, 0xd0);
-            else if (catalog[i].cmd == 0x1e) pchar = InputGtoXeq(pchar, 0xe0);
-            else if (catalog[i].cmd == 0x01) pchar = InputLbl(pchar);
-            else if (catalog[i].cmd == 0xc0) pchar = InputEnd(pchar);
-            else {
-              ram[REG_R+1] = catalog[i].cmd;
-              if (catalog[i].flags & 0x3) {
-                pchar = PostFix(catalog[i].flags, pchar, &b);
-                ram[REG_R+0] = b;
-                }
+            i = 1;
+            if (token[i] != '|') {
+              for (j=REG_M; j<=REG_P+2; j++) ram[j] = 0;
+              } else i++;
+            while (token[i] != '"' && token[i] != 0) {
+              for (j=REG_P+2; j>REG_M; j--)
+                ram[j] = ram[j-1];
+              ram[REG_M] = token[i++];
+              if (ram[REG_M] > 'e' && ram[REG_M] <= 'z')
+                ram[REG_M] -= 32;
               }
-            if (FlagSet(52)) ProgramStep(NULL);
-              else Exec(71);
+            }
+  
+  
+  //        i = 1;
+  //        ram[REG_R+1] = 0xf0;
+  //        while (token[i] != '"' && token[i] != 0) {
+  //          ram[REG_R+1]++;
+  //          ram[REG_R+1-i] = token[i];
+  //          if (ram[REG_R+1-i] > 'e' &&
+  //              ram[REG_R+1-i] <= 'z') ram[REG_R+1-i] -= 32;
+  //          i++;
+  //          }
+  //        Exec(0x100a);
+          }
+        else {
+          i = 0;
+          if (strcasecmp(token,"PRGM") == 0) {
+            if (FlagSet(52)) ClearFlag(52);
+              else SetFlag(52);
+            }
+          else if (strcasecmp(token,"SST") == 0) {
+            Sst();
+            }
+          else if (strcasecmp(token,"BST") == 0) {
+            Bst();
+            }
+          else if (strcasecmp(token,"CAT") == 0) {
+            pchar = NextToken(pchar, token);
+            Cat(token);
+            }
+          else if (strcasecmp(token,"RS") == 0) {
+            if (FlagSet(22)) {
+              StoreNumber(Normalize(RecallNumber(R_X)), R_X);
+              ram[LIFT] = 'E';
+              ClearFlag(22);
+              }
+            running = -1;
+            }
+          else {
+            while (catalog[i].flags != 0xff && strcasecmp(catalog[i].name, token) != 0) {
+              i++;
+              }
+            if (catalog[i].flags == 0xff) Message("NONEXISTENT");
+            else {
+              if (catalog[i].cmd == 0x20) pchar = InputRcl(pchar);
+              else if (catalog[i].cmd == 0x30) pchar = InputSto(pchar);
+              else if (catalog[i].cmd == 0xb1) pchar = InputGtoXeq(pchar, 0xd0);
+              else if (catalog[i].cmd == 0x1e) pchar = InputGtoXeq(pchar, 0xe0);
+              else if (catalog[i].cmd == 0x01) pchar = InputLbl(pchar);
+              else if (catalog[i].cmd == 0xc0) pchar = InputEnd(pchar);
+              else {
+                ram[REG_R+1] = catalog[i].cmd;
+                if (catalog[i].flags & 0x3) {
+                  pchar = PostFix(catalog[i].flags, pchar, &b);
+                  ram[REG_R+0] = b;
+                  }
+                }
+              if (FlagSet(52)) ProgramStep(NULL);
+                else Exec(71);
+              }
             }
           }
         }

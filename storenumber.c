@@ -3,7 +3,6 @@
 void StoreNumber(NUMBER n, int reg) {
   int i;
   if (reg == R_X && ram[LIFT] == 'E') {
-printf("Stack lift\n");
     for (i=0; i<21; i++) ram[i] = ram[i+7];
     }
   reg *= 7;

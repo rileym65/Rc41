@@ -9,7 +9,6 @@ NUMBER Hr(NUMBER a) {
   d /= 3600.0;
   d += h;
   sprintf(tmp,"%.12e\n",d);
-printf("<<%s>>\n",tmp);
   a = AtoN(tmp);
   return a;
   }

@@ -35,11 +35,15 @@ void Sst() {
     }
   else {
     SetFlag(51);
+    ram[REG_E+1] |= 0x0f;
+    ram[REG_E+0] = 0xff;
+    if (FlagSet(22)) {
+      StoreNumber(Normalize(RecallNumber(R_X)), R_X);
+      ClearFlag(22);
+      }
     addr = (ram[REG_B+1] << 8) | ram[REG_B+0];
     addr = FromPtr(addr) - 1;
-printf("exec [%04x]: %02x %02x %02x\n",addr,ram[addr],ram[addr-1],ram[addr-2]);
     addr = Exec(addr);
-printf("exec [%04x]: %02x %02x %02x\n",addr,ram[addr],ram[addr-1],ram[addr-2]);
     addr = ToPtr(addr + 1);
     ram[REG_B+1] = (addr >> 8) & 0xff;
     ram[REG_B+0] = addr & 0xff;

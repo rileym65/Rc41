@@ -8,11 +8,13 @@ int Exec(int addr) {
   int  flag;
   int  i;
   int  j;
+  int  oaddr;
   byte b2;
   double d;
   double x;
   double y;
   char n[32];
+  oaddr = addr;
   cmd = 0;
   while (cmd == 0) cmd = ram[addr--];
   if (cmd == 0x54 && FlagSet(22)) cmd = 0x1c;
@@ -327,6 +329,7 @@ int Exec(int addr) {
          ram[PENDING] = 'D';
          break;
     case 0x49:                                             // HMS+
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          b = RecallNumber(R_Y);
          StoreNumber(a, R_L);
@@ -338,6 +341,7 @@ int Exec(int addr) {
          StoreNumber(a,R_Z);
          break;
     case 0x4a:                                             // HMS-
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          b = RecallNumber(R_Y);
          StoreNumber(a, R_L);
@@ -708,12 +712,14 @@ int Exec(int addr) {
          StoreNumber(a, R_X);
          break;
     case 0x6c:                                             // HMS
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          StoreNumber(a, R_L);
          a = Hms(a);
          StoreNumber(a, R_X);
          break;
     case 0x6d:                                             // HR
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          StoreNumber(a, R_L);
          a = Hr(a);
@@ -873,6 +879,8 @@ int Exec(int addr) {
          break;
     case 0x84:                                             // STOP
          running = 0;
+         ram[REG_E+1] |= 0x0f;
+         ram[REG_E+0] = 0xff;
          break;
     case 0x85:                                             // RTN
          Rtn();
@@ -1063,13 +1071,17 @@ int Exec(int addr) {
     case 0xcd:
          addr--;
          b2 = ram[addr];
-printf("3rd global: %02x\n",b2);
          if (b2 >= 0xf0) {                                 // Label
            addr -= (b2 & 0xf);
+           addr--;
            }
          else {                                            // End
            running = 0;
+           addr = oaddr;
+           ram[REG_E+1] |= 0x0f;
+           ram[REG_E+0] = 0xff;
            }
+         break;
     case 0xce:                                             // X<>
          b2 = ram[addr--];
          a = RecallNumber(R_X);
@@ -1098,6 +1110,44 @@ printf("3rd global: %02x\n",b2);
     case 0xde:                                             // GTO
     case 0xdf:                                             // GTO
          addr = GtoXeq(addr+1);
+         if (addr == 0) {
+           running = 0;
+           addr = oaddr;
+           }
+         break;
+
+    case 0xe0:                                             // XEQ
+    case 0xe1:                                             // XEQ
+    case 0xe2:                                             // XEQ
+    case 0xe3:                                             // XEQ
+    case 0xe4:                                             // XEQ
+    case 0xe5:                                             // XEQ
+    case 0xe6:                                             // XEQ
+    case 0xe7:                                             // XEQ
+    case 0xe8:                                             // XEQ
+    case 0xe9:                                             // XEQ
+    case 0xea:                                             // XEQ
+    case 0xeb:                                             // XEQ
+    case 0xec:                                             // XEQ
+    case 0xed:                                             // XEQ
+    case 0xee:                                             // XEQ
+    case 0xef:                                             // XEQ
+         addr = GtoXeq(addr+1);
+         if (addr == 0) {
+           running = 0;
+           addr = oaddr;
+           }
+         else {
+           if (running) {
+printf("running\n");
+             }
+           else {
+printf("not running\n");
+             running = -1;
+             for (i=0; i<7; i++) ram[REG_A+i] = 0;
+             for (i=2; i<7; i++) ram[REG_B+i] = 0;
+             }
+           }
          break;
 
     case 0xf0:                                             // TEXT 0
