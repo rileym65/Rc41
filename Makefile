@@ -66,6 +66,7 @@ OBJS= \
 	programbyte.o \
 	programline.o \
 	programstep.o \
+	push.o \
 	rcl.o \
 	recallnumber.o \
 	rnd.o \

@@ -35,6 +35,7 @@ void Sst() {
     }
   else {
     SetFlag(51);
+    running = -1;
     ram[REG_E+1] |= 0x0f;
     ram[REG_E+0] = 0xff;
     if (FlagSet(22)) {
@@ -47,6 +48,7 @@ void Sst() {
     addr = ToPtr(addr + 1);
     ram[REG_B+1] = (addr >> 8) & 0xff;
     ram[REG_B+0] = addr & 0xff;
+    running = 0;
     ClearFlag(51);
     }
   }

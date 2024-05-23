@@ -30,14 +30,25 @@ void Debug(char* cmd) {
   int start;
   int end;
   int base;
+  int addr;
   cmd++;
   if (*cmd == '?') {
     printf("\n");
+    printf("\\bj             - Perform synthetic byte jumper\n");
     printf("\\dreg ddd[-ddd] - Show data register contents\n");
     printf("\\reg hhh[-hhh]  - Show register contents\n");
     printf("\\size           - Show data register count\n");
     printf("\\stack          - Show stack registers\n");
     printf("\\stat           - Show all stat registers\n");
+    }
+  if (strcasecmp(cmd, "bj") == 0 && FlagSet(52) == 0) {
+    addr = (ram[REG_B+1] << 8) | ram[REG_B+0];
+    addr = FromPtr(addr);
+    i = (ram[addr] & 0x0f);
+    addr -= i;
+    addr = ToPtr(addr);
+    ram[REG_B+1] = (addr >> 8) & 0xff;
+    ram[REG_B+0] = addr & 0xff;
     }
   if (strcasecmp(cmd, "stack") == 0) {
     ShowStatRegs(-1);

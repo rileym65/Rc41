@@ -29,7 +29,7 @@
 1B  EEX
 1C  CHS
 1D  GTO"
-1E  XEQ"      (partial, works in direct mode)
+1E  XEQ"
 1F
 
 20  RCL 00
@@ -139,7 +139,7 @@
 82  GRAD
 83  ENTER^
 84  STOP
-85  RTN     (partial)
+85  RTN
 86  BEEP
 87  CLA
 88  ASHF

@@ -101,6 +101,13 @@ int Exec(int addr) {
     case 0x1d:                                             // GTO"
          addr = GtoAlpha(addr);
          break;
+    case 0x1e:                                             // XEQ"
+         addr = GtoAlpha(addr);
+         if (addr != 0) {
+printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
+           Push((oaddr)-isize(oaddr-1));
+           }
+         break;
          
 
     case 0x20:                                             // RCL 00
@@ -887,7 +894,7 @@ int Exec(int addr) {
          ram[REG_E+0] = 0xff;
          break;
     case 0x85:                                             // RTN
-         Rtn();
+         addr =Rtn(addr);
          break;
     case 0x86:                                             // BEEP
          break;
