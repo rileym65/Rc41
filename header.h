@@ -36,6 +36,8 @@ typedef unsigned char byte;
 #define REG_C      91
 #define REG_D      98
 #define REG_E     105
+#define LIFT      112
+#define PENDING   113
 
 #define R_T         0
 #define R_Z         1

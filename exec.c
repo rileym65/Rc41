@@ -20,7 +20,9 @@ int Exec(int addr) {
   if ((cmd < 0x10 || cmd > 0x1c) && FlagSet(22)) {
     StoreNumber(Normalize(RecallNumber(R_X)), R_X);
     ClearFlag(22);
+    ram[LIFT] = 'E';
     }
+  ram[PENDING] =  (FlagSet(22) == 0) ? 'E' : 'D';
   switch (cmd) {
     case 0x00:                                             // NULL
          break;
@@ -226,6 +228,7 @@ int Exec(int addr) {
          break;
 
     case 0x40:                                             // +
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          b = RecallNumber(R_Y);
          c = Add(a,b);
@@ -237,6 +240,7 @@ int Exec(int addr) {
          StoreNumber(a,R_Z);
          break;
     case 0x41:                                             // -
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          b = RecallNumber(R_Y);
          c = Sub(b,a);
@@ -248,6 +252,7 @@ int Exec(int addr) {
          StoreNumber(a,R_Z);
          break;
     case 0x42:                                             // *
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          b = RecallNumber(R_Y);
          c = Mul(a,b);
@@ -259,6 +264,7 @@ int Exec(int addr) {
          StoreNumber(a,R_Z);
          break;
     case 0x43:                                             // /
+         ram[LIFT] = 'D';
          b = RecallNumber(R_X);
          a = RecallNumber(R_Y);
          c = Div(a,b);
@@ -312,11 +318,13 @@ int Exec(int addr) {
          a = RecallNumber(R_X);
          StoreNumber(a, R_L);
          EPlus();
+         ram[PENDING] = 'D';
          break;
     case 0x48:                                             // E-
          a = RecallNumber(R_X);
          StoreNumber(a, R_L);
          EMinus();
+         ram[PENDING] = 'D';
          break;
     case 0x49:                                             // HMS+
          a = RecallNumber(R_X);
@@ -767,6 +775,7 @@ int Exec(int addr) {
          break;
     case 0x77:                                             // CLX
          StoreNumber(ZERO,R_X);
+         ram[PENDING] = 'D';
          break;
     case 0x78:                                             // X=Y?
          a = RecallNumber(R_X);
@@ -859,12 +868,8 @@ int Exec(int addr) {
          SetFlag(42);
          break;
     case 0x83:                                             // ENTER^
-         a = RecallNumber(R_Z);
-         StoreNumber(a, R_T);
-         a = RecallNumber(R_Y);
-         StoreNumber(a, R_Z);
-         a = RecallNumber(R_X);
-         StoreNumber(a, R_Y);
+         for (i=0; i<21; i++) ram[i] = ram[i+7];
+         ram[PENDING] = 'D';
          break;
     case 0x84:                                             // STOP
          running = 0;
@@ -892,6 +897,7 @@ int Exec(int addr) {
          break;
     case 0x8c:                                             // AON
          SetFlag(48);
+         ram[PENDING] = 'N';
          break;
     case 0x8d:                                             // OFF
          on = 0;
@@ -1106,6 +1112,7 @@ printf("3rd global: %02x\n",b2);
          break;
 
     }
+  if (ram[PENDING] != 'N') ram[LIFT] = ram[PENDING];
   return addr;
   }
 

@@ -4,6 +4,7 @@ void AddNumber(char n) {
   int i;
   int t;
   NUMBER x;
+  ram[PENDING] = 'D';
   if (FlagSet(22) == 0) {
     dp = 0;
     SetFlag(22);

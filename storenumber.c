@@ -1,6 +1,11 @@
 #include "header.h"
 
 void StoreNumber(NUMBER n, int reg) {
+  int i;
+  if (reg == R_X && ram[LIFT] == 'E') {
+printf("Stack lift\n");
+    for (i=0; i<21; i++) ram[i] = ram[i+7];
+    }
   reg *= 7;
   ram[reg+6] = (n.sign << 4) | (n.mantissa[0] & 0xf);
   ram[reg+5] = (n.mantissa[1] <<4) | (n.mantissa[2] & 0xf);
