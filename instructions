@@ -28,7 +28,7 @@
 1A  .
 1B  EEX
 1C  CHS
-1D
+1D  GTO"      (partial)
 1E
 1F
 
@@ -219,22 +219,22 @@ CD  GLOBAL
 CE  X<>
 CF  LBL
 
-D0
-D1
-D2
-D3
-D4
-D5
-D6
-D7
-D8
-D9
-DA
-DB
-DC
-DD
-DE
-DF
+D0  GTO
+D1  GTO
+D2  GTO
+D3  GTO
+D4  GTO
+D5  GTO
+D6  GTO
+D7  GTO
+D8  GTO
+D9  GTO
+DA  GTO
+DB  GTO
+DC  GTO
+DD  GTO
+DE  GTO
+DF  GTO
 
 E0
 E1

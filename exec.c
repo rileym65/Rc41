@@ -1081,6 +1081,25 @@ printf("3rd global: %02x\n",b2);
          addr--;
          break;
 
+    case 0xd0:                                             // GTO
+    case 0xd1:                                             // GTO
+    case 0xd2:                                             // GTO
+    case 0xd3:                                             // GTO
+    case 0xd4:                                             // GTO
+    case 0xd5:                                             // GTO
+    case 0xd6:                                             // GTO
+    case 0xd7:                                             // GTO
+    case 0xd8:                                             // GTO
+    case 0xd9:                                             // GTO
+    case 0xda:                                             // GTO
+    case 0xdb:                                             // GTO
+    case 0xdc:                                             // GTO
+    case 0xdd:                                             // GTO
+    case 0xde:                                             // GTO
+    case 0xdf:                                             // GTO
+         addr = GtoXeq(addr+1);
+         break;
+
     case 0xf0:                                             // TEXT 0
          for (i=REG_M; i<=REG_P+2; i++)
            ram[i] = 0;

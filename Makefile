@@ -42,8 +42,9 @@ OBJS= \
 	fromptr.o \
 	fs.o \
 	fsqc.o \
-	gotoline.o \
 	gto2.o \
+	gotoline.o \
+	gtoxeq.o \
 	hms.o \
 	hmsminus.o \
 	hmsplus.o \

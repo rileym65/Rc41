@@ -136,7 +136,7 @@ char* ProgramLine(char* buffer) {
         else if (ram[adr-2] >= 123 && ram[adr-2] <= 127)
           sprintf(tmp, "%s %c", reverse[b].name, ram[adr-2] - 123 + 'a');
         else
-          sprintf(tmp, "%s %02d", reverse[b].name, ram[adr-2]);
+          sprintf(tmp, "%s %02d", reverse[b].name, ram[adr-2] & 0x7f);
         strcat(buffer, tmp);
         }
       else if ((reverse[b].size & 0xf0) == 0x10) {
