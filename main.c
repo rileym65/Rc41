@@ -349,7 +349,7 @@ int main(int argc, char** argv) {
                   }
                 }
               if (FlagSet(52)) ProgramStep(NULL);
-                else Exec(71);
+                else if (ram[71] != 0) Exec(71);
               }
             }
           }
