@@ -111,6 +111,7 @@ void ProgramStep(char* line) {
       ProgramByte(0x00);
       i = 5;
       while (line[i] != 0 && line[i] != '"') {
+        if (line[i] > 'e' && line[i] <= 'z') line[i] -= 32;
         ProgramByte(line[i]);
         ram[start-3]++;
         i++;
@@ -121,6 +122,7 @@ void ProgramStep(char* line) {
       ProgramByte(0xf0);
       i = 5;
       while (line[i] != 0 && line[i] != '"') {
+        if (line[i] > 'e' && line[i] <= 'z') line[i] -= 32;
         ProgramByte(line[i]);
         ram[start-2]++;
         i++;

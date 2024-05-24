@@ -20,6 +20,7 @@ OBJS= \
 	clrg.o \
 	debug.o \
 	dec.o \
+	del.o \
 	display.o \
 	div.o \
 	dse.o \
@@ -63,6 +64,7 @@ OBJS= \
 	normalize.o \
 	ntoa.o \
 	oct.o \
+	pack.o \
 	programbyte.o \
 	programline.o \
 	programstep.o \

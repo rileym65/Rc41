@@ -328,6 +328,13 @@ int main(int argc, char** argv) {
             pchar = NextToken(pchar, token);
             Cat(token);
             }
+          else if (strcasecmp(token,"DEL") == 0) {
+            pchar = NextToken(pchar, token);
+            Del(token);
+            }
+          else if (strcasecmp(token,"PACK") == 0) {
+            Pack();
+            }
           else if (strcasecmp(token,"RS") == 0) {
             if (FlagSet(22)) {
               StoreNumber(Normalize(RecallNumber(R_X)), R_X);

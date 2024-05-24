@@ -273,6 +273,8 @@ FF  Text 15
 Non-Programmable
 BST
 CAT n
+DEL nnn
 GTO .nnn
+PACK
 SST
 
