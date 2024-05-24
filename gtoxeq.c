@@ -14,6 +14,7 @@ int GtoXeq(int address) {
     lbl = ram[address-2] & 0x7f;
   else
     lbl = ((ram[REG_E+2] & 0x0f) << 4) | ((ram[REG_E+1] >> 4) & 0x0f);
+printf("Searching for %02x\n",lbl);
   address--;
   addr = (ram[REG_B+1] << 8) | ram[REG_B+0];
   addr = FromPtr(addr) - 1;
@@ -33,7 +34,8 @@ int GtoXeq(int address) {
   last = addr;
   flag = -1;
   while (flag) {
-    if ((ram[addr] == 0xcf) && ((ram[addr-1] & 0x7f) == lbl)) flag = 0;
+    if (lbl < 15 && ((ram[addr-1] & 0x7f) == lbl+1)) flag = 0;
+    else if (lbl > 14 && (ram[addr] == 0xcf) && ((ram[addr-1] & 0x7f) == lbl)) flag = 0;
     else if (ram[addr] >= 0xc0 && ram[addr] <= 0xcd &&
              ram[addr-2] < 0xf0) {
       addr = FindStart(addr) + 1;
@@ -66,7 +68,8 @@ int GtoXeq(int address) {
       ram[last-1] = ofs & 0xff;
       }
     }
-  ret = addr-1;
+  if (lbl < 15) ret = addr - 2;
+    else ret = addr-1;
   addr = ToPtr(addr);
   ram[REG_B+1] = (addr >> 8);
   ram[REG_B+0] = addr & 0xff;

@@ -251,7 +251,7 @@ int main(int argc, char** argv) {
         }
       }
     else {
-      printf("\n[[%s]]\n",Display(screen));
+      printf("\n[%s]\n",Display(screen));
       if (debug) ShowStatRegs(0);
       ClearFlag(50);
       if (FlagSet(52)) printf("PRGM");

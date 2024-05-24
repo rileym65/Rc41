@@ -123,11 +123,11 @@ char* ProgramLine(char* buffer) {
         if (tmp[0] == ' ') strcat(buffer, tmp+1);
           else strcat(buffer, tmp);
         }
-      else if ((reverse[b].size & 0x0f) == 1) {
+      else if (b < 0xf0 && (reverse[b].size & 0x0f) == 1) {
         sprintf(tmp, "%s", reverse[b].name);
         strcat(buffer, tmp);
         }
-      else if ((reverse[b].size & 0x0f) == 2) {
+      else if (b < 0xf0 && (reverse[b].size & 0x0f) == 2) {
         Postfix(b, adr, buffer);
         }
       else if ((reverse[b].size & 0xf0) == 0x60) {

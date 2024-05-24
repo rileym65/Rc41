@@ -1151,6 +1151,8 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
          else {
            if (running) {
 printf("running\n");
+printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
+             Push((oaddr-1)-isize(oaddr-1));
              }
            else {
 printf("not running\n");

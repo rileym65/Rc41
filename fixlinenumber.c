@@ -8,7 +8,7 @@ void FixLineNumber() {
   addr = FromPtr(addr);
   addr--;
   ladr = FindStart(addr);
-  while (ladr != addr) {
+  while (ladr > addr) {
     ladr -= isize(ladr);
     if (ram[ladr] != 0) lineNumber++;
     }
