@@ -11,6 +11,7 @@ int Isg(byte post) {
   NUMBER y;
   char   tmp[16];
   x = Rcl(post);
+ShowNumber(x);
   e = x.exponent[0] * 10 + x.exponent[1];
   if (x.esign) e = -e;
   count = 0;
@@ -23,8 +24,11 @@ int Isg(byte post) {
     e--;
     }
   for (i=0; i<3; i++) {
-    final = (final * 10);
-    if (p < 10) final += x.mantissa[p++];
+    if (e >= -1) {
+      final = (final * 10);
+      if (p < 10) final += x.mantissa[p++];
+      }
+    e++;
     }
   for (i=0; i<2; i++) {
     inc = (inc * 10);
@@ -41,6 +45,7 @@ printf("-->%s\n",tmp);
   y = AtoN(tmp);
   if (count < 0) y.sign = 9;
   Sto(y, post);
+if (count > final) printf("Skip\n");
   if (count > final) return -1;
   return 0;
   }

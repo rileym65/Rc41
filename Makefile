@@ -80,6 +80,8 @@ OBJS= \
 	sf.o \
 	shownumber.o \
 	showstatregs.o \
+	size.o \
+	skip.o \
 	sst.o \
 	sto.o \
 	storenumber.o \

@@ -276,5 +276,6 @@ CAT n
 DEL nnn
 GTO .nnn
 PACK
+SIZE
 SST
 

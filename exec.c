@@ -292,24 +292,24 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
          a = RecallNumber(R_X);
          b = RecallNumber(R_Y);
          c = Sub(a, b);
-         if (reg < 0x0c0) {
+         if (addr < 0x0c0) {
            if (c.sign != 0) Message("YES");
              else Message("NO");
            }
          else {
-           if (c.sign == 0) addr -= isize(addr);
+           if (c.sign == 0) addr = Skip(addr);
            }
          break;
     case 0x45:                                             // X>Y?
          b = RecallNumber(R_X);
          a = RecallNumber(R_Y);
          c = Sub(a, b);
-         if (reg < 0x0c0) {
+         if (addr < 0x0c0) {
            if (c.sign != 0) Message("YES");
              else Message("NO");
            }
          else {
-           if (c.sign == 0) addr -= isize(addr);
+           if (c.sign == 0) addr = Skip(addr);
            }
          break;
     case 0x46:                                             // X<=Y?
@@ -319,12 +319,12 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
          flag = 0;
          if (c.sign != 0) flag = -1;
          if (IsZero(c)) flag = -1;
-         if (reg < 0x0c0) {
+         if (addr < 0x0c0) {
            if (flag) Message("YES");
              else Message("NO");
            }
          else {
-           if (flag == 0) addr -= isize(addr);
+           if (flag == 0) addr = Skip(addr);
            }
          break;
     case 0x47:                                             // E+
@@ -639,12 +639,12 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
          flag = 0;
          for (i=0; i<10; i++)
            if (a.mantissa[i] != 0) flag = -1;
-         if (reg < 0x0c0) {
+         if (addr < 0x0c0) {
            if (flag) Message("YES");
              else Message("NO");
            }
          else {
-           if (flag == 0) addr -= isize(addr);
+           if (flag == 0) addr = Skip(addr);
            }
          break;
     case 0x64:                                             // X>0?
@@ -653,12 +653,12 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
          for (i=0; i<10; i++)
            if (a.mantissa[i] != 0) flag = -1;
          if (a.sign) flag = 0;
-         if (reg < 0x0c0) {
+         if (addr < 0x0c0) {
            if (flag) Message("YES");
              else Message("NO");
            }
          else {
-           if (flag == 0) addr -= isize(addr);
+           if (flag == 0) addr = Skip(addr);
            }
          break;
     case 0x65:                                             // LN1+X
@@ -677,12 +677,12 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
          for (i=0; i<10; i++)
            if (a.mantissa[i] != 0) flag = -1;
          if (a.sign == 0) flag = 0;
-         if (reg < 0x0c0) {
+         if (addr < 0x0c0) {
            if (flag) Message("YES");
              else Message("NO");
            }
          else {
-           if (flag == 0) addr -= isize(addr);
+           if (flag == 0) addr = Skip(addr);
            }
          break;
     case 0x67:                                             // X=0?
@@ -690,12 +690,12 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
          flag = -1;
          for (i=0; i<10; i++)
            if (a.mantissa[i] != 0) flag = 0;
-         if (reg < 0x0c0) {
+         if (addr < 0x0c0) {
            if (flag) Message("YES");
              else Message("NO");
            }
          else {
-           if (flag == 0) addr -= isize(addr);
+           if (flag == 0) addr = Skip(addr);
            }
          break;
     case 0x68:                                             // INT
@@ -804,12 +804,12 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
            if (a.mantissa[i] != b.mantissa[i]) flag = 0;
          for (i=0; i<2; i++)
            if (a.exponent[i] != b.exponent[i]) flag = 0;
-         if (reg < 0x0c0) {
+         if (addr < 0x0c0) {
            if (flag) Message("YES");
              else Message("NO");
            }
          else {
-           if (flag == 0) addr -= isize(addr);
+           if (flag == 0) addr = Skip(addr);
            }
          break;
     case 0x79:                                             // X<>Y?
@@ -822,12 +822,12 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
            if (a.mantissa[i] != b.mantissa[i]) flag = -1;
          for (i=0; i<2; i++)
            if (a.exponent[i] != b.exponent[i]) flag = -1;
-         if (reg < 0x0c0) {
+         if (addr < 0x0c0) {
            if (flag) Message("YES");
              else Message("NO");
            }
          else {
-           if (flag == 0) addr -= isize(addr);
+           if (flag == 0) addr = Skip(addr);
            }
          break;
     case 0x7a:                                             // SIGN
@@ -850,12 +850,12 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
            for (i=0; i<10; i++)
              if (a.mantissa[i] != 0) flag = 0;
            }
-         if (reg < 0x0c0) {
+         if (addr < 0x0c0) {
            if (flag) Message("YES");
              else Message("NO");
            }
          else {
-           if (flag == 0) addr -= isize(addr);
+           if (flag == 0) addr = Skip(addr);
            }
          break;
     case 0x7c:                                             // MEAN
@@ -966,14 +966,14 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
          break;
     case 0x96:                                             // ISG
          i = Isg(ram[addr--]);
-         if (reg >= 0x0c0) {
-           if (i != 0) addr -= isize(addr);
+         if (addr >= 0x0c0) {
+           if (i != 0) addr = Skip(addr);
            }
          break;
     case 0x97:                                             // DSE
          i = Dse(ram[addr--]);
-         if (reg >= 0x0c0) {
-           if (i != 0) addr -= isize(addr);
+         if (addr >= 0x0c0) {
+           if (i != 0) addr = Skip(addr);
            }
          break;
     case 0x98:                                             // VIEW

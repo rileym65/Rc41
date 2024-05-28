@@ -332,6 +332,10 @@ int main(int argc, char** argv) {
             pchar = NextToken(pchar, token);
             Del(token);
             }
+          else if (strcasecmp(token,"SIZE") == 0) {
+            pchar = NextToken(pchar, token);
+            Size(token);
+            }
           else if (strcasecmp(token,"PACK") == 0) {
             Pack();
             }

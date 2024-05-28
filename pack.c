@@ -39,7 +39,12 @@ printf("%02x %02x %02x - %02x %02x %02x\n",ram[next],ram[next-1],ram[next-2],
     if (ram[cur-2] < 0xf0) {
 printf("END\n");
       if ((ram[cur-2] & 0x0f) == 0x0d) pack = -1; else pack = 0;
-if (pack) printf("Needs packing\n");
+      if ((ram[cur-2] & 0xf0) == 0x20) pack = -1;
+      if (pack) {
+        ram[cur-2] &= 0xf0;
+        ram[cur-2] |= 0x09;
+printf("Needs packing\n");
+        }
       }
 
     if (pack) {

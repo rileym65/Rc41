@@ -162,6 +162,8 @@ extern void   SetX(NUMBER n, int l, int s);
 extern void   Sf(byte n);
 extern void   ShowNumber(NUMBER n);
 extern void   ShowStatRegs(int stackOnly);
+extern void   Size(char* token);
+extern int    Skip(int addr);
 extern void   Sst();
 extern void   Sto(NUMBER a,int rreg);
 extern void   StoreNumber(NUMBER n, int reg);

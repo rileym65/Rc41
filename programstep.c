@@ -100,6 +100,7 @@ void ProgramStep(char* line) {
       for (i=0; i<strlen(line); i++) {
         if (line[i] != '"') {
           if (line[i] > 'e' && line[i] <= 'z') ProgramByte(line[i]-32);
+          else if (line[i] == '|') ProgramByte(0x7f);
           else ProgramByte(line[i]);
           ram[start-1]++;
           }
