@@ -104,7 +104,6 @@ int Exec(int addr) {
     case 0x1e:                                             // XEQ"
          addr = GtoAlpha(addr);
          if (addr != 0) {
-printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
            Push((oaddr)-isize(oaddr-1));
            }
          break;
@@ -454,11 +453,6 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
          a = RecallNumber(R_X);
          StoreNumber(a, R_L);
          a = Ln(a);
-//         NtoA(a, n);
-//         d = atof(n);
-//         d = log(d);
-//         sprintf(n,"%.12e",d);
-//         a = AtoN(n);
          StoreNumber(a, R_X);
          break;
     case 0x51:                                             // X^2
@@ -538,11 +532,6 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
          if (FlagSet(43) == 0 && FlagSet(42) == 0) a = Mul(a, DTOR);
          else if (FlagSet(42)) a = Mul(a, GTOR);
          a = Tan(a);
-//         NtoA(a, n);
-//         d = atof(n);
-//         d = tan(d);
-//         sprintf(n,"%.12e",d);
-//         a = AtoN(n);
          StoreNumber(a, R_X);
          break;
     case 0x5c:                                             // ASIN
@@ -629,11 +618,6 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
          a = RecallNumber(R_X);
          StoreNumber(a, R_L);
          a = Ln1PlusX(a);
-//         NtoA(a, n);
-//         d = atof(n);
-//         d = log1p(d);
-//         sprintf(n,"%.12e",d);
-//         a = AtoN(n);
          StoreNumber(a, R_X);
          break;
     case 0x66:                                             // X<0?
@@ -1115,12 +1099,9 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
            }
          else {
            if (running) {
-printf("running\n");
-printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
              Push((oaddr-1)-isize(oaddr-1));
              }
            else {
-printf("not running\n");
              running = -1;
              for (i=0; i<7; i++) ram[REG_A+i] = 0;
              for (i=2; i<7; i++) ram[REG_B+i] = 0;

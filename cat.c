@@ -23,6 +23,9 @@ void Cat(char* token) {
     end = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
     printf(".END. REG %d\n",end - 0x0c0);
     }
+  if (strcmp(token, "2") == 0) {
+    printf("PRP\n");
+    }
   if (strcmp(token, "3") == 0) {
     i = 12;
     while (catalog[i].flags != 0xff) {

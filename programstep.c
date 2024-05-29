@@ -56,7 +56,7 @@ void ProgramStep(char* line) {
   int dist;
   int d;
   byteCount = 0;
-  if (ram[REG_R+1] == 0x00) return;
+  if (ram[REG_R+1] == 0x00 && line == NULL) return;
   addr = (ram[REG_B+1] << 8) | ram[REG_B+0];
   reg = (addr & 0xfff);
   byt = (addr >> 12) & 0xf;
@@ -67,19 +67,13 @@ void ProgramStep(char* line) {
     }
   else {
     adr--;
-// printf("%02x %02x %02x\n",ram[adr],ram[adr-1],ram[adr-2]);
     while (ram[adr] == 0) adr--;
-// printf("%02x %02x %02x\n",ram[adr],ram[adr-1],ram[adr-2]);
-//    if (((ram[adr] & 0xf0) != 0xc0) || ((ram[adr-2] & 0xf0) == 0xf0)) {
     if (ram[adr] < 0xc0 || ram[adr] > 0xcd || ram[adr-2] >= 0xf0) {
       adr -= isize(adr);
       }
     }
   start = adr+1;
   pend = FindEnd(adr);
-//  pstart = FindStart(pend);
-// printf("End: [[%02x %02x %02x]]\n",ram[pend], ram[pend-1], ram[pend-2]);
-//printf("[[%02x %02x %02x]]\n",ram[pstart], ram[pstart-1], ram[pstart-2]);
   ram[pend-2] |= 0x04;
   reg = adr / 7;
   byt = adr % 7;

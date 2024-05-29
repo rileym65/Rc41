@@ -275,10 +275,12 @@ int main(int argc, char** argv) {
             SetFlag(22);
             ProgramStep(token);
             }
-          for (i=0; i<strlen(token); i++) {
-            if (token[i] == '.') ram[REG_R+1] = 0x1a;
-              else ram[REG_R+1] = token[i] - '0' + 0x10;
-            Exec(71);
+          else {
+            for (i=0; i<strlen(token); i++) {
+              if (token[i] == '.') ram[REG_R+1] = 0x1a;
+                else ram[REG_R+1] = token[i] - '0' + 0x10;
+              Exec(71);
+              }
             }
           }
         else if (token[0] == '"') {
@@ -338,6 +340,10 @@ int main(int argc, char** argv) {
             }
           else if (strcasecmp(token,"PACK") == 0) {
             Pack();
+            }
+          else if (strcasecmp(token,"PRP") == 0) {
+            pchar = NextToken(pchar, token);
+            Prp(token);
             }
           else if (strcasecmp(token,"RS") == 0) {
             if (FlagSet(22)) {

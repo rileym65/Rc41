@@ -79,6 +79,7 @@ OBJS= \
 	programbyte.o \
 	programline.o \
 	programstep.o \
+	prp.o \
 	push.o \
 	rcl.o \
 	recallnumber.o \

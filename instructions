@@ -276,6 +276,7 @@ CAT n
 DEL nnn
 GTO .nnn
 PACK
-SIZE
+PRP "name"
+SIZE nnn
 SST
 
