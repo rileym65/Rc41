@@ -502,21 +502,13 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
          a = RecallNumber(R_X);
          StoreNumber(a, R_L);
          a = Ex(a);
-//         NtoA(a, n);
-//         d = atof(n);
-//         d = pow(M_E,d);
-//         sprintf(n,"%.12e",d);
-//         a = AtoN(n);
          StoreNumber(a, R_X);
          break;
     case 0x56:                                             // LOG
          a = RecallNumber(R_X);
          StoreNumber(a, R_L);
-         NtoA(a, n);
-         d = atof(n);
-         d = log10(d);
-         sprintf(n,"%.12e",d);
-         a = AtoN(n);
+         a = Ln(a);
+         a = Mul(a, LOGE);
          StoreNumber(a, R_X);
          break;
     case 0x57:                                             // 10^X
@@ -534,11 +526,6 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
          StoreNumber(a, R_L);
          a = Ex(a);
          a = Sub(a, ONE);
-//         NtoA(a, n);
-//         d = atof(n);
-//         d = pow(M_E,d);
-//         sprintf(n,"%.12e",d);
-//         a = AtoN(n);
          StoreNumber(a, R_X);
          break;
     case 0x59:                                             // SIN
