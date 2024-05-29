@@ -9,6 +9,7 @@ OBJS= \
 	add.o \
 	addnumber.o \
 	arcl.o \
+	asin.o \
 	asto.o \
 	aton.o \
 	aview.o \

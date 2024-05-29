@@ -560,11 +560,7 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
     case 0x5c:                                             // ASIN
          a = RecallNumber(R_X);
          StoreNumber(a, R_L);
-         NtoA(a, n);
-         d = atof(n);
-         d = asin(d);
-         sprintf(n,"%.12e",d);
-         a = AtoN(n);
+         a = Asin(a);
          if (FlagSet(43) == 0 && FlagSet(42) == 0) a = Mul(a, RTOD);
          else if (FlagSet(42)) a = Mul(a, RTOG);
          StoreNumber(a, R_X);

@@ -99,6 +99,7 @@ LINK int    byteCount;
 extern NUMBER  Add(NUMBER a, NUMBER b);
 extern void    AddNumber(char n);
 extern void    Arcl(int rreg);
+extern NUMBER  Asin(NUMBER a);
 extern void    Asto(int rreg);
 extern NUMBER  AtoN(char* number);
 extern void    Aview();
