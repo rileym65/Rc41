@@ -568,11 +568,7 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
     case 0x5d:                                             // ACOS
          a = RecallNumber(R_X);
          StoreNumber(a, R_L);
-         NtoA(a, n);
-         d = atof(n);
-         d = acos(d);
-         sprintf(n,"%.12e",d);
-         a = AtoN(n);
+         a = Acos(a);
          if (FlagSet(43) == 0 && FlagSet(42) == 0) a = Mul(a, RTOD);
          else if (FlagSet(42)) a = Mul(a, RTOG);
          StoreNumber(a, R_X);

@@ -96,6 +96,7 @@ LINK int    ramClear;
 LINK char   screen[32];
 LINK int    byteCount;
 
+extern NUMBER  Acos(NUMBER a);
 extern NUMBER  Add(NUMBER a, NUMBER b);
 extern void    AddNumber(char n);
 extern void    Arcl(int rreg);

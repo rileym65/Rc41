@@ -6,6 +6,7 @@ LIBDIR=
 LIBS=-lm
 DEFS=
 OBJS= \
+	acos.o \
 	add.o \
 	addnumber.o \
 	arcl.o \
