@@ -12,6 +12,7 @@ OBJS= \
 	arcl.o \
 	asin.o \
 	asto.o \
+	atan.o \
 	aton.o \
 	aview.o \
 	bst.o \
