@@ -86,6 +86,7 @@ LINK NUMBER RTOG;
 LINK NUMBER E;
 LINK NUMBER TEN;
 LINK NUMBER LOGE;
+LINK NUMBER ILOGE;
 LINK int    debug;
 LINK int    dp;
 LINK int    lift;
@@ -95,6 +96,20 @@ LINK char   buffer[32];
 LINK int    ramClear;
 LINK char   screen[32];
 LINK int    byteCount;
+
+#ifdef MAIN
+DNUMBER D_ZERO = { 0, { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 0, { 0,0,0 } };
+DNUMBER D_ONE  = { 0, { 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 0, { 0,0,0 } };
+DNUMBER D_TWO  = { 0, { 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 0, { 0,0,0 } };
+DNUMBER D_PI   = { 0, { 3,1,4,1,5,9,2,6,5,3,5,8,9,7,9,3,2,3,8,4 }, 0, { 0,0,0 } };
+DNUMBER D_PI2  = { 0, { 1,5,7,0,7,9,6,3,2,6,7,9,4,8,9,6,6,1,9,2 }, 0, { 0,0,0 } };
+#else
+extern DNUMBER D_PI;
+extern DNUMBER D_PI2;
+extern DNUMBER D_ZERO;
+extern DNUMBER D_ONE;
+extern DNUMBER D_TWO;
+#endif
 
 extern NUMBER  Acos(NUMBER a);
 extern NUMBER  Add(NUMBER a, NUMBER b);

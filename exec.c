@@ -514,11 +514,8 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
     case 0x57:                                             // 10^X
          a = RecallNumber(R_X);
          StoreNumber(a, R_L);
-         NtoA(a, n);
-         d = atof(n);
-         d = pow(10,d);
-         sprintf(n,"%.12e",d);
-         a = AtoN(n);
+         a = Mul(a, ILOGE);
+         a = Ex(a);
          StoreNumber(a, R_X);
          break;
     case 0x58:                                             // E^X-1

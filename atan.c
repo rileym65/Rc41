@@ -6,9 +6,6 @@ NUMBER Atan(NUMBER a) {
   int     addsub;
   DNUMBER x;
   DNUMBER xsqr;
-  DNUMBER one = { 0, { 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 0, { 0,0,0 } };
-  DNUMBER two = { 0, { 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 0, { 0,0,0 } };
-  DNUMBER pi2 = { 0, { 1,5,7,0,7,9,6,3,2,6,7,9,4,8,9,6,6,1,9,2 }, 0, { 0,0,0 } };
   DNUMBER sum;
   DNUMBER den;
   DNUMBER last;
@@ -17,7 +14,7 @@ NUMBER Atan(NUMBER a) {
   xsqr = D_Mul(x, x);
   addsub = -1;
   if (x.esign != 0) {
-    den = two;
+    den = D_TWO;
     den.mantissa[0] = 3;
     sum = x;
     flag = -1;
@@ -28,23 +25,23 @@ NUMBER Atan(NUMBER a) {
       if (addsub) sum = D_Sub(sum, term);
         else sum = D_Add(sum, term);
       addsub = (addsub) ? 0 : -1;
-      den = D_Mul(den, two);
+      den = D_Mul(den, D_TWO);
       flag = 0;
       for (i=0; i<15; i++)
         if (last.mantissa[i] != sum.mantissa[i]) flag = -1;
       }
     }
   else {
-    sum = pi2;
-    den = one;
+    sum = D_PI2;
+    den = D_ONE;
     while (flag) {
       last = sum;
       den = D_Mul(den, x);
-      term = D_Div(one, den);
+      term = D_Div(D_ONE, den);
       if (addsub) sum = D_Sub(sum, term);
         else sum = D_Add(sum, term);
       addsub = (addsub) ? 0 : -1;
-      den = D_Add(den, two);
+      den = D_Add(den, D_TWO);
       x = D_Mul(x, xsqr);
       flag = 0;
       for (i=0; i<15; i++)
