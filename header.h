@@ -96,6 +96,7 @@ LINK char   buffer[32];
 LINK int    ramClear;
 LINK char   screen[32];
 LINK int    byteCount;
+LINK int    singleStep;
 
 #ifdef MAIN
 DNUMBER D_ZERO = { 0, { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 0, { 0,0,0 } };

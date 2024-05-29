@@ -216,11 +216,13 @@ int main(int argc, char** argv) {
   int   file;
   debug = 0;
   ramClear = 0;
+  singleStep = 0;
   ram[LIFT] = 'D';
   ram[PENDING] = 'D';
   for (i=1; i<argc; i++) {
     if (strcmp(argv[i],"-d") == 0) debug = -1;
     if (strcmp(argv[i],"-rc") == 0) ramClear = -1;
+    if (strcmp(argv[i],"-ss") == 0) { singleStep = -1; debug = -1; }
     }
   Init();
   if (ramClear == 0) {

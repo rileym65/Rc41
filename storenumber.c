@@ -4,6 +4,7 @@ void StoreNumber(NUMBER n, int reg) {
   int i;
   if (reg == R_X && ram[LIFT] == 'E') {
     for (i=0; i<21; i++) ram[i] = ram[i+7];
+    ram[LIFT] = 'D';
     }
   reg *= 7;
   ram[reg+6] = (n.sign << 4) | (n.mantissa[0] & 0xf);

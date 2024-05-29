@@ -9,6 +9,7 @@ int Exec(int addr) {
   int  i;
   int  j;
   int  oaddr;
+  char buffer[64];
   byte b2;
   double d;
   double x;
@@ -18,11 +19,14 @@ int Exec(int addr) {
   cmd = 0;
   while (cmd == 0) cmd = ram[addr--];
   if (cmd == 0x54 && FlagSet(22)) cmd = 0x1c;
-  if (debug) printf("Exec: %02x %02x\n",cmd,ram[addr]);
+  if (debug) {
+    ProgramList(1, addr+1, buffer);
+    printf("-->%s\n",buffer);
+    }
   if ((cmd < 0x10 || cmd > 0x1c) && FlagSet(22)) {
     StoreNumber(Normalize(RecallNumber(R_X)), R_X);
     ClearFlag(22);
-    ram[LIFT] = 'E';
+    ram[PENDING] = 'E';
     }
   ram[PENDING] =  (FlagSet(22) == 0) ? 'E' : 'D';
   switch (cmd) {
@@ -60,46 +64,34 @@ int Exec(int addr) {
          break;
 
     case 0x10:                                             // 0
-         AddNumber(0);
-         break;
     case 0x11:                                             // 1
-         AddNumber(1);
-         break;
     case 0x12:                                             // 2
-         AddNumber(2);
-         break;
     case 0x13:                                             // 3
-         AddNumber(3);
-         break;
     case 0x14:                                             // 4
-         AddNumber(4);
-         break;
     case 0x15:                                             // 5
-         AddNumber(5);
-         break;
     case 0x16:                                             // 6
-         AddNumber(6);
-         break;
     case 0x17:                                             // 7
-         AddNumber(7);
-         break;
     case 0x18:                                             // 8
-         AddNumber(8);
-         break;
     case 0x19:                                             // 9
-         AddNumber(9);
-         break;
     case 0x1a:                                             // .
-         AddNumber(10);
-         break;
     case 0x1b:                                             // EEX
-         AddNumber(11);
-         break;
     case 0x1c:                                             // CHS
-         AddNumber(12);
+         if (running) {
+           addr++;
+           while (ram[addr] >= 0x10 && ram[addr] <= 0x1c) {
+             AddNumber(ram[addr--] - 0x10);
+             }
+           StoreNumber(Normalize(RecallNumber(R_X)), R_X);
+           ClearFlag(22);
+           ram[PENDING] = 'E';
+           }
+         else {
+           AddNumber(cmd - 0x10);
+           }
          break;
     case 0x1d:                                             // GTO"
          addr = GtoAlpha(addr);
+         addr--;
          break;
     case 0x1e:                                             // XEQ"
          addr = GtoAlpha(addr);
@@ -479,6 +471,7 @@ int Exec(int addr) {
          StoreNumber(a,R_Z);
          break;
     case 0x54:                                             // CHS
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          a.sign = (a.sign == 0) ? 9 : 0;
          SetX(a, 0, 0);
@@ -701,6 +694,7 @@ int Exec(int addr) {
          Cle();
          break;
     case 0x71:                                             // X<>Y
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          b = RecallNumber(R_Y);
          StoreNumber(b, R_X);
@@ -716,6 +710,7 @@ int Exec(int addr) {
          StoreNumber(ZERO, R_T);
          break;
     case 0x74:                                             // R^
+         ram[LIFT] = 'D';
          a = RecallNumber(R_T);
          b = RecallNumber(R_Z);
          StoreNumber(b, R_T);
@@ -726,6 +721,7 @@ int Exec(int addr) {
          StoreNumber(a, R_X);
          break;
     case 0x75:                                             // RDN
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          b = RecallNumber(R_Y);
          StoreNumber(b, R_X);
@@ -886,6 +882,7 @@ int Exec(int addr) {
          Sto(a, b2);
          break;
     case 0x92:                                             // ST+
+         ram[LIFT] = 'D';
          b2 = ram[addr--];
          a = RecallNumber(R_X);
          b = Rcl(b2);
@@ -893,6 +890,7 @@ int Exec(int addr) {
          Sto(a, b2);
          break;
     case 0x93:                                             // ST-
+         ram[LIFT] = 'D';
          b2 = ram[addr--];
          b = RecallNumber(R_X);
          a = Rcl(b2);
@@ -900,6 +898,7 @@ int Exec(int addr) {
          Sto(a, b2);
          break;
     case 0x94:                                             // ST*
+         ram[LIFT] = 'D';
          b2 = ram[addr--];
          a = RecallNumber(R_X);
          b = Rcl(b2);
@@ -907,6 +906,7 @@ int Exec(int addr) {
          Sto(a, b2);
          break;
     case 0x95:                                             // ST/
+         ram[LIFT] = 'D';
          b2 = ram[addr--];
          b = RecallNumber(R_X);
          a = Rcl(b2);
@@ -1043,6 +1043,7 @@ int Exec(int addr) {
            }
          break;
     case 0xce:                                             // X<>
+         ram[LIFT] = 'D';
          b2 = ram[addr--];
          a = RecallNumber(R_X);
          b = Rcl(b2);
@@ -1133,14 +1134,21 @@ int Exec(int addr) {
              ram[i] = 0;
            }
          for (i=0; i<(cmd & 0x0f); i++) {
-           for (j=REG_P+2; j>REG_M; j--)
-             ram[j] = ram[j-1];
-           ram[REG_M] = ram[addr--];
+           if (i > 0 || ram[addr] != 0x7f) {
+             for (j=REG_P+2; j>REG_M; j--)
+               ram[j] = ram[j-1];
+             ram[REG_M] = ram[addr--];
+             } else addr--;
            }
          break;
 
     }
   if (ram[PENDING] != 'N') ram[LIFT] = ram[PENDING];
+  if (debug) ShowStatRegs(0);
+  if (singleStep) {
+    printf(":");
+    fgets(buffer,2,stdin);
+    }
   return addr;
   }
 
