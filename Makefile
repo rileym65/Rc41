@@ -94,6 +94,7 @@ OBJS= \
 	size.o \
 	sin.o \
 	skip.o \
+	sqrt.o \
 	sst.o \
 	sto.o \
 	storenumber.o \

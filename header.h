@@ -99,6 +99,7 @@ LINK int    byteCount;
 
 #ifdef MAIN
 DNUMBER D_ZERO = { 0, { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 0, { 0,0,0 } };
+DNUMBER D_HALF = { 0, { 5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 9, { 0,0,1 } };
 DNUMBER D_ONE  = { 0, { 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 0, { 0,0,0 } };
 DNUMBER D_TWO  = { 0, { 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 0, { 0,0,0 } };
 DNUMBER D_PI   = { 0, { 3,1,4,1,5,9,2,6,5,3,5,8,9,7,9,3,2,3,8,4 }, 0, { 0,0,0 } };
@@ -107,6 +108,7 @@ DNUMBER D_PI2  = { 0, { 1,5,7,0,7,9,6,3,2,6,7,9,4,8,9,6,6,1,9,2 }, 0, { 0,0,0 } 
 extern DNUMBER D_PI;
 extern DNUMBER D_PI2;
 extern DNUMBER D_ZERO;
+extern DNUMBER D_HALF;
 extern DNUMBER D_ONE;
 extern DNUMBER D_TWO;
 #endif
@@ -201,6 +203,7 @@ extern void    ShowStatRegs(int stackOnly);
 extern NUMBER  Sin(NUMBER a);
 extern void    Size(char* token);
 extern int     Skip(int addr);
+extern NUMBER  Sqrt(NUMBER a);
 extern void    Sst();
 extern void    Sto(NUMBER a,int rreg);
 extern void    StoreNumber(NUMBER n, int reg);

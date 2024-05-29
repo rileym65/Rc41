@@ -469,12 +469,9 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
          break;
     case 0x52:                                             // SQRT
          a = RecallNumber(R_X);
-         NtoA(a, n);
-         d = atof(n);
-         d = sqrt(d);
-         sprintf(n,"%.12e",d);
-         a = AtoN(n);
-         SetX(a, 1, 0);
+         StoreNumber(a, R_L);
+         a = Sqrt(a);
+         StoreNumber(a, R_X);
          break;
     case 0x53:                                             // Y^X
          a = RecallNumber(R_X);
