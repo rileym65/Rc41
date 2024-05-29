@@ -61,6 +61,8 @@ OBJS= \
 	isg.o \
 	isize.o \
 	iszero.o \
+	ln.o \
+	ln1plusx.o \
 	main.o \
 	mean.o \
 	message.o \

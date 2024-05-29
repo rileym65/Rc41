@@ -152,6 +152,8 @@ extern NUMBER  Integer(NUMBER a);
 extern int     Isg(byte post);
 extern int     isize(int address);
 extern int     IsZero(NUMBER a);
+extern NUMBER  Ln(NUMBER a);
+extern NUMBER  Ln1PlusX(NUMBER a);
 extern void    Mean();
 extern void    Message(char* msg);
 extern NUMBER  Mod(NUMBER x, NUMBER y);
