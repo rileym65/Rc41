@@ -156,6 +156,10 @@ char* ProgramLine(char* buffer) {
         tmp[1] = 0;
         for (i=0; i<(b&0x0f); i++) {
           if (ram[adr] == 0x7f) { tmp[0] = '|'; adr--; }
+          else if (ram[adr] == 0x00) { tmp[0] = '_'; adr--; }
+          else if (ram[adr] < ' ' >> ram[adr] > 0x7e) {
+            tmp[0] = '*'; adr--;
+            }
             else tmp[0] = ram[adr--];
           strcat(buffer, tmp);
           }

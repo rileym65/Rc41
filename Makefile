@@ -18,12 +18,17 @@ OBJS= \
 	cle.o \
 	clearflag.o \
 	clrg.o \
+	cos.o \
+	dadd.o \
+	ddiv.o \
 	debug.o \
 	dec.o \
 	del.o \
 	display.o \
 	div.o \
+	dmul.o \
 	dse.o \
+	dsub.o \
 	eminus.o \
 	eng.o \
 	eplus.o \
@@ -81,11 +86,13 @@ OBJS= \
 	shownumber.o \
 	showstatregs.o \
 	size.o \
+	sin.o \
 	skip.o \
 	sst.o \
 	sto.o \
 	storenumber.o \
 	sub.o \
+	tan.o \
 	tenscompliment.o \
 	tointeger.o \
 	tone.o \

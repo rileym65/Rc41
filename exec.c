@@ -542,11 +542,7 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
          StoreNumber(a, R_L);
          if (FlagSet(43) == 0 && FlagSet(42) == 0) a = Mul(a, DTOR);
          else if (FlagSet(42)) a = Mul(a, GTOR);
-         NtoA(a, n);
-         d = atof(n);
-         d = sin(d);
-         sprintf(n,"%.12e",d);
-         a = AtoN(n);
+         a = Sin(a);
          StoreNumber(a, R_X);
          break;
     case 0x5a:                                             // COS
@@ -554,11 +550,7 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
          StoreNumber(a, R_L);
          if (FlagSet(43) == 0 && FlagSet(42) == 0) a = Mul(a, DTOR);
          else if (FlagSet(42)) a = Mul(a, GTOR);
-         NtoA(a, n);
-         d = atof(n);
-         d = cos(d);
-         sprintf(n,"%.12e",d);
-         a = AtoN(n);
+         a = Cos(a);
          StoreNumber(a, R_X);
          break;
     case 0x5b:                                             // TAN
@@ -566,11 +558,12 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
          StoreNumber(a, R_L);
          if (FlagSet(43) == 0 && FlagSet(42) == 0) a = Mul(a, DTOR);
          else if (FlagSet(42)) a = Mul(a, GTOR);
-         NtoA(a, n);
-         d = atof(n);
-         d = tan(d);
-         sprintf(n,"%.12e",d);
-         a = AtoN(n);
+         a = Tan(a);
+//         NtoA(a, n);
+//         d = atof(n);
+//         d = tan(d);
+//         sprintf(n,"%.12e",d);
+//         a = AtoN(n);
          StoreNumber(a, R_X);
          break;
     case 0x5c:                                             // ASIN
@@ -1009,42 +1002,42 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
          break;
     case 0xaa:                                             // FS?C
          flag = FsQc(ram[addr--]);
-         if (reg < 0x0c0) {
+         if (addr < 0x0c0) {
            if (flag) Message("YES");
              else Message("NO");
            }
          else {
-           if (flag == 0) addr -= isize(addr);
+           if (flag == 0) addr =Skip(addr);
            }
          break;
     case 0xab:                                             // FC?C
          flag = FsQc(ram[addr--]);
-         if (reg < 0x0c0) {
+         if (addr < 0x0c0) {
            if (flag) Message("NO");
              else Message("YES");
            }
          else {
-           if (flag != 0) addr -= isize(addr);
+           if (flag != 0) addr =Skip(addr);
            }
          break;
     case 0xac:                                             // FS?
          flag = Fs(ram[addr--]);
-         if (reg < 0x0c0) {
+         if (addr < 0x0c0) {
            if (flag) Message("YES");
              else Message("NO");
            }
          else {
-           if (flag == 0) addr -= isize(addr);
+           if (flag == 0) addr =Skip(addr);
            }
          break;
     case 0xad:                                             // FC?
          flag = Fs(ram[addr--]);
-         if (reg < 0x0c0) {
+         if (addr < 0x0c0) {
            if (flag) Message("NO");
              else Message("YES");
            }
          else {
-           if (flag != 0) addr -= isize(addr);
+           if (flag != 0) addr =Skip(addr);
            }
          break;
 
