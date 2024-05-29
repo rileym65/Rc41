@@ -123,6 +123,7 @@ extern void    EMinus();
 extern void    Eng(byte n);
 extern void    EPlus();
 extern void    EReg(byte post);
+extern NUMBER  Ex(NUMBER a);
 extern int     Exec(int addr);
 extern NUMBER  Fact(NUMBER a);
 extern int     FcQc(byte n);

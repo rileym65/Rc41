@@ -33,6 +33,7 @@ OBJS= \
 	eng.o \
 	eplus.o \
 	ereg.o \
+	ex.o \
 	exec.o \
 	fact.o \
 	fcqc.o \
