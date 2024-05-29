@@ -105,6 +105,7 @@ OBJS= \
 	tone.o \
 	toptr.o \
 	view.o \
+	ytox.o
 
 $(PROJECT): $(OBJS)
 	$(CC) $(DEFS) $(LIBDIR) $(OBJS) $(LIBS) -o $(PROJECT)

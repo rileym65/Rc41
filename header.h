@@ -214,6 +214,7 @@ extern int     ToInteger(NUMBER a);
 extern void    Tone(byte n);
 extern int     ToPtr(int addr);
 extern void    View(byte post);
+extern NUMBER  YtoX(NUMBER y, NUMBER x);
 
 
 #endif

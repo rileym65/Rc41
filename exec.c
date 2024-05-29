@@ -476,14 +476,8 @@ printf("oaddr: %02x %02x %02x\n",ram[oaddr],ram[oaddr-1],ram[oaddr-2]);
     case 0x53:                                             // Y^X
          a = RecallNumber(R_X);
          StoreNumber(a, R_L);
-         NtoA(a, n);
-         x = atof(n);
-         a = RecallNumber(R_Y);
-         NtoA(a, n);
-         y = atof(n);
-         d = pow(y,x);
-         sprintf(n,"%.12e",d);
-         a = AtoN(n);
+         b = RecallNumber(R_Y);
+         a = YtoX(a, b);
          StoreNumber(a, R_X);
          a = RecallNumber(R_Z);
          StoreNumber(a,R_Y);
