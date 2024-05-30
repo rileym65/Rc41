@@ -5,13 +5,11 @@ NUMBER Ln1PlusX(NUMBER a) {
   int flag;
   int cnt;
   DNUMBER one;
-  DNUMBER n;
   DNUMBER x;
   DNUMBER sum;
   DNUMBER num;
   DNUMBER den;
   DNUMBER term;
-  DNUMBER base;
   DNUMBER last;
   int     addsub;
   x = NumberToDNumber(a);

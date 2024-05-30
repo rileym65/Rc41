@@ -2,7 +2,7 @@
 
 NUMBER Hr(NUMBER a) {
   int h,m,s,f;
-  char tmp[16];
+  char tmp[24];
   double d;
   GetHms(a, &h, &m, &s, &f);
   d = m * 60 + s + ((double)f/100.0);

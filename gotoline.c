@@ -3,9 +3,6 @@
 void GotoLine(int line) {
   int addr;
   int adr;
-  int byt;
-  int reg;
-  int flag;
   int l;
   addr = (ram[REG_B+1] << 8) | ram[REG_B+0];
   adr = FromPtr(addr);

@@ -56,6 +56,7 @@ char *PostFix(byte flags, char* line, byte *b) {
 char *InputGtoXeq(char* line, byte base) {
   int n;
   char token[256];
+  char buffer[300];
   line = NextToken(line, token);
   if (token[0] == '.') {
 printf("non-programmable\n");
@@ -136,7 +137,7 @@ printf("non-programmable\n");
 char *InputLbl(char* line) {
   int n;
   char token[256];
-  char buffer[256];
+  char buffer[300];
   line = NextToken(line, token);
   if (token[0] >= '0' && token[0] <= '9') {
     n = atoi(token);
@@ -210,7 +211,6 @@ int main(int argc, char** argv) {
   char  buffer[1024];
   char  token[32];
   int   isNumber;
-  int   p;
   byte  b;
   char *pchar;
   int   file;

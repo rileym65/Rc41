@@ -6,7 +6,6 @@ void Asto(int rreg) {
   int l;
   int reg;
   int base;
-  NUMBER n;
   base = ram[REG_C+2] << 4;
   base |= ((ram[REG_C+1] >> 4) & 0xf);
   if (rreg < 0x70) {

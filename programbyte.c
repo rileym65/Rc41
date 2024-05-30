@@ -6,7 +6,6 @@ void ProgramByte(byte b) {
   int adr;
   int byt;
   int reg;
-  int lineNumber;
   int pqr;
   addr = (ram[REG_B+1] << 8) | ram[REG_B+0];
   reg = (addr & 0xfff);

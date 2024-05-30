@@ -9,7 +9,6 @@ int GtoXeq(int address) {
   int dif;
   byte lbl;
   int flag;
-  int lineNumber;
   if (address >= 0x0c0)
     lbl = ram[address-2] & 0x7f;
   else

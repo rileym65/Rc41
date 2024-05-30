@@ -2,7 +2,6 @@
 
 char* Format(NUMBER a, char* dest) {
   int i;
-  int p;
   int d;
   int e;
   int mode;

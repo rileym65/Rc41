@@ -4,7 +4,6 @@
 int Exec(int addr) {
   byte cmd;
   int  byt; 
-  int  reg;
   int  flag;
   int  i;
   int  j;

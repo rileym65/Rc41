@@ -9,7 +9,6 @@ int Gto2(int address) {
   int dif;
   byte lbl;
   int flag;
-  int lineNumber;
   lbl = ram[address] & 0x0f;
   address--;
   addr = (ram[REG_B+1] << 8) | ram[REG_B+0];

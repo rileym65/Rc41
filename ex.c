@@ -4,16 +4,13 @@ NUMBER Ex(NUMBER a) {
   int i;
   int flag;
   DNUMBER one;
-  DNUMBER n;
   DNUMBER x;
   DNUMBER sum;
   DNUMBER num;
   DNUMBER den;
   DNUMBER term;
-  DNUMBER base;
   DNUMBER last;
   DNUMBER fact;
-  int     addsub;
   x = NumberToDNumber(a);
   one.sign = 0;
   one.esign = 0;

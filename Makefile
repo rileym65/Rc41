@@ -4,7 +4,7 @@ INCDIR=
 INCS=
 LIBDIR=
 LIBS=-lm
-DEFS=
+DEFS= -Wall
 OBJS= \
 	acos.o \
 	add.o \

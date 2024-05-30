@@ -1,7 +1,6 @@
 #include "header.h"
 
 int FindStart(int address) {
-  int pend;
   int addr;
   int byt;
   int reg;

@@ -9,15 +9,12 @@ void Pack() {
   int last;
   int total;
   int count;
-  int dest;
   int pack;
   int start;
   int bytes;
-  int line;
   int prg;
   printf("PACKING\n");
   prg = FromPtr((ram[REG_B+1] << 8) | ram[REG_B+0]);
-  line = ((ram[REG_E+1] & 0x0f) << 8) | ram[REG_E+0];
   end = (((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0]) * 7 + 2;
   last = ((ram[REG_C+2] << 4) | ((ram[REG_C+1] >> 4) & 0x0f));
   last = last * 7;

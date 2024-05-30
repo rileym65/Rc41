@@ -5,7 +5,6 @@ void Sst() {
   int adr;
   int byt;
   int reg;
-  int flag;
   int line;
   if (FlagSet(52)) {
     line = ram[REG_E+0] | ((ram[REG_E+1] & 0x0f) << 8);

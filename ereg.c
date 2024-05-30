@@ -2,10 +2,7 @@
 
 void EReg(byte post) {
   int base;
-  int ofs;
   int e;
-  NUMBER x;
-  NUMBER y;
   base = ram[REG_C+2] << 4;
   base |= ((ram[REG_C+1] >> 4) & 0xf);
   e = 0xffff;

@@ -22,5 +22,6 @@ int Rtn(int addr) {
     for (i=REG_B+2; i<REG_B+7; i++) ram[i] = 0x00;
     for (i=REG_A+0; i<REG_A+7; i++) ram[i] = 0x00;
     }
+  return addr-1;
   }
 

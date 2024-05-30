@@ -43,7 +43,6 @@ NUMBER Add(NUMBER a, NUMBER b) {
   DNUMBER da;
   DNUMBER db;
   DNUMBER dc;
-  NUMBER   result;
   da = NumberToDNumber(a);
   db = NumberToDNumber(b);
   dc = D_Add(da, db);

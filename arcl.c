@@ -3,7 +3,6 @@
 void Arcl(int rreg) {
   int i;
   int p;
-  int l;
   int reg;
   int base;
   char buffer[32];

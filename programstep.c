@@ -9,18 +9,11 @@ void Link(int address) {
   int lnext;
   int prev;
   next = FindNextGlobal(address-1);
-printf("First: [%04x] %02x %02x %02x\n",address,ram[address],ram[address-1],ram[address-2]);
-printf("Next : [%04x] %02x %02x %02x\n",next,ram[next],ram[next-1],ram[next-2]);
   lnext = ((ram[next] & 0x0f) << 8) | ram[next-1];
   if (lnext != 0) {
-printf("lnext: %x\n",lnext);
     prev = ((lnext & 0x1ff) * 7) + ((lnext >> 9) & 0x7) + next + byteCount - 1;
-printf("byte count: %d\n",byteCount);
-printf("Prev : [%04x] %02x %02x %02x\n",prev,ram[prev],ram[prev-1],ram[prev-2]);
     }
-else printf("Prev : None\n");
   diff = 1 + address - next;
-printf("Diff : %d\n",diff);
   reg = diff / 7;
   byt = diff % 7;
   adr = (byt << 9) | reg;
@@ -48,12 +41,10 @@ void ProgramStep(char* line) {
   int reg;
   int start;
   int pend;
-  int pstart;
   int lineNumber;
   int greg;
   int gbyt;
   int l;
-  int dist;
   int d;
   byteCount = 0;
   if (ram[REG_R+1] == 0x00 && line == NULL) return;

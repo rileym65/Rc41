@@ -1,7 +1,6 @@
 #include "header.h"
 
 int ToInteger(NUMBER a) {
-  int i;
   int e;
   int r;
   int p;

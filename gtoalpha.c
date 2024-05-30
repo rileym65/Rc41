@@ -4,14 +4,6 @@ int GtoAlpha(int address) {
   int i;
   int n;
   int addr;
-  int last;
-  int jump;
-  int ret;
-  int ofs;
-  int dif;
-  byte lbl;
-  int flag;
-  int lineNumber;
   char token[16];
 
   ram[REG_E+1] |= 0x0f;

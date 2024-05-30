@@ -4,7 +4,7 @@ NUMBER Fact(NUMBER a) {
   int i;
   int n;
   double r;
-  char tmp[16];
+  char tmp[24];
   if (a.esign != 0) {
     Message("DATA ERROR");
     return a;

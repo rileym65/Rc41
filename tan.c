@@ -1,7 +1,6 @@
 #include "header.h"
 
 NUMBER Tan(NUMBER a) {
-  int i;
   NUMBER x;
   NUMBER s;
   NUMBER c;

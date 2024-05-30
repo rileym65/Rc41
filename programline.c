@@ -53,6 +53,7 @@ char* Postfix(byte i, int adr, char* buffer) {
       strcat(buffer, tmp);
       }
     }
+  return buffer;
   }
 
 char* ProgramList(int lineNumber, int adr, char* buffer) {
@@ -153,7 +154,7 @@ char* ProgramList(int lineNumber, int adr, char* buffer) {
         for (i=0; i<(b&0x0f); i++) {
           if (ram[adr] == 0x7f) { tmp[0] = '|'; adr--; }
           else if (ram[adr] == 0x00) { tmp[0] = '_'; adr--; }
-          else if (ram[adr] < ' ' >> ram[adr] > 0x7e) {
+          else if (ram[adr] < ' ' || ram[adr] > 0x7e) {
             tmp[0] = '*'; adr--;
             }
             else tmp[0] = ram[adr--];
@@ -163,6 +164,7 @@ char* ProgramList(int lineNumber, int adr, char* buffer) {
       else
 sprintf(buffer, "b=%02x, size=%d",b,reverse[b].size);
       }
+  return buffer;
   }
 
 char* ProgramLine(char* buffer) {
@@ -281,7 +283,7 @@ char* ProgramLine(char* buffer) {
         for (i=0; i<(b&0x0f); i++) {
           if (ram[adr] == 0x7f) { tmp[0] = '|'; adr--; }
           else if (ram[adr] == 0x00) { tmp[0] = '_'; adr--; }
-          else if (ram[adr] < ' ' >> ram[adr] > 0x7e) {
+          else if (ram[adr] < ' ' || ram[adr] > 0x7e) {
             tmp[0] = '*'; adr--;
             }
             else tmp[0] = ram[adr--];
@@ -293,6 +295,6 @@ sprintf(buffer, "b=%02x, size=%d",b,reverse[b].size);
       }
     }
 
-
+  return buffer;
   }
 

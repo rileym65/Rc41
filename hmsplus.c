@@ -33,8 +33,6 @@ void GetHms(NUMBER a, int* h, int* m, int *s, int *f) {
 
 NUMBER HmsPlus(NUMBER a, NUMBER b) {
   char   buffer[16];
-  int p;
-  int e;
   int ha,ma,sa,fa;
   int hb,mb,sb,fb;
   GetHms(a, &ha, &ma, &sa, &fa);

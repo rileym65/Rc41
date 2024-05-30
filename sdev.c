@@ -7,8 +7,7 @@ void Sdev() {
   int base;
   int ofs;
   NUMBER a;
-  NUMBER b;
-  char   tmp[16];
+  char   tmp[32];
   double x,x2,meanx,n;
   base = ram[REG_C+2] << 4;
   base |= ((ram[REG_C+1] >> 4) & 0xf);
