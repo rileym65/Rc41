@@ -58,9 +58,10 @@ char* Postfix(byte i, int adr, char* buffer) {
 char* ProgramList(int lineNumber, int adr, char* buffer) {
   int i;
   int b;
+  int b2;
   int end;
   char tmp[256];
-strcpy(buffer,"");
+  strcpy(buffer,"");
   end = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
     while (ram[adr] == 0) adr--;
     if (lineNumber < 100) sprintf(buffer, "%02d ", lineNumber);
@@ -104,6 +105,19 @@ strcpy(buffer,"");
           }
         if (tmp[0] == ' ') strcat(buffer, tmp+1);
           else strcat(buffer, tmp);
+        }
+      else if (b >= 0xa0 && b <= 0xa7) {
+        b2 = ram[adr-1];
+        i = 0;
+        while (reverse2[i].cmd != 0xff && (reverse2[i].cmd != b || reverse2[i].post != b2)) i++;
+        if (reverse2[i].cmd != 0xff) {
+          sprintf(buffer,"%02d %s",lineNumber, reverse2[i].name);
+          }
+        else {
+          b = ((b & 0x0f) << 2) | ((b2 & 0xc0) >> 6);
+          b2 &= 0x3f;
+          sprintf(buffer,"%02d XROM %02d,%02d",lineNumber,b,b2);
+          }
         }
       else if (b < 0xf0 && (reverse[b].size & 0x0f) == 1) {
         sprintf(tmp, "%s", reverse[b].name);
@@ -157,6 +171,7 @@ char* ProgramLine(char* buffer) {
   int reg;
   int byt;
   int b;
+  int b2;
   int adr;
   int lineNumber;
   int end;
@@ -218,6 +233,19 @@ char* ProgramLine(char* buffer) {
           }
         if (tmp[0] == ' ') strcat(buffer, tmp+1);
           else strcat(buffer, tmp);
+        }
+      else if (b >= 0xa0 && b <= 0xa7) {
+        b2 = ram[adr-1];
+        i = 0;
+        while (reverse2[i].cmd != 0xff && (reverse2[i].cmd != b || reverse2[i].post != b2)) i++;
+        if (reverse2[i].cmd != 0xff) {
+          sprintf(buffer,"%02d %s",lineNumber, reverse2[i].name);
+          }
+        else {
+          b = ((b & 0x0f) << 2) | ((b2 & 0xc0) >> 6);
+          b2 &= 0x3f;
+          sprintf(buffer,"%02d XROM %02d,%02d",lineNumber,b,b2);
+          }
         }
       else if (b < 0xf0 && (reverse[b].size & 0x0f) == 1) {
         sprintf(tmp, "%s", reverse[b].name);

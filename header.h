@@ -97,6 +97,8 @@ LINK int    ramClear;
 LINK char   screen[32];
 LINK int    byteCount;
 LINK int    singleStep;
+LINK char   printBuffer[1024];
+LINK int    printPosition;
 
 #ifdef MAIN
 DNUMBER D_ZERO = { 0, { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 0, { 0,0,0 } };
@@ -186,6 +188,7 @@ extern char*   NtoA(NUMBER a,char* buffer);
 extern DNUMBER NumberToDNumber(NUMBER a);
 extern NUMBER  Oct(NUMBER a);
 extern void    Pack();
+extern void    Printer(byte function);
 extern void    ProgramByte(byte b);
 extern char*   ProgramLine(char* buffer);
 extern char*   ProgramList(int lineNumber, int adr, char* dest);

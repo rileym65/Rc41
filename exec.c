@@ -870,6 +870,18 @@ int Exec(int addr) {
          Aview();
          running = 0;
          break;
+    case 0x8f:                                             // ADV
+         if (FlagSet(55) && FlagSet(21)) {
+           if (printPosition != 0) {
+             for (i=0; i<24-strlen(buffer); i++)
+               printf(" ");
+             printf("%s",printBuffer);
+             strcpy(printBuffer,"");
+             printPosition = 0;
+             }
+           printf("\n");
+           }
+         break;
         
     case 0x90:                                             // RCL
          b2 = ram[addr--];
@@ -950,6 +962,22 @@ int Exec(int addr) {
          Tone(ram[addr--]);
          break;
    
+    case 0xa0:                                             // XROM
+    case 0xa1:
+    case 0xa2:
+    case 0xa3:
+    case 0xa4:
+    case 0xa5:
+    case 0xa6:
+    case 0xa7:
+         b2 = ram[addr--];
+         byt = ((cmd &0x0f) << 2) | ((b2 & 0xc0) >> 6);
+         b2 &= 0x3f;
+         if (byt == 29) Printer(b2);
+         else {
+           Message("NONEXISTENT");
+           }
+         break;
     case 0xa8:                                             // SF
          Sf(ram[addr--]);
          break;

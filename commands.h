@@ -438,6 +438,73 @@ extern REV reverse[];
 #endif
 
 
+typedef struct {
+  char *name;
+  byte  cmd;
+  byte  post;
+  byte  flags;
+  } CATALOG2;
+
+#ifdef MAIN
+
+CATALOG2 catalog2[] = {
+    { "ACA",     0xa7, 0x41,    0 },
+    { "ACCHR",   0xa7, 0x42,    0 },
+    { "ACCOL",   0xa7, 0x43,    0 },
+    { "ACSPEC",  0xa7, 0x44,    0 },
+    { "ACX",     0xa7, 0x45,    0 },
+    { "BLDSPEC", 0xa7, 0x46,    0 },
+    { "PRA",     0xa7, 0x48,    0 },
+    { "PRBUF",   0xa7, 0x4a,    0 },
+    { "PRFLAGS", 0xa7, 0x4b,    0 },
+    { "PRP",     0xa7, 0x4d,    0 },
+    { "PRREG",   0xa7, 0x50,    0 },
+    { "PRE",     0xa7, 0x52,    0 },
+    { "PRSTK",   0xa7, 0x53,    0 },
+    { "PRX",     0xa7, 0x54,    0 },
+    { "SKPCHR",  0xa7, 0x56,    0 },
+    { "SKPCOL",  0xa7, 0x57,    0 },
+    { "",        0x00, 0x00, 0xff }
+  };
+
+#else
+
+extern CATALOG2 catalog2[];
+
+#endif
+
+typedef struct {
+  byte cmd;
+  byte post;
+  char* name;
+  } REV2;
+
+#ifdef MAIN
+
+REV2 reverse2[] = {
+  { 0xa7, 0x41, "ACA"       },
+  { 0xa7, 0x42, "ACCHR"     },
+  { 0xa7, 0x43, "ACCOL"     },
+  { 0xa7, 0x44, "ACSPEC"    },
+  { 0xa7, 0x45, "ACX"       },
+  { 0xa7, 0x46, "BLDSPEC"   },
+  { 0xa7, 0x48, "PRA"       },
+  { 0xa7, 0x4a, "PRBUF"     },
+  { 0xa7, 0x4b, "PRFLAGS"   },
+  { 0xa7, 0x50, "PRREG"     },
+  { 0xa7, 0x52, "PRE"       },
+  { 0xa7, 0x53, "PRSTACK"   },
+  { 0xa7, 0x54, "PRX"       },
+  { 0xa7, 0x56, "SKPCHR"    },
+  { 0xa7, 0x57, "SKPCOL"    },
+  { 0xff, 0xff, ""          }
+  };
+
+#else
+
+extern REV2 reverse2[];
+
+#endif
 
 #endif
 

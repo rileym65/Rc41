@@ -217,6 +217,8 @@ int main(int argc, char** argv) {
   debug = 0;
   ramClear = 0;
   singleStep = 0;
+  strcpy(printBuffer,"");
+  printPosition = 0;
   ram[LIFT] = 'D';
   ram[PENDING] = 'D';
   for (i=1; i<argc; i++) {
@@ -235,6 +237,8 @@ int main(int argc, char** argv) {
     else Message("MEMORY LOST");
     }
   else Message("MEMORY LOST");
+  SetFlag(55);
+  SetFlag(21);
 
   while (on) {
     if (running) {
@@ -359,8 +363,7 @@ int main(int argc, char** argv) {
             while (catalog[i].flags != 0xff && strcasecmp(catalog[i].name, token) != 0) {
               i++;
               }
-            if (catalog[i].flags == 0xff) Message("NONEXISTENT");
-            else {
+            if (catalog[i].flags != 0xff) {
               if (catalog[i].cmd == 0x20) pchar = InputRcl(pchar);
               else if (catalog[i].cmd == 0x30) pchar = InputSto(pchar);
               else if (catalog[i].cmd == 0xb1) pchar = InputGtoXeq(pchar, 0xd0);
@@ -377,6 +380,18 @@ int main(int argc, char** argv) {
               if (FlagSet(52)) ProgramStep(NULL);
                 else if (ram[71] != 0) Exec(71);
               }
+            else {
+              i = 0;
+              while (catalog2[i].flags != 0xff && strcasecmp(catalog2[i].name, token) != 0) i++;
+              if (catalog2[i].flags == 0xff) Message("NONEXISTENT");
+              else {
+                ram[REG_R+1] = catalog2[i].cmd;
+                ram[REG_R+0] = catalog2[i].post;
+                if (FlagSet(52)) ProgramStep(NULL);
+                  else if (ram[71] != 0) Exec(71);
+                }
+              }
+
             }
           }
         }

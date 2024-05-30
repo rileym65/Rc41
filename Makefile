@@ -76,6 +76,7 @@ OBJS= \
 	ntoa.o \
 	oct.o \
 	pack.o \
+	printer.o \
 	programbyte.o \
 	programline.o \
 	programstep.o \

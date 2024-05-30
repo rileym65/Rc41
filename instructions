@@ -149,7 +149,7 @@
 8C  AON
 8D  OFF
 8E  PROMPT
-8F
+8F  ADV
 
 90  RCL
 91  STO
@@ -269,6 +269,23 @@ FC  Text 12
 FD  Text 13
 FE  Text 14
 FF  Text 15
+
+Printer commands
+    ACA
+    ACCHR
+    ACCOL
+    ACSPEC
+    ACX
+    BLDSPEC
+    PRA
+    PRBUF
+    PRE
+    PRFLAGS
+    PRREG
+    PRSTK
+    PRX
+    SKPCHR
+    SKPCOL
 
 Non-Programmable
 BST

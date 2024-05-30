@@ -24,7 +24,10 @@ void Cat(char* token) {
     printf(".END. REG %d\n",end - 0x0c0);
     }
   if (strcmp(token, "2") == 0) {
-    printf("PRP\n");
+    i = 0;
+    while (catalog2[i].flags != 0xff) {
+      printf("%s\n",catalog2[i++].name);
+      }
     }
   if (strcmp(token, "3") == 0) {
     i = 12;
