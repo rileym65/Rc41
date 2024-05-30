@@ -282,6 +282,7 @@ Printer commands
     PRE
     PRFLAGS
     PRREG
+    PRREGX
     PRSTK
     PRX
     SKPCHR

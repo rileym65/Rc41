@@ -16,6 +16,8 @@ void Printer(byte function) {
   int    n;
   int    p;
   int    f;
+  int    s;
+  int    e;
   int    reg;
   int    r00;
   int    r[6];
@@ -140,6 +142,11 @@ void Printer(byte function) {
     }
 
   else if (function == 8) {                      // PRA
+    if (printPosition != 0) {
+      printf("%s\n",printBuffer);
+      printBuffer[0] = 0;
+      printPosition = 0;
+      }
     n = 0;
     p = 0;
     m = REG_P + 2;
@@ -162,6 +169,11 @@ void Printer(byte function) {
     }
 
   else if (function == 11) {                     // PRFLAGS
+    if (printPosition != 0) {
+      printf("%s\n",printBuffer);
+      printBuffer[0] = 0;
+      printPosition = 0;
+      }
     printf("STATUS:\n");
     reg = (ram[REG_C+2] << 4) + ((ram[REG_C+1] >> 4) & 0x0f);
     printf("SIZE= %03d\n",0x1000 - reg);
@@ -197,6 +209,11 @@ void Printer(byte function) {
     }
 
   else if (function == 16) {                          // PRREG
+    if (printPosition != 0) {
+      printf("%s\n",printBuffer);
+      printBuffer[0] = 0;
+      printPosition = 0;
+      }
     n = 0;
     reg = (ram[REG_C+2] << 4) | ((ram[REG_C+1] >> 4) & 0x0f);
     while (reg < 0x1000) {
@@ -208,7 +225,68 @@ void Printer(byte function) {
       }
     }
 
+  else if (function == 17) {                          // PRREGX
+    if (printPosition != 0) {
+      printf("%s\n",printBuffer);
+      printBuffer[0] = 0;
+      printPosition = 0;
+      }
+    x = RecallNumber(R_X);
+    s = 0;
+    e = 0;
+    p = 0;
+    if (x.esign == 0) {
+      s = x.mantissa[p++];
+      n = x.exponent[0] * 10 + x.exponent[1];
+      while (n > 0) {
+        s *= 10;
+        if (p < 10) s += x.mantissa[p++];
+        n--;
+        }
+      }
+    else {
+      n = x.exponent[0] * 10 + x.exponent[1];
+      while (n > 0) {
+        n--;
+        p--;
+        }
+      p++;
+      }
+    for (i=0; i<3; i++) {
+      e *= 10;
+      if (p >= 0 && p < 10) e += x.mantissa[p];
+      p++;
+      }
+    reg = (ram[REG_C+2] << 4) | ((ram[REG_C+1] >> 4) & 0x0f);
+    n = s;
+    e += reg;
+    reg += s;
+    if (reg > 0xfff) {
+      Message("NONEXISTENT");
+      }
+    else {
+      while (reg <= e) {
+        if (reg > 0xfff) {
+          Message("NONEXISTENT");
+          reg = e+1;
+          }
+        else {
+          x = RecallNumber(reg);
+          Format(x, buffer);
+          printf("R%02d= %s\n",n,buffer);
+          n++;
+          reg++;
+          }
+        }
+      }
+    }
+
   else if (function == 18) {                          // PRE
+    if (printPosition != 0) {
+      printf("%s\n",printBuffer);
+      printBuffer[0] = 0;
+      printPosition = 0;
+      }
     reg = (ram[REG_C+6] << 4) | ((ram[REG_C+5] >> 4) & 0x0f);
     r00 = ((ram[REG_C+2] << 4) | ((ram[REG_C+1] >> 4) & 0x0f));
     x = RecallNumber(reg+r00);
@@ -232,6 +310,11 @@ void Printer(byte function) {
     }
 
   else if (function == 19) {                          // PRSTK
+    if (printPosition != 0) {
+      printf("%s\n",printBuffer);
+      printBuffer[0] = 0;
+      printPosition = 0;
+      }
     x = RecallNumber(R_T);
     Format(x, buffer);
     printf("T= %s\n",buffer);
@@ -247,6 +330,11 @@ void Printer(byte function) {
     }
 
   else if (function == 20) {                          // PRX
+    if (printPosition != 0) {
+      printf("%s\n",printBuffer);
+      printBuffer[0] = 0;
+      printPosition = 0;
+      }
     x = RecallNumber(R_X);
     Format(x, buffer);
     printf("%s\n",buffer);
