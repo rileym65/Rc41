@@ -1,4 +1,4 @@
-PROJECT=hp41
+PROJECT=rc41
 CC=gcc
 INCDIR=
 INCS=
@@ -16,10 +16,12 @@ OBJS= \
 	aton.o \
 	aview.o \
 	bst.o \
+	cardreader.o \
 	cat.o \
 	cf.o \
 	cle.o \
 	clearflag.o \
+	clp.o \
 	clrg.o \
 	cos.o \
 	dadd.o \
@@ -56,6 +58,7 @@ OBJS= \
 	gtoalpha.o \
 	gotoline.o \
 	gtoxeq.o \
+	gtoxeqind.o \
 	hms.o \
 	hmsminus.o \
 	hmsplus.o \

@@ -97,7 +97,14 @@ printf("non-programmable\n");
         }
       ram[REG_R+1] = 0x00;
       }
-    if (token[0] >= '0' && token[0] <= '9') {
+    if (strcasecmp(token, "IND") == 0) {
+      line = NextToken(line, token);
+      n = atoi(token);
+      ram[REG_R+1] = 0xae;
+      if (base == 0xd0) ram[REG_R+0] = n;
+        else ram[REG_R+0] = n | 0x80;
+      }
+    else if (token[0] >= '0' && token[0] <= '9') {
       n = atoi(token);
       if (n <= 14 && base == 0xd0) {
         ram[REG_R+1] = 0xb1+n;
@@ -350,6 +357,19 @@ int main(int argc, char** argv) {
           else if (strcasecmp(token,"PRP") == 0) {
             pchar = NextToken(pchar, token);
             Prp(token);
+            }
+          else if (strcasecmp(token,"CLP") == 0) {
+            pchar = NextToken(pchar, token);
+            Clp(token);
+            }
+          else if (strcasecmp(token,"VER") == 0) {
+            CardReader(5,0);
+            }
+          else if (strcasecmp(token,"WALL") == 0) {
+            CardReader(6,0);
+            }
+          else if (strcasecmp(token,"RALL") == 0) {
+            CardReader(37,0);
             }
           else if (strcasecmp(token,"RS") == 0) {
             if (FlagSet(22)) {

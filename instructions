@@ -182,7 +182,7 @@ AA  FS?C
 AB  FC?C
 AC  FS?
 AD  FC?
-AE
+AE  GTO/XEQ IND
 AF
 
 B0
@@ -281,6 +281,7 @@ Printer commands
     PRBUF
     PRE
     PRFLAGS
+    PRP "name" - Non programmable
     PRREG
     PRREGX
     PRSTK
@@ -288,13 +289,42 @@ Printer commands
     SKPCHR
     SKPCOL
 
+Card reader commands
+    RALL    - Non programmable
+    RDTA
+    RDTAX
+    VER     - Non programmable
+    WALL    - Non programmable
+    WDTA
+    WDTAX
+    7CLREG
+    7DSP0
+    7DSP1
+    7DSP2
+    7DSP3
+    7DSP4
+    7DSP5
+    7DSP6
+    7DSP7
+    7DSP8
+    7DSP9
+    7DSPI
+    7DSZ
+    7DSZI
+    7ENG
+    7FIX
+    7ISZ
+    7ISZI
+    7P<>S
+    7SCI
+
 Non-Programmable
 BST
 CAT n
+CLP "name"
 DEL nnn
 GTO .nnn
 PACK
-PRP "name"
 SIZE nnn
 SST
 

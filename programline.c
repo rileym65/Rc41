@@ -107,6 +107,15 @@ char* ProgramList(int lineNumber, int adr, char* buffer) {
         if (tmp[0] == ' ') strcat(buffer, tmp+1);
           else strcat(buffer, tmp);
         }
+      else if (b == 0xae) {
+        b2 = ram[adr-1];
+        if (b2 >= 0x80) {
+          sprintf(buffer,"%02d XEQ IND %02d",lineNumber, b2 & 0x7f);
+          }
+        else {
+          sprintf(buffer,"%02d GTO IND %02d",lineNumber, b2 & 0x7f);
+          }
+        }
       else if (b >= 0xa0 && b <= 0xa7) {
         b2 = ram[adr-1];
         i = 0;
@@ -235,6 +244,15 @@ char* ProgramLine(char* buffer) {
           }
         if (tmp[0] == ' ') strcat(buffer, tmp+1);
           else strcat(buffer, tmp);
+        }
+      else if (b == 0xae) {
+        b2 = ram[adr-1];
+        if (b2 >= 0x80) {
+          sprintf(buffer,"%02d XEQ IND %02d",lineNumber, b2 & 0x7f);
+          }
+        else {
+          sprintf(buffer,"%02d GTO IND %02d",lineNumber, b2 & 0x7f);
+          }
         }
       else if (b >= 0xa0 && b <= 0xa7) {
         b2 = ram[adr-1];

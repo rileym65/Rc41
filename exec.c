@@ -973,6 +973,7 @@ int Exec(int addr) {
          byt = ((cmd &0x0f) << 2) | ((b2 & 0xc0) >> 6);
          b2 &= 0x3f;
          if (byt == 29) Printer(b2);
+         else if (byt == 30) addr = CardReader(b2, addr);
          else {
            Message("NONEXISTENT");
            }
@@ -1023,6 +1024,18 @@ int Exec(int addr) {
            if (flag != 0) addr =Skip(addr);
            }
          break;
+    case 0xae:                                             // GTO/XEQ IND
+         b2 = ram[addr];
+         addr = GtoXeqInd(addr+1);
+         if (addr == 0) {
+           running = 0;
+           addr = oaddr;
+           }
+         if (addr != 0 && b2 >= 0x80) {
+           Push((oaddr)-isize(oaddr-1));
+           }
+         break;
+
 
     case 0xb1:                                             // GTO 00
     case 0xb2:                                             // GTO 01
