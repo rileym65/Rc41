@@ -75,6 +75,7 @@ void ProgramStep(char* line) {
   if (!FlagSet(22)) ProgramByte(ram[REG_R+1]);
   if (line != NULL) {
     if (line[0] == '.' || (line[0] >= '0' && line[0] <= '9')) {
+      ProgramByte(0x00);
       for (i=0; i<strlen(line); i++) {
         if (line[i] == '.') ProgramByte(0x1a);
         else if (line[i] >= '0' && line[i] <= '9')
@@ -137,10 +138,7 @@ void ProgramStep(char* line) {
   ram[REG_E+1] &= 0xf0;
   ram[REG_E+1] |= ((lineNumber >> 8) & 0x0f);
   if (byteCount != 0) {
-printf("Bytes: %d\n",byteCount);
-printf("Adjusting next global\n");
     gaddr = FindNextGlobal(start-2);
-printf("--> %02x %02x %02x\n",ram[gaddr], ram[gaddr-1], ram[gaddr-2]);
     l = ((ram[gaddr] & 0x0f) << 8) | ram[gaddr-1];
     if (l != 0) {
       greg = l & 0x1ff;
@@ -149,7 +147,6 @@ printf("--> %02x %02x %02x\n",ram[gaddr], ram[gaddr-1], ram[gaddr-2]);
       d += byteCount;
       greg = d / 7;
       gbyt = d % 7;
-  printf("reg=%d, byt=%d\n",greg,gbyt);
       ram[gaddr] &= 0xf0;
       ram[gaddr] |= (gbyt << 1) | (greg >> 8);
       ram[gaddr-1] = greg & 0xff;

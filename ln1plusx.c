@@ -3,7 +3,6 @@
 NUMBER Ln1PlusX(NUMBER a) {
   int i;
   int flag;
-  int cnt;
   DNUMBER one;
   DNUMBER x;
   DNUMBER sum;
@@ -23,9 +22,7 @@ NUMBER Ln1PlusX(NUMBER a) {
   den = one;
   addsub = -1;
   flag = -1;
-cnt = 0;
   while (flag) {
-cnt++;
     last = sum;
     num = D_Mul(num, x);
     den = D_Add(den, one);
@@ -42,7 +39,6 @@ cnt++;
     for (i=0; i<15; i++)
       if (last.mantissa[i] != sum.mantissa[i]) flag = -1;
     }
-printf("Count = %d\n",cnt);
   return DNumberToNumber(sum);
   }
 

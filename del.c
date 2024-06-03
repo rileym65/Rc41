@@ -8,13 +8,11 @@ void Del(char* token) {
   if (FlagSet(52) == 0) return;
   n = atoi(token);
   lineNumber = ((ram[REG_E+1] & 0x0f) << 8) | ram[REG_E+0];
-printf("starting line number: %d\n",lineNumber);
   if (lineNumber == 0xfff) {
     FixLineNumber();
     lineNumber = ((ram[REG_E+1] & 0x0f) << 8) | ram[REG_E+0];
     }
   if (lineNumber > 0) lineNumber--;
-printf("ending line number: %d\n",lineNumber);
   addr = FromPtr((ram[REG_B+1] << 8) | ram[REG_B+0]);
   addr--;
   while (n > 0) {

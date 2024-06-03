@@ -2,7 +2,6 @@
 
 void Push(int address) {
   int i;
-printf("push: [%04x] %02x %02x %02x\n",ToPtr(address),ram[address],ram[address-1],ram[address-2]);
   address = ToPtr(address);
   for (i=6; i>1; i--) ram[REG_A+i] = ram[REG_A+i-2];
   ram[REG_A+1] = ram[REG_B+6];

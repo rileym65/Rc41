@@ -32,12 +32,8 @@ int Dse(byte post) {
     }
   if (inc == 0) inc = 1;
   if (x.sign) count = -count;
-printf("Count = %d\n",count);
-printf("Final = %d\n",final);
-printf("Inc   = %d\n",inc);
   count -= inc;
   sprintf(tmp,"%d.%03d%02d",count,final,inc);
-printf("-->%s\n",tmp);
   y = AtoN(tmp);
   if (count < 0) y.sign = 9;
   Sto(y, post);

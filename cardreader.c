@@ -355,7 +355,6 @@ int CardReader(byte function, int addr) {
     }
 
   if (function == 31) {                          // 7P<>S
-printf("P<>S\n");
     for (i=0; i<10; i++) {
       a = Rcl(i);
       b = Rcl(i+10);
