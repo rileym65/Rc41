@@ -66,7 +66,7 @@ int CardReader(byte function, int addr) {
       p++;
       }
     r00 = (ram[REG_C+2] << 4) | ((ram[REG_C+1] >> 4) & 0x0f);
-    len = e-s;
+    len = 1+e-s;
     s += r00;
     e += r00;
     s *= 7;
@@ -177,7 +177,7 @@ int CardReader(byte function, int addr) {
       p++;
       }
     r00 = (ram[REG_C+2] << 4) | ((ram[REG_C+1] >> 4) & 0x0f);
-    len = e-s;
+    len = 1+e-s;
     s += r00;
     e += r00;
     s *= 7;
