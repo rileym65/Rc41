@@ -32,6 +32,30 @@ void Link(int address) {
   byteCount = 0;
   }
 
+void ClearLinks(int address) {
+  int pstart;
+  int pend;
+  if (linksCleared) return;
+  linksCleared = -1;
+  pend = FindEnd(address);
+  pstart = FindStart(address);
+  while (ram[pstart] == 0x00) pstart--;
+  while (pstart > pend) {
+    if ((ram[pstart] & 0xf0) == 0xb0) {
+      ram[pstart-1] = 0;
+      }
+    if ((ram[pstart] & 0xf0) == 0xd0) {
+      ram[pstart] &= 0xf0;
+      ram[pstart-1] = 0;
+      }
+    if ((ram[pstart] & 0xf0) == 0xe0) {
+      ram[pstart] &= 0xf0;
+      ram[pstart-1] = 0;
+      }
+    pstart -= isize(pstart);
+    }
+  }
+
 void ProgramStep(char* line) {
   int i;
   int addr;
@@ -52,6 +76,7 @@ void ProgramStep(char* line) {
   reg = (addr & 0xfff);
   byt = (addr >> 12) & 0xf;
   adr = (reg * 7) + byt;
+  ClearLinks(adr);
   lineNumber = ram[REG_E+0] + ((ram[REG_E+1] &0x0f) << 8);
   if (lineNumber == 0) {
     adr--;

@@ -99,6 +99,7 @@ LINK int    byteCount;
 LINK int    singleStep;
 LINK char   printBuffer[1024];
 LINK int    printPosition;
+LINK int    linksCleared;
 
 #ifdef MAIN
 DNUMBER D_ZERO = { 0, { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 0, { 0,0,0 } };

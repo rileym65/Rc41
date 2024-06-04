@@ -330,6 +330,7 @@ int main(int argc, char** argv) {
         else {
           i = 0;
           if (strcasecmp(token,"PRGM") == 0) {
+            linksCleared = 0;
             if (FlagSet(52)) ClearFlag(52);
               else SetFlag(52);
             }
