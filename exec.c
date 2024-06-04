@@ -1076,8 +1076,9 @@ int Exec(int addr) {
            addr--;
            }
          else {                                            // End
-           running = 0;
-           addr = oaddr;
+         addr =Rtn(addr);
+//           running = 0;
+//           addr = oaddr;
            ram[REG_E+1] |= 0x0f;
            ram[REG_E+0] = 0xff;
            }
