@@ -12,6 +12,7 @@ void Fix(byte n) {
     }
   if (n >= 0x0a) {
     Message("DATA ERRROR");
+    Error();
     return;
     }
   SetFlag(40);

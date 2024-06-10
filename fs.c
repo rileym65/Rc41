@@ -13,6 +13,7 @@ int Fs(byte n) {
     }
   if (n >= 56) {
     Message("NONEXISTENT");
+    Error();
     return 0;
     }
   flag = FlagSet(n);

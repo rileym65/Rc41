@@ -40,6 +40,7 @@ int Gto2(int address) {
       }
     if (flag != 0 && addr == last) {
       Message("NONEXISTENT");
+      Error();
       return 0;
       }
     }

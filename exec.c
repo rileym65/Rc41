@@ -976,6 +976,7 @@ int Exec(int addr) {
          else if (byt == 30) addr = CardReader(b2, addr);
          else {
            Message("NONEXISTENT");
+           Error();
            }
          break;
     case 0xa8:                                             // SF

@@ -13,6 +13,7 @@ NUMBER Rcl(int rreg) {
     reg = base + (rreg - 0x80);
     if (reg > 0xfff) {
       Message("NONEXISTENT");
+      Error();
       return ZERO;
       }
     reg = base + ToInteger(RecallNumber(reg));
@@ -22,6 +23,7 @@ NUMBER Rcl(int rreg) {
     }
   if (reg > 0xfff) {
     Message("NONEXISTENT");
+    Error();
     return ZERO;
     }
   return RecallNumber(reg);

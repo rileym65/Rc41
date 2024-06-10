@@ -59,7 +59,6 @@ char *InputGtoXeq(char* line, byte base) {
   char buffer[300];
   line = NextToken(line, token);
   if (token[0] == '.') {
-printf("non-programmable\n");
     if (token[1] == '.') {
       n = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
       ram[REG_B+0] = n & 0xff;
@@ -371,6 +370,10 @@ int main(int argc, char** argv) {
             }
           else if (strcasecmp(token,"RALL") == 0) {
             CardReader(37,0);
+            }
+          else if (strcasecmp(token,"WPRG") == 0) {
+            pchar = NextToken(pchar, token);
+            Wprg(token);
             }
           else if (strcasecmp(token,"RS") == 0) {
             if (FlagSet(22)) {

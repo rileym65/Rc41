@@ -38,6 +38,7 @@ OBJS= \
 	eng.o \
 	eplus.o \
 	ereg.o \
+	error.o \
 	ex.o \
 	exec.o \
 	fact.o \
@@ -110,6 +111,7 @@ OBJS= \
 	tone.o \
 	toptr.o \
 	view.o \
+	wprg.o \
 	ytox.o
 
 $(PROJECT): $(OBJS)

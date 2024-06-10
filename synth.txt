@@ -4,7 +4,10 @@ N      LASTX     \
 O      CLX       ]
 P      X=Y?      ^
 Q      X<>Y?     _
-a      X<0?
+a      X<=0?
+b      MEAN
 c      SDEV
 d      AVIEW
-
+e      CLD
+|-     SIGN     ---
+                 |

@@ -17,6 +17,7 @@ void Arcl(int rreg) {
     reg = base + (rreg - 0x80);
     if (reg > 0xfff) {
       Message("NONEXISTENT");
+    Error();
       return;
       }
     reg = base + ToInteger(RecallNumber(reg));
@@ -26,6 +27,7 @@ void Arcl(int rreg) {
     }
   if (reg > 0xfff) {
     Message("NONEXISTENT");
+    Error();
     return;
     }
   for (i=0; i<32; i++) buffer[i] = 0;

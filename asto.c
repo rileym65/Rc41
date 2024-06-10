@@ -16,6 +16,7 @@ void Asto(int rreg) {
     reg = base + (rreg - 0x80);
     if (reg > 0xfff) {
       Message("NONEXISTENT");
+      Error();
       return;
       }
     reg = base + ToInteger(RecallNumber(reg));
@@ -25,6 +26,7 @@ void Asto(int rreg) {
     }
   if (reg > 0xfff) {
     Message("NONEXISTENT");
+      Error();
     return;
     }
   reg *= 7;

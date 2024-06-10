@@ -20,6 +20,7 @@ int GtoAlpha(int address) {
     return addr;
     }
   Message("NONEXISTENT");
+  Error();
   return 0;
   }
 

@@ -12,6 +12,7 @@ void Cf(byte n) {
     }
   if (n >= 30) {
     Message("NONEXISTENT");
+    Error();
     return;
     }
   ClearFlag(n);

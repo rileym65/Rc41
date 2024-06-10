@@ -15,6 +15,7 @@ void EReg(byte post) {
     }
   if (base+e > 0xfff-6) {
     Message("NONEXISTENT");
+    Error();
     return;
     }
   ram[REG_C+6] = (e >> 4) & 0xff;

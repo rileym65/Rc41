@@ -12,6 +12,7 @@ void Sci(byte n) {
     }
   if (n >= 0x0a) {
     Message("DATA ERRROR");
+    Error();
     return;
     }
   ClearFlag(40);

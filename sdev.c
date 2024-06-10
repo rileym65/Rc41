@@ -28,6 +28,7 @@ void Sdev() {
   n = atof(tmp);
   if (n == 1) {
     Message("DATA ERROR");
+    Error();
     return;
     }
   meanx = x/n;
@@ -44,6 +45,7 @@ void Sdev() {
   x2 = atof(tmp);
   if (n == 1) {
     Message("DATA ERROR");
+    Error();
     return;
     }
   meanx = x/n;

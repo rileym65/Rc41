@@ -150,6 +150,7 @@ extern void    EMinus();
 extern void    Eng(byte n);
 extern void    EPlus();
 extern void    EReg(byte post);
+extern void    Error();
 extern NUMBER  Ex(NUMBER a);
 extern int     Exec(int addr);
 extern NUMBER  Fact(NUMBER a);
@@ -224,6 +225,7 @@ extern int     ToInteger(NUMBER a);
 extern void    Tone(byte n);
 extern int     ToPtr(int addr);
 extern void    View(byte post);
+extern void    Wprg(char* name);
 extern NUMBER  YtoX(NUMBER y, NUMBER x);
 
 

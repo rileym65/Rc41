@@ -13,6 +13,7 @@ void Sto(NUMBER a,int rreg) {
     reg = base + (rreg - 0x80);
     if (reg > 0xfff) {
       Message("NONEXISTENT");
+      Error();
       return;
       }
     reg = base + ToInteger(RecallNumber(reg));
@@ -22,6 +23,7 @@ void Sto(NUMBER a,int rreg) {
     }
   if (reg > 0xfff) {
     Message("NONEXISTENT");
+    Error();
     return;
     }
   StoreNumber(a, reg);

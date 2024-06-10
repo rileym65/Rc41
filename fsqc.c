@@ -13,6 +13,7 @@ int FsQc(byte n) {
     }
   if (n >= 30) {
     Message("NONEXISTENT");
+    Error();
     return 0;
     }
   flag = FlagSet(n);

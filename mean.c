@@ -16,6 +16,7 @@ void Mean() {
   x = RecallNumber(base+5);
   if (IsZero(x)) {
     Message("DATA ERROR");
+    Error();
     return;
     }
   x = Div(y, x);

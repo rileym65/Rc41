@@ -12,6 +12,7 @@ void Sf(byte n) {
     }
   if (n >= 30) {
     Message("NONEXISTENT");
+    Error();
     return;
     }
   SetFlag(n);

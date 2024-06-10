@@ -25,6 +25,7 @@ void Printer(byte function) {
   char   buffer[256];
   if (FlagSet(55) == 0) {
     Message("NONEXISTENT");
+    Error();
     return;
     }
   if (FlagSet(21) == 0) return;
@@ -56,6 +57,7 @@ void Printer(byte function) {
         }
       if (m > 127) {
         Message("NONEXISTENT");
+        Error();
         return;
         }
       }
@@ -73,6 +75,7 @@ void Printer(byte function) {
         }
       if (m > 127) {
         Message("DATA ERROR");
+        Error();
         return;
         }
       }
@@ -112,11 +115,13 @@ void Printer(byte function) {
         }
       if (p > 127) {
         Message("DATA ERROR");
+        Error();
         return;
         }
       }
     else {
       Message("DATA ERROR");
+      Error();
       return;
       }
     if ((ram[REG_Y+6] & 0xf0) != 0x10) {
@@ -263,11 +268,13 @@ void Printer(byte function) {
     reg += s;
     if (reg > 0xfff) {
       Message("NONEXISTENT");
+      Error();
       }
     else {
       while (reg <= e) {
         if (reg > 0xfff) {
           Message("NONEXISTENT");
+          Error();
           reg = e+1;
           }
         else {
@@ -350,6 +357,7 @@ void Printer(byte function) {
         }
       if (m > 127) {
         Message("NONEXISTENT");
+        Error();
         return;
         }
       }
@@ -368,6 +376,7 @@ void Printer(byte function) {
         }
       if (m > 127) {
         Message("NONEXISTENT");
+        Error();
         return;
         }
       }
@@ -377,6 +386,7 @@ void Printer(byte function) {
     }
   else {
     Message("NONEXISTENT");
+    Error();
     }
   }
 

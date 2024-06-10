@@ -9,6 +9,7 @@ NUMBER Sqrt(NUMBER a) {
   DNUMBER t;
   if (a.sign) {
     Message("DATA ERROR");
+    Error();
     return a;
     }
   x = NumberToDNumber(a);

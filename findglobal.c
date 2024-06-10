@@ -35,6 +35,7 @@ int FindGlobal(char* label) {
       else addr += dst - 1;
     }
   Message("NONEXISTENT");
+  Error();
   return 0;
   }
 

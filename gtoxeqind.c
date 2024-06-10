@@ -27,6 +27,7 @@ int GtoXeqInd(int address) {
       }
     if (flag != 0 && addr == last) {
       Message("NONEXISTENT");
+      Error();
       return 0;
       }
     }
