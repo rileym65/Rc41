@@ -67,6 +67,7 @@ OBJS= \
 	init.o \
 	integer.o \
 	isg.o \
+	isinteger.o \
 	isize.o \
 	iszero.o \
 	ln.o \

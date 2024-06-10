@@ -8,6 +8,7 @@ DNUMBER D_Div(DNUMBER a, DNUMBER b) {
   int temp1[21];
   int temp2[21];
   int p;
+  int flag;
   DNUMBER result;
   p=9;
   ea = (a.exponent[0] * 100) + (a.exponent[1] * 10) + a.exponent[2];
@@ -50,8 +51,13 @@ DNUMBER D_Div(DNUMBER a, DNUMBER b) {
         }
       } else p = 20;
     }
-  while (result.mantissa[0] == 0) {
-    for (i=0; i<18; i++) result.mantissa[i] = result.mantissa[i+1];
+  flag = -1;
+  while (result.mantissa[0] == 0 && flag) {
+    flag = 0;
+    for (i=0; i<18; i++) {
+      result.mantissa[i] = result.mantissa[i+1];
+      if (result.mantissa[i] != 0) flag = -1;
+      }
     result.mantissa[19] = 0;
     ea--;
     }

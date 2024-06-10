@@ -280,7 +280,8 @@ int CardReader(byte function, int addr) {
     a = Rcl(25);
     i = ToInteger(a);
     if (i < 0 || i > 9 || a.sign) {
-      Message("ERROR");
+      Message("DATA ERROR");
+      Error();
       }
     else {
       if (i & 8) SetFlag(36); else ClearFlag(36);
@@ -304,7 +305,8 @@ int CardReader(byte function, int addr) {
     a = Rcl(25);
     i = ToInteger(a);
     if (i < 0 || i > 25 || a.sign) {
-      Message("ERROR");
+      Message("DATA ERROR");
+      Error();
       }
     else {
       a = Rcl(i);
@@ -341,7 +343,8 @@ int CardReader(byte function, int addr) {
     a = Rcl(25);
     i = ToInteger(a);
     if (i < 0 || i > 25 || a.sign) {
-      Message("ERROR");
+      Message("DATA ERROR");
+      Error();
       }
     else {
       a = Rcl(i);

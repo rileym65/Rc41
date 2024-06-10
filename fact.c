@@ -5,7 +5,7 @@ NUMBER Fact(NUMBER a) {
   int n;
   double r;
   char tmp[24];
-  if (a.esign != 0) {
+  if (a.esign != 0 || a.sign != 0) {
     Message("DATA ERROR");
     Error();
     return a;
@@ -17,7 +17,7 @@ NUMBER Fact(NUMBER a) {
     }
   for (i=a.exponent[1]+1; i<10; i++)
     if (a.mantissa[i] != 0) {
-      Message("NONEXISTENT");
+      Message("DATA ERROR");
       Error();
       return a;
       }
@@ -29,6 +29,7 @@ NUMBER Fact(NUMBER a) {
   if (n > 69) {
     Message("OUT OF RANGE");
     Error();
+    return a;
     }
   r = 1;
   for (i=1; i<= n; i++) {

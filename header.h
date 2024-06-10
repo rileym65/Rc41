@@ -180,6 +180,7 @@ extern NUMBER  Hr(NUMBER a);
 extern void    Init();
 extern NUMBER  Integer(NUMBER a);
 extern int     Isg(byte post);
+extern int     IsInteger(NUMBER a);
 extern int     isize(int address);
 extern int     IsZero(NUMBER a);
 extern NUMBER  Ln(NUMBER a);

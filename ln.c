@@ -12,6 +12,16 @@ NUMBER Ln(NUMBER a) {
   DNUMBER term;
   DNUMBER base;
   DNUMBER last;
+  if (IsZero(a)) {
+    Message("DATA ERROR");
+    Error();
+    return a;
+    }
+  if (a.sign) {
+    Message("DATA ERROR");
+    Error();
+    return a;
+    }
   x = NumberToDNumber(a);
   one.sign = 0;
   one.esign = 0;
@@ -33,8 +43,9 @@ NUMBER Ln(NUMBER a) {
     term = D_Mul(term, base);
     sum = D_Add(sum, term);
     flag = 0;
-    for (i=0; i<15; i++)
+    for (i=0; i<15; i++) {
       if (last.mantissa[i] != sum.mantissa[i]) flag = -1;
+      }
     }
   sum = D_Add(sum, sum);
   return DNumberToNumber(sum);
