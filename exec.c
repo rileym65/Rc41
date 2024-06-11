@@ -545,11 +545,12 @@ int Exec(int addr) {
     case 0x5e:                                             // ATAN
          a = RecallNumber(R_X);
          StoreNumber(a, R_L);
-         NtoA(a, n);
-         d = atof(n);
-         d = atan(d);
-         sprintf(n,"%.12e",d);
-         a = AtoN(n);
+         a = Atan(a);
+//         NtoA(a, n);
+//         d = atof(n);
+//         d = atan(d);
+//         sprintf(n,"%.12e",d);
+//         a = AtoN(n);
          if (FlagSet(43) == 0 && FlagSet(42) == 0) a = Mul(a, RTOD);
          else if (FlagSet(42)) a = Mul(a, RTOG);
          StoreNumber(a, R_X);

@@ -67,7 +67,7 @@ typedef struct {
   byte sign;
   byte mantissa[20];
   byte esign;
-  byte exponent[3];
+  int exponent[3];
   } DNUMBER;
 
 LINK char display[32];
@@ -102,13 +102,17 @@ LINK int    printPosition;
 LINK int    linksCleared;
 
 #ifdef MAIN
+NUMBER  S_ONE  = { 0, { 1,0,0,0,0,0,0,0,0,0 }, 0, { 0,0 } };
+DNUMBER S_PI   = { 0, { 3,1,4,1,5,9,2,6,5,3 }, 0, { 0,0 } };
 DNUMBER D_ZERO = { 0, { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 0, { 0,0,0 } };
 DNUMBER D_HALF = { 0, { 5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 9, { 0,0,1 } };
 DNUMBER D_ONE  = { 0, { 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 0, { 0,0,0 } };
-DNUMBER D_TWO  = { 0, { 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 0, { 0,0,0 } };
+DNUMBER D_TWO  = { 0, { 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 0, { 0,0,0 } };
 DNUMBER D_PI   = { 0, { 3,1,4,1,5,9,2,6,5,3,5,8,9,7,9,3,2,3,8,4 }, 0, { 0,0,0 } };
 DNUMBER D_PI2  = { 0, { 1,5,7,0,7,9,6,3,2,6,7,9,4,8,9,6,6,1,9,2 }, 0, { 0,0,0 } };
 #else
+extern NUMBER S_ONE;
+extern NUMBER S_PI;
 extern DNUMBER D_PI;
 extern DNUMBER D_PI2;
 extern DNUMBER D_ZERO;

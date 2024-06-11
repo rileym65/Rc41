@@ -1,6 +1,18 @@
 #include "header.h"
 
 NUMBER Asin(NUMBER a) {
+  NUMBER t;
+  NUMBER x;
+  t = Mul(a,a);
+  t = Sub(S_ONE, t);
+  t = Sqrt(t);
+  x = Div(a, t);
+  t = Atan(x);
+  return t;
+  }
+
+/*
+NUMBER Asin(NUMBER a) {
   int i;
   int flag;
   DNUMBER one = { 0, { 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 0, { 0,0,0 } };
@@ -14,12 +26,29 @@ NUMBER Asin(NUMBER a) {
   DNUMBER term2;
   DNUMBER fact = { 0, { 3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 0, { 0,0,0 } };
   DNUMBER last;
+  if (a.esign == 0) {
+    if (a.exponent[0] != 0 || a.exponent[1] != 0) {
+      Message("DATA ERROR");
+      Error();
+      return a;
+      }
+    if (a.mantissa[0] > 1) {
+      Message("DATA ERROR");
+      Error();
+      return a;
+      }
+    for (i=1; i<10; i++)
+      if (a.mantissa[i] != 0) {
+        Message("DATA ERROR");
+        Error();
+        return a;
+        }
+    }
   x = NumberToDNumber(a);
   xsqr = D_Mul(x, x);
   sum = x;
   num = one;
   den = two;
-
   flag = -1;
   while (flag) {
     last = sum;
@@ -35,9 +64,9 @@ NUMBER Asin(NUMBER a) {
     fact = D_Add(fact, one);
 
     flag = 0;
-    for (i=0; i<15; i++)
+    for (i=0; i<12; i++)
       if (last.mantissa[i] != sum.mantissa[i]) flag = -1;
     }
   return DNumberToNumber(sum);
   }
-
+*/

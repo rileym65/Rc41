@@ -40,6 +40,7 @@ DNUMBER D_Mul(DNUMBER a, DNUMBER b) {
     }
   for (i=0; i<19; i++)
     if (p+i < 19) result.mantissa[i] = temp[p+i];
+      else result.mantissa[i] = 0;
   result.esign = (ea < 0) ? 9 : 0;
   if (ea < 0) ea = -ea;
   result.exponent[0] = (ea / 100);

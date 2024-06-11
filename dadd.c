@@ -34,12 +34,12 @@ DNUMBER D_Add(DNUMBER a, DNUMBER b) {
     temp2[i] = b.mantissa[i];
     }
   while (ea > eb) {
-    for (i=19; i>= 0; i--) temp2[i] = temp2[i-1];
+    for (i=19; i> 0; i--) temp2[i] = temp2[i-1];
     temp2[0] = 0;
     eb++;
     }
   while (eb > ea) {
-    for (i=19; i>= 0; i--) temp1[i] = temp1[i-1];
+    for (i=19; i> 0; i--) temp1[i] = temp1[i-1];
     temp1[0] = 0;
     ea++;
     }
