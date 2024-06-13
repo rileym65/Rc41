@@ -1,5 +1,8 @@
 #include "header.h"
 
+/* *********************************************** */
+/* ***** Convert ram address to NABC address ***** */
+/* *********************************************** */
 int ToPtr(int addr) {
   int reg;
   int byt;

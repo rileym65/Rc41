@@ -57,6 +57,7 @@ OBJS= \
 	fsqc.o \
 	gto2.o \
 	gtoalpha.o \
+	gtoend.o \
 	gotoline.o \
 	gtoxeq.o \
 	gtoxeqind.o \
@@ -89,7 +90,9 @@ OBJS= \
 	push.o \
 	rcl.o \
 	recallnumber.o \
+	relink.o \
 	rnd.o \
+	rprg.o \
 	rtn.o \
 	sci.o \
 	sdev.o \

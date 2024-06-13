@@ -325,6 +325,7 @@ CLP "name"
 DEL nnn
 GTO .nnn
 PACK
+RPRG
 SIZE nnn
 SST
 WPRG "name"

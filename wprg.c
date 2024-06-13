@@ -16,8 +16,6 @@ void Wprg(char* name) {
     }
   address = FindStart(address);
   end = FindEnd(address);
-  printf("[%04x]: %02x %02x %02x\n",address,ram[address],ram[address-1],ram[address-2]);
-  printf("[%04x]: %02x %02x %02x\n",end,ram[end],ram[end-1],ram[end-2]);
   printf("Card file? ");
   fgets(filename, 1023, stdin);
   while (strlen(filename) > 0 && filename[strlen(filename)-1] < ' ')
@@ -36,7 +34,11 @@ void Wprg(char* name) {
     card[5] = (len >> 8) & 0xff;
     card[6] = (len & 0xff);
     write(file, card, 7);
-    write(file, ram+end, len);
+    while (len > 0) {
+      write(file, ram+address, 1);
+      address--;
+      len--;
+      }
     close(file);
     }
   else {

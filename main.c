@@ -375,6 +375,9 @@ int main(int argc, char** argv) {
             pchar = NextToken(pchar, token);
             Wprg(token);
             }
+          else if (strcasecmp(token,"RPRG") == 0) {
+            Rprg();
+            }
           else if (strcasecmp(token,"RS") == 0) {
             if (FlagSet(22)) {
               StoreNumber(Normalize(RecallNumber(R_X)), R_X);
