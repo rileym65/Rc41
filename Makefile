@@ -55,6 +55,7 @@ OBJS= \
 	fromptr.o \
 	fs.o \
 	fsqc.o \
+	getalpha.o \
 	gto2.o \
 	gtoalpha.o \
 	gtoend.o \

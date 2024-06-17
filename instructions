@@ -270,6 +270,20 @@ FD  Text 13
 FE  Text 14
 FF  Text 15
 
+Tape Drive commands
+    CREATE
+    DIR
+    NEWM      - Non programmable
+    PURGE
+    READA
+    SEC
+    UNSEC
+    WRTA
+    WRTP
+    WRTPV
+    WRTS
+    ZERO
+
 Printer commands
     ACA
     ACCHR

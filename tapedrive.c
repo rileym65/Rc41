@@ -36,6 +36,43 @@ void Allocate(int l) {
   WriteSector(sec);
   }
 
+void Deallocate(int l) {
+  int sec;
+  int ofs;
+  sec = l / 256;
+  ofs = l & 0xff;
+  if (written) WriteSector(sectorNumber);
+  ReadSector(sec);
+  sector[ofs] = 0x00;
+  WriteSector(sec);
+  }
+
+int FindFile(char* filename) {
+  int s;
+  int p;
+  int d;
+  int flag;
+  if (written) WriteSector(sectorNumber);
+  d = 0;
+  p = 0;
+  s = 2;
+  flag = -1;
+  while (flag) {
+    ReadSector(s);
+    while (p < 256) {
+      if (sector[p] != 0x00) {
+        if (strcmp(filename, sector+p+1) == 0) return p;
+        }
+      if (sector[p] == 0xff) flag = 0;
+      p += 32;
+      d++;
+      }
+    p = 0;
+    s++;
+    }
+  return -1;
+  }
+
 int FindOpenDir() {
   int s;
   int p;
@@ -119,6 +156,8 @@ int CreateFile(char* filename, int size, char typ) {
   sector[dirofs+13] = size & 0xff;
   sector[dirofs+14] = (rec >> 8) & 0xff;
   sector[dirofs+15] = rec & 0xff;
+  sector[dirofs+16] = (recs >> 8) & 0xff;
+  sector[dirofs+17] = recs & 0xff;
   WriteSector(sectorNumber);
   for (i=0; i<recs; i++) Allocate(rec + i);
   for (i=0; i<256; i++) sector[i] = 0;
@@ -168,9 +207,15 @@ void td_dir() {
         if (sector[p] == 'K') printf("KE");
         if (sector[p] == 'S') printf("ST");
         if (sector[p] == 'A') printf("WA");
-        if (sector[p+9] & 1) printf(",S");
-        else printf("  ");
-        printf("    ");
+        if (sector[p+9] != 0) {
+          switch(sector[p+9]) {
+            case 1: printf(",S "); break;
+            case 2: printf(",P "); break;
+            case 3: printf(",PS"); break;
+            }
+          }
+        else printf("   ");
+        printf("   ");
         r = (sector[p+10] << 8) | sector[p+11];
         printf("%4d\n",r);
         }
@@ -195,23 +240,353 @@ void td_create() {
   int m;
   int size;
   NUMBER x;
-printf("Create data file\n");
-  m = REG_P+2;
-  while (m >= REG_M && ram[m] == 0x00) m--;
-  p = 0;
-  while (m >= REG_M) {
-    if (ram[m] != 0x00) filename[p++] = ram[m];
-    m--;
+  GetAlpha(filename);
+  filename[7] = 0;
+  if (strlen(filename) == 0) {
+    Message("NAME ERR");
+    Error();
+    return;
     }
-  if (p > 7) p = 7;
-  filename[p] = 0;
-printf("Filename: %s\n",filename);
+  if (FindFile(filename) >= 0) {
+    Message("DUP FL NAME");
+    Error();
+    return;
+    }
   x = RecallNumber(R_X);
-ShowNumber(x);
   size = ToInteger(x);
-printf("Size: %d\n",size);
   p = CreateFile(filename, size * 7, 'D');
-printf("create result: %d\n",p);
+  }
+
+void td_reada() {
+  int  i;
+  int  fp;
+  int  rec;
+  int  p;
+  char filename[32];
+  GetAlpha(filename);
+  if (strlen(filename) == 0) {
+    Message("NAME ERR");
+    Error();
+    return;
+    }
+  fp = FindFile(filename);
+  if (fp >= 0 && sector[fp] != 'A') {
+    Message("FL TYPE ERR");
+    Error();
+    return;
+    }
+  if (fp < 0) {
+    Message("FL NOT FOUND");
+    Error();
+    return;
+    }
+  rec = (sector[fp+14] << 8) | sector[fp+15];
+  p = 0;
+  ReadSector(rec);
+  for (i=0; i<16*7; i++) ram[i] = sector[p++];
+  for (i=0x0c0*7; i<0x200*7; i++) {
+    ram[i] = sector[p++];
+    if (p == 256) {
+      rec++;
+      ReadSector(rec);
+      p = 0;
+      }
+    }
+  }
+
+void td_purge() {
+  int  i;
+  int  fp;
+  int  rec;
+  int  recs;
+  char filename[32];
+  GetAlpha(filename);
+  if (strlen(filename) == 0) {
+    Message("NAME ERR");
+    Error();
+    return;
+    }
+  fp = FindFile(filename);
+  if (fp < 0) {
+    Message("FL NOT FOUND");
+    Error();
+    return;
+    }
+  if (sector[fp+9] & 1) {
+    Message("FL SECURED");
+    Error();
+    return;
+    }
+  rec = (sector[fp+14] << 8) | sector[fp+15];
+  recs = (sector[fp+16] << 8) | sector[fp+17];
+  for (i=0; i<32; i++) sector[fp+i] = 0;
+  WriteSector(sectorNumber);
+  for (i=0; i<256; i++) sector[i] = 0;
+  for (i=0; i<recs; i++) WriteSector(rec+i);
+  for (i=0; i<recs; i++) Deallocate(rec+i);
+  }
+
+void td_sec() {
+  int  fp;
+  char filename[32];
+  GetAlpha(filename);
+  if (strlen(filename) == 0) {
+    Message("NAME ERR");
+    Error();
+    return;
+    }
+  fp = FindFile(filename);
+  if (fp < 0) {
+    Message("FL NOT FOUND");
+    Error();
+    return;
+    }
+  sector[fp+9] |= 0x01;
+  WriteSector(sectorNumber);
+  }
+
+void td_unsec() {
+  int  fp;
+  char filename[32];
+  GetAlpha(filename);
+  if (strlen(filename) == 0) {
+    Message("NAME ERR");
+    Error();
+    return;
+    }
+  fp = FindFile(filename);
+  if (fp < 0) {
+    Message("FL NOT FOUND");
+    Error();
+    return;
+    }
+  sector[fp+9] &= 0xfe;
+  WriteSector(sectorNumber);
+  }
+
+void td_wrta() {
+  int  i;
+  int  fp;
+  int  rec;
+  int  p;
+  char filename[32];
+  GetAlpha(filename);
+  if (strlen(filename) == 0) {
+    Message("NAME ERR");
+    Error();
+    return;
+    }
+  fp = FindFile(filename);
+  if (fp >= 0 && sector[fp] != 'A') {
+    Message("DUP FL NAME");
+    Error();
+    return;
+    }
+  if (fp >= 0 && sector[fp+9] & 1) {
+    Message("FL SECURED");
+    Error();
+    return;
+    }
+  if (fp >= 0) {
+    rec = (sector[fp+14] << 8) | sector[fp+15];
+    }
+  else {
+    rec = CreateFile(filename, 2352, 'A');
+    if (rec < 0) {
+      return;
+      }
+    }
+  p = 0;
+  for (i=0; i<16*7; i++) sector[p++] = ram[i];
+  for (i=0x0c0*7; i<0x200*7; i++) {
+    sector[p++] = ram[i];
+    if (p == 256) {
+      WriteSector(rec);
+      rec++;
+      p = 0;
+      }
+    }
+  if (p != 0) WriteSector(rec);
+  }
+
+void td_wrtp(int priv) {
+  int i;
+  int address;
+  int end;
+  int len;
+  int rec;
+  int recs;
+  int fp;
+  int p;
+  int dirsec;
+  int dirofs;
+  char *comma;
+  char filename[32];
+  char progname[32];
+  GetAlpha(progname);
+  if (strlen(progname) == 0) {
+    Message("NAME ERR");
+    Error();
+    return;
+    }
+  comma = strchr(progname, ',');
+  if (comma != NULL) {
+    if (comma == progname) {
+printf("Need to code for ',filename'\n");
+return;
+      }
+    else {
+      *comma = 0;
+      comma++;
+      strcpy(filename, comma);
+      }
+    }
+  else {
+    strcpy(filename,progname);
+    }
+  filename[7] = 0;
+printf("Progname: %s\n", progname);
+printf("Filename: %s\n", filename);
+  if (strlen(filename) == 0 || strlen(progname) == 0) {
+    Message("NAME ERR");
+    Error();
+    return;
+    }
+  address = FindGlobal(progname);
+  if (address == 0) {
+    Message("NAME ERR");
+    Error();
+    return;
+    }
+  address = FindStart(address);
+  end = FindEnd(address);
+  end -= 2;
+  len = address - end;
+  fp = FindFile(filename);
+  if (fp >= 0 && sector[fp] != 'P') {
+    Message("DUP FL NAME");
+    Error();
+    return;
+    }
+  if (fp >= 0 && sector[fp+9] & 1) {
+    Message("FL SECURED");
+    Error();
+    return;
+    }
+  if (fp > 0) {
+    dirsec = sectorNumber;
+    dirofs = fp;
+    rec = (sector[fp+14] << 8) | sector[fp+15];
+    recs = (sector[fp+16] << 8) | sector[fp+17];
+    for (i=0; i<recs; i++) Deallocate(rec+i);
+    rec = FindOpenSectors(recs);
+    for (i=0; i<recs; i++) Allocate(rec+i);
+    ReadSector(dirsec);
+    sector[dirofs + 10] = (((len + 6) / 7) >> 8) & 0xff;
+    sector[dirofs + 11] = ((len + 6) / 7) & 0xff;
+    sector[dirofs + 12] = (len >> 8) & 0xff;
+    sector[dirofs + 13] = len & 0xff;
+    sector[dirofs + 14] = (rec >> 8) & 0xff;
+    sector[dirofs + 15] = rec & 0xff;
+    sector[dirofs + 16] = (recs >> 8) & 0xff;
+    sector[dirofs + 17] = recs & 0xff;
+    WriteSector(dirsec);
+printf("Overwriting\n");
+printf("regs: %d\n",len/7);
+printf("len : %d\n",len);
+    }
+  else {
+    rec = CreateFile(filename, len, 'P');
+    }
+  p = 0;
+  while (len >= 0) {
+    sector[p++] = ram[address--];
+    len --;
+    if (p == 256) {
+      WriteSector(rec);
+      rec++;
+      p = 0;
+      }
+    }
+  if (p > 0) WriteSector(rec);
+  fp = FindFile(filename);
+  if (fp >= 0) {
+    if (priv) sector[fp+9] |= 0x02;
+      else sector[fp+9] &= 0xfd;
+    WriteSector(sectorNumber);
+    }
+
+  }
+
+
+
+
+
+
+void td_wrts() {
+  int  i;
+  int  fp;
+  int  rec;
+  char filename[32];
+  GetAlpha(filename);
+  if (strlen(filename) == 0) {
+    Message("NAME ERR");
+    Error();
+    return;
+    }
+  fp = FindFile(filename);
+  if (fp >= 0 && sector[fp] != 'S') {
+    Message("DUP FL NAME");
+    Error();
+    return;
+    }
+  if (fp >= 0 && sector[fp+9] & 1) {
+    Message("FL SECURED");
+    Error();
+    return;
+    }
+  if (fp >= 0) {
+    rec = (sector[fp+14] << 8) | sector[fp+15];
+    ReadSector(rec);
+    for (i=0; i<112; i++) sector[i] = ram[i];
+    WriteSector(rec);
+    }
+  else {
+    rec = CreateFile(filename, 112, 'S');
+    if (rec > 0) {
+      for (i=0; i<112; i++) sector[i] = ram[i];
+      WriteSector(rec);
+      }
+    }
+  }
+
+void td_zero() {
+  int  i;
+  int  fp;
+  int  rec;
+  int  recs;
+  char filename[32];
+  GetAlpha(filename);
+  if (strlen(filename) == 0) {
+    Message("NAME ERR");
+    Error();
+    return;
+    }
+  fp = FindFile(filename);
+  if (fp < 0) {
+    Message("FL NOT FOUND");
+    Error();
+    return;
+    }
+  if (sector[fp+9] & 1) {
+    Message("FL SECURED");
+    Error();
+    return;
+    }
+  rec = (sector[fp+14] << 8) | sector[fp+15];
+  recs = (sector[fp+16] << 8) | sector[fp+17];
+  for (i=0; i<256; i++) sector[i] = 0;
+  for (i=0; i<recs; i++) WriteSector(rec+i);
   }
 
 void TapeDrive(byte function, int addr) {
@@ -231,6 +606,42 @@ void TapeDrive(byte function, int addr) {
       return;
       }
     td_newm(addr+1);
+    }
+
+  if (function == 4) {                           /* PURGE */
+    td_purge();
+    }
+
+  if (function == 5) {                           /* READA */
+    td_reada();
+    }
+
+  if (function == 13) {                          /* SEC */
+    td_sec();
+    }
+
+  if (function == 15) {                          /* UNSEC */
+    td_unsec();
+    }
+
+  if (function == 17) {                          /* WRTA */
+    td_wrta();
+    }
+
+  if (function == 19) {                          /* WRTP */
+    td_wrtp(0);
+    }
+
+  if (function == 20) {                          /* WRTPV */
+    td_wrtp(1);
+    }
+
+  if (function == 23) {                          /* WRTS */
+    td_wrts();
+    }
+
+  if (function == 24) {                          /* ZERO */
+    td_zero();
     }
 
   }
