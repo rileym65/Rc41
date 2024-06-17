@@ -495,6 +495,10 @@ CATALOG2 catalog2[] = {
     { "7ISZI",   0xa7, 0x9e,    0 },
     { "7P<>S",   0xa7, 0x9f,    0 },
     { "7SCI",    0xa7, 0xa4,    0 },
+
+    { "CREATE",  0xa7, 0x01,    0 },
+    { "DIR",     0xa7, 0x02,    0 },
+    { "NEWM",    0xa7, 0x03,    0 },
     { "",        0x00, 0x00, 0xff }
   };
 
@@ -559,6 +563,11 @@ REV2 reverse2[] = {
   { 0xa7, 0x9e, "7ISZI"     },
   { 0xa7, 0x9f, "7P<>S"     },
   { 0xa7, 0xa4, "7SCI"      },
+
+  { 0xa7, 0x01, "CREATE"    },
+  { 0xa7, 0x02, "DIR"       },
+  { 0xa7, 0x03, "NEWM"      },
+
   { 0xff, 0xff, ""          }
   };
 

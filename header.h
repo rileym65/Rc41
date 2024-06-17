@@ -19,7 +19,8 @@ typedef unsigned char byte;
 
 #include "commands.h"
 
-#define RAMSIZE 28672
+#define RAMTOP  0x200
+#define RAMSIZE (RAMTOP * 7)
 #define REG_T       0
 #define REG_Z       7
 #define REG_Y      14
@@ -198,6 +199,7 @@ extern NUMBER  Normalize(NUMBER N);
 extern char*   NtoA(NUMBER a,char* buffer);
 extern DNUMBER NumberToDNumber(NUMBER a);
 extern NUMBER  Oct(NUMBER a);
+extern void    OpenTapeDrive(char* filename);
 extern void    Pack();
 extern void    Printer(byte function);
 extern void    ProgramByte(byte b);
@@ -228,6 +230,7 @@ extern void    Sto(NUMBER a,int rreg);
 extern void    StoreNumber(NUMBER n, int reg);
 extern NUMBER  Sub(NUMBER a, NUMBER b);
 extern NUMBER  Tan(NUMBER a);
+extern void    TapeDrive(byte function, int addr);
 extern NUMBER  TensCompliment(NUMBER a);
 extern int     ToInteger(NUMBER a);
 extern void    Tone(byte n);

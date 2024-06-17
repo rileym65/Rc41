@@ -5,7 +5,12 @@ int Rtn(int addr) {
   if (running) {
     if (ram[REG_B+2] == 0x00 && ram[REG_B+3] == 0x00) {
       running = 0;
-      return addr;
+      GotoLine(0);
+      for (i=REG_B+2; i<REG_B+7; i++) ram[i] = 0x00;
+      for (i=REG_A+0; i<REG_A+7; i++) ram[i] = 0x00;
+      ram[REG_E] = 0x00;
+      ram[REG_E+1] &= 0xf0;
+      return 0;
       }
     for (i=REG_B+0; i<REG_B+5; i++) ram[i] = ram[i+2];
     ram[REG_B+5] = ram[REG_A+0];

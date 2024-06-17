@@ -974,6 +974,7 @@ int Exec(int addr) {
          byt = ((cmd &0x0f) << 2) | ((b2 & 0xc0) >> 6);
          b2 &= 0x3f;
          if (byt == 29) Printer(b2);
+         else if (byt == 28) TapeDrive(b2, addr);
          else if (byt == 30) addr = CardReader(b2, addr);
          else {
            Message("NONEXISTENT");
@@ -1078,11 +1079,18 @@ int Exec(int addr) {
            addr--;
            }
          else {                                            // End
-         addr =Rtn(addr);
+           addr =Rtn(addr);
 //           running = 0;
 //           addr = oaddr;
-           ram[REG_E+1] |= 0x0f;
-           ram[REG_E+0] = 0xff;
+           if (addr != 0) {
+printf("Return with address != 0\n");
+             ram[REG_E+1] |= 0x0f;
+             ram[REG_E+0] = 0xff;
+             }
+           else {
+             ram[REG_E+1] &= 0xf0;
+             ram[REG_E+0] = 0x00;
+             }
            }
          break;
     case 0xce:                                             // X<>

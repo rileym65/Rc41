@@ -181,7 +181,7 @@ void Printer(byte function) {
       }
     printf("STATUS:\n");
     reg = (ram[REG_C+2] << 4) + ((ram[REG_C+1] >> 4) & 0x0f);
-    printf("SIZE= %03d\n",0x1000 - reg);
+    printf("SIZE= %03d\n",RAMTOP - reg);
     reg = (ram[REG_C+6] << 4) | ((ram[REG_C+5] >> 4) & 0x0f);
     printf("E= %03d\n",reg);
     if (FlagSet(42) == 0 && FlagSet(43) == 0) printf("DEG\n");
@@ -221,7 +221,7 @@ void Printer(byte function) {
       }
     n = 0;
     reg = (ram[REG_C+2] << 4) | ((ram[REG_C+1] >> 4) & 0x0f);
-    while (reg < 0x1000) {
+    while (reg < RAMTOP) {
       x = RecallNumber(reg);
       Format(x, buffer);
       printf("R%02d= %s\n",n,buffer);

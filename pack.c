@@ -71,7 +71,7 @@ void Pack() {
       if (total > 0) {
         i = ((ram[cur] & 0x0f) << 8) | ram[cur-1];
         i = ((i & 0x1ff) * 7) + ((i >> 9) & 0x07);
-        i -= total;
+        if (i != 0) i -= total;
         i = ((i / 7) & 0x1ff) | ((i % 7) << 9);
         ram[cur] = ((i >> 8) & 0xff) | 0xc0;
         ram[cur-1] = i & 0xff;
@@ -92,7 +92,7 @@ void Pack() {
     }
   i = ((ram[end] & 0x0f) << 8) | ram[end-1];
   i = ((i & 0x1ff) * 7) + ((i >> 9) & 0x07);
-  i += count;
+  if (i != 0) i += count;
   i = ((i / 7) & 0x1ff) | ((i % 7) << 9);
   ram[end] = ((i >> 8) & 0xff) | 0xc0;
   ram[end-1] = i & 0xff;

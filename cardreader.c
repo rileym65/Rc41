@@ -25,7 +25,7 @@ int CardReader(byte function, int addr) {
     r00 = (ram[REG_C+2] << 4) | ((ram[REG_C+1] >> 4) & 0x0f);
     file = open(filename, O_RDONLY, 0666);
     if (file >= 0) {
-      len = 0x1000 - r00;
+      len = RAMTOP - r00;
       r00 *= 7;
       read(file, card, 5);
       if (card[0] != 'D') {
@@ -111,7 +111,7 @@ int CardReader(byte function, int addr) {
     r00 = (ram[REG_C+2] << 4) | ((ram[REG_C+1] >> 4) & 0x0f);
     file = open(filename, O_CREAT | O_TRUNC | O_WRONLY, 0666);
     if (file >= 0) {
-      len = 0x1000;
+      len = RAMTOP;
       r00 *= 7;
       card[0] = 'A';
       card[1] = 0x00;
@@ -134,7 +134,7 @@ int CardReader(byte function, int addr) {
     r00 = (ram[REG_C+2] << 4) | ((ram[REG_C+1] >> 4) & 0x0f);
     file = open(filename, O_CREAT | O_TRUNC | O_WRONLY, 0666);
     if (file >= 0) {
-      len = 0x1000 - r00;
+      len = RAMTOP - r00;
       r00 *= 7;
       card[0] = 'D';
       card[1] = 0x00;
@@ -378,7 +378,7 @@ int CardReader(byte function, int addr) {
       filename[strlen(filename)-1] = 0;
     file = open(filename, O_RDONLY);
     if (file >= 0) {
-      len = 0x1000;
+      len = RAMTOP;
       len *= 7;
       read(file, card, 5);
       if (card[0] != 'A') {

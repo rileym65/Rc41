@@ -60,11 +60,13 @@ char *InputGtoXeq(char* line, byte base) {
   line = NextToken(line, token);
   if (token[0] == '.') {
     if (token[1] == '.') {
-      n = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
-      ram[REG_B+0] = n & 0xff;
-      ram[REG_B+1] = 0x30 | ((n >> 8) & 0x0f);
-      ram[REG_E+0] = 0x00;
-      ram[REG_E+1] &= 0xf0;
+      GtoEnd();
+//      n = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
+//      ram[REG_B+0] = n & 0xff;
+//      ram[REG_B+1] = 0x30 | ((n >> 8) & 0x0f);
+//      ram[REG_E+0] = 0x00;
+//      ram[REG_E+1] &= 0xf0;
+      Pack();
       }
     else if (token[1] == '"') {
       }
@@ -91,6 +93,8 @@ char *InputGtoXeq(char* line, byte base) {
           ram[REG_E+0] = 0xff;
           if (base == 0xe0) {
             running = -1;
+            ram[REG_E+0] = 0xff;
+            ram[REG_E+1] |= 0x0f;
             }
           }
         }
@@ -233,6 +237,7 @@ int main(int argc, char** argv) {
     if (strcmp(argv[i],"-ss") == 0) { singleStep = -1; debug = -1; }
     }
   Init();
+  OpenTapeDrive("tape1.dat");
   if (ramClear == 0) {
     file = open("hp41.ram", O_RDONLY);
     if (file > 0) {
@@ -258,8 +263,8 @@ int main(int argc, char** argv) {
         }
       else {
         running = 0;
-        ram[REG_E+0] = 0xff;
-        ram[REG_E+1] |= 0x0f;
+//        ram[REG_E+0] = 0xff;
+//        ram[REG_E+1] |= 0x0f;
         }
       }
     else {
@@ -378,6 +383,10 @@ int main(int argc, char** argv) {
           else if (strcasecmp(token,"RPRG") == 0) {
             Rprg();
             }
+          else if (strcasecmp(token,"NEWM") == 0) {
+            pchar = NextToken(pchar, token);
+            TapeDrive(3, atoi(token));
+            }
           else if (strcasecmp(token,"RS") == 0) {
             if (FlagSet(22)) {
               StoreNumber(Normalize(RecallNumber(R_X)), R_X);
@@ -385,6 +394,8 @@ int main(int argc, char** argv) {
               ClearFlag(22);
               }
             running = -1;
+            ram[REG_E+0] = 0xff;
+            ram[REG_E+1] |= 0x0f;
             }
           else {
             while (catalog[i].flags != 0xff && strcasecmp(catalog[i].name, token) != 0) {

@@ -110,6 +110,7 @@ OBJS= \
 	storenumber.o \
 	sub.o \
 	tan.o \
+	tapedrive.o \
 	tenscompliment.o \
 	tointeger.o \
 	tone.o \

@@ -102,7 +102,7 @@ printf("Base: %x, start: %x, end: %x\n",base,start,end);
     }
   if (strcasecmp(cmd, "size") == 0) {
     base = (ram[REG_C+2] << 4) + ((ram[REG_C+1] >> 4) & 0x0f);
-    printf("Size=%d\n",0x1000 - base);
+    printf("Size=%d\n",RAMTOP - base);
     }
   }
 
