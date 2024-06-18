@@ -11,7 +11,7 @@ NUMBER Rcl(int rreg) {
   else if (rreg >= 0x70 && rreg <= 0x7f) reg = rreg - 0x70;
   else if (rreg >= 0x80 && rreg <= 0xef) {
     reg = base + (rreg - 0x80);
-    if (reg > 0xfff) {
+    if (reg > 0x1ff) {
       Message("NONEXISTENT");
       Error();
       return ZERO;
@@ -21,7 +21,7 @@ NUMBER Rcl(int rreg) {
   else if (rreg >= 0xf0 && rreg <= 0xff) {
     reg = base + ToInteger(RecallNumber(rreg - 0xf0));
     }
-  if (reg > 0xfff) {
+  if (reg > 0x1ff) {
     Message("NONEXISTENT");
     Error();
     return ZERO;

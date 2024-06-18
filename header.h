@@ -18,6 +18,7 @@
 typedef unsigned char byte;
 
 #include "commands.h"
+#include "keys.h"
 
 #define RAMTOP  0x200
 #define RAMSIZE (RAMTOP * 7)
@@ -173,6 +174,7 @@ extern int     FromPtr(int ptr);
 extern int     Fs(byte n);
 extern int     FsQc(byte n);
 extern char*   GetAlpha(char* buffer);
+extern void    GetBE(NUMBER x, int *b, int* e);
 extern void    GetHms(NUMBER a, int* h, int* m, int *s, int *f);
 extern int     Gto2(int address);
 extern int     GtoAlpha(int address);
