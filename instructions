@@ -316,13 +316,13 @@ Printer commands
     SKPCOL
 
 Card reader commands
-    RALL    - Non programmable
     RDTA
     RDTAX
     VER     - Non programmable
     WALL    - Non programmable
     WDTA
     WDTAX
+    WSTS
     7CLREG
     7DSP0
     7DSP1
@@ -351,7 +351,6 @@ CLP "name"
 DEL nnn
 GTO .nnn
 PACK
-RPRG
 SIZE nnn
 SST
 WPRG "name"

@@ -1,25 +1,17 @@
 #include "header.h"
 
-void Wprg(char* name) {
+void Wprg(char* filename) {
   int i;
   int file;
-  char filename[1024];
   int address;
   int end;
   int len;
   char card[7];
-  address = FindGlobal(name);
-  if (address == 0) {
-    Message("NONEXISTENT");
-    Error();
-    return;
-    }
+  address = (ram[REG_B+1] << 8) | ram[REG_B+0];
+  address = FromPtr(address);
   address = FindStart(address);
   end = FindEnd(address);
-  printf("Card file? ");
-  fgets(filename, 1023, stdin);
-  while (strlen(filename) > 0 && filename[strlen(filename)-1] < ' ')
-    filename[strlen(filename)-1] = 0;
+printf("%x -> %x\n",address,end);
   file = open(filename, O_CREAT | O_TRUNC | O_WRONLY, 0666);
   if (file >= 0) {
     end -= 2;

@@ -5,6 +5,7 @@ void Error() {
     ClearFlag(25);
     return;
     }
+  errFlag = -1;
   running = 0;
   }
 

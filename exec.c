@@ -16,6 +16,7 @@ int Exec(int addr) {
   char n[32];
   oaddr = addr;
   cmd = 0;
+  errFlag = 0;
   while (cmd == 0) cmd = ram[addr--];
   if (cmd == 0x54 && FlagSet(22)) cmd = 0x1c;
   if (debug) {
@@ -1200,6 +1201,7 @@ printf("Return with address != 0\n");
     printf(":");
     fgets(buffer,2,stdin);
     }
+  errFlag = 0;
   return addr;
   }
 

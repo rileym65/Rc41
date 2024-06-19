@@ -19,14 +19,12 @@ void SetKaFlags() {
   addr = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
   addr *= 7;
   addr += 2;
-printf("%02x %02x %02x\n",ram[addr],ram[addr-1],ram[addr-2]);
   l = ((ram[addr] & 0x0f) << 8) | ram[addr-1];
   while (l != 0x000) {
     reg = l & 0x1ff;
     byt = (l >> 9) & 0x7;
     addr += (reg * 7 + byt);
     addr--;
-printf("%02x %02x %02x\n",ram[addr],ram[addr-1],ram[addr-2]);
     l = ((ram[addr] & 0x0f) << 8) | ram[addr-1];
     if (ram[addr-2] >= 0xf0) {
       if (ram[addr-3] != 0x00) SetKaFlag(ram[addr-3], 1);

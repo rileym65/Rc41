@@ -1,18 +1,13 @@
 #include "header.h"
 
-void Rprg() {
+void Rprg(char *filename) {
   int file;
-  char filename[1024];
   int address;
   int nabc;
   int len;
   int regs;
   byte b;
   unsigned char card[7];
-  printf("Card file? ");
-  fgets(filename, 1023, stdin);
-  while (strlen(filename) > 0 && filename[strlen(filename)-1] < ' ')
-    filename[strlen(filename)-1] = 0;
   file = open(filename, O_RDONLY);
   if (file >= 0) {
     read(file, card, 7);

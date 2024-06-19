@@ -93,6 +93,7 @@ OBJS= \
 	rcl.o \
 	recallnumber.o \
 	relink.o \
+	resize.o \
 	rnd.o \
 	rprg.o \
 	rtn.o \

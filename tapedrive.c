@@ -501,14 +501,14 @@ void td_readrx() {
 void td_reads() {
   int i;
   int rec;
-  int btm;
+//  int btm;
   int fp;
-  int ofs;
+//  int ofs;
   int r00_a;
   int r00_b;
-  int end;
-  int src;
-  int dst;
+//  int end;
+//  int src;
+//  int dst;
   char filename[32];
   GetAlpha(filename);
   if (strlen(filename) == 0) {
@@ -538,53 +538,7 @@ void td_reads() {
   ram[REG_D+1] |= (sector[REG_D+1] & 0xf0);
   ram[REG_C+6] = sector[REG_C+6];
   ram[REG_C+5] = (ram[REG_C+5] & 0x0f) | (sector[REG_C+5] & 0xf0);
-  if (r00_a == r00_b) return;
-  if (r00_a > r00_b) {
-    btm = 0x0c0 * 7;
-    while (ram[btm+6] == 0xf0) btm += 7;
-    btm /= 7;
-    ofs = r00_a - r00_b;
-    end = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
-    if ((end - ofs) < btm) {
-      Message("NO ROOM");
-      Error();
-      return;
-      }
-    dst = (end-ofs) * 7;
-    src = end * 7;
-    while (dst < 0xe00) {
-      ram[dst] = (src < 0xe00) ? ram[src] : 0x00;
-      dst++;
-      src++;
-      }
-    ofs = -ofs;
-    }
-  else {
-    ofs = r00_b - r00_a;
-    src = ((0x1ff - ofs) * 7) + 6;
-    dst = (0x1ff * 7) + 6;
-    end = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
-    end *= 7;
-    while (src >= end) {
-      ram[dst--] = ram[src--];
-      }
-    end = 0x0c0 * 7;
-    while (ram[end + 6] == 0xf0) end += 7;
-    while (src >= end) ram[src--] = 0x00;
-    }
-  end = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
-  end += ofs;
-  ram[REG_C+1] &= 0xf0;
-  ram[REG_C+1] |= ((end >> 8) & 0x0f);
-  ram[REG_C+0] = end & 0xff;
-  ram[REG_C+2] = sector[REG_C+2];
-  ram[REG_C+1] &= 0x0f;
-  ram[REG_C+1] |= (sector[REG_C+1] & 0xf0);
-  end = ((ram[REG_B+1] & 0x0f) << 8) | ram[REG_B+0];
-  end += ofs;
-  ram[REG_B+1] &= 0xf0;
-  ram[REG_B+1] |= ((end >> 8) & 0x0f);
-  ram[REG_B+0] = end & 0xff;
+  Resize(r00_a, r00_b);
   }
 
 void td_purge() {

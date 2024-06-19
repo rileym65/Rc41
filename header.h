@@ -102,6 +102,7 @@ LINK int    singleStep;
 LINK char   printBuffer[1024];
 LINK int    printPosition;
 LINK int    linksCleared;
+LINK int    errFlag;
 
 #ifdef MAIN
 NUMBER  S_ONE  = { 0, { 1,0,0,0,0,0,0,0,0,0 }, 0, { 0,0 } };
@@ -211,11 +212,14 @@ extern char*   ProgramList(int lineNumber, int adr, char* dest);
 extern void    ProgramStep(char* line);
 extern void    Prp(char* name);
 extern void    Push(int address);
+extern void    Rall(char* filename);
 extern NUMBER  Rcl(int rreg);
 extern NUMBER  RecallNumber(int reg);
 extern void    ReLink();
+extern void    Resize(int old_r00, int new_r00);
 extern void    Rnd();
-extern void    Rprg();
+extern void    Rprg(char* filename);
+extern void    Rsts(char* filename);
 extern int     Rtn(int address);
 extern void    Sci(byte n);
 extern void    Sdev();

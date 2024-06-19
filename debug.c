@@ -31,10 +31,15 @@ void Debug(char* cmd) {
   int end;
   int base;
   int addr;
+  int file;
+  char filename[1024];
+  char card[5];
+  int  p;
   cmd++;
   if (*cmd == '?') {
     printf("\n");
     printf("\\bj             - Perform synthetic byte jumper\n");
+    printf("\\card filename  - Load card\n");
     printf("\\dreg ddd[-ddd] - Show data register contents\n");
     printf("\\reg hhh[-hhh]  - Show register contents\n");
     printf("\\size           - Show data register count\n");
@@ -103,6 +108,28 @@ printf("Base: %x, start: %x, end: %x\n",base,start,end);
   if (strcasecmp(cmd, "size") == 0) {
     base = (ram[REG_C+2] << 4) + ((ram[REG_C+1] >> 4) & 0x0f);
     printf("Size=%d\n",RAMTOP - base);
+    }
+
+  if (strncasecmp(cmd, "card ", 5) == 0) {
+    cmd += 5;
+    p = 0;
+    while (*cmd == ' ') cmd++;
+    while (*cmd > ' ') filename[p++] = *cmd++;
+    filename[p] = 0;
+    if (FlagSet(52)) {
+      Wprg(filename);
+      }
+    else {
+      file = open(filename, O_RDONLY);
+      if (file > 0) {
+        read(file, card, 1);
+        close(file);
+        if (card[0] == 'S') Rsts(filename);
+        if (card[0] == 'A') Rall(filename);
+        if (card[0] == 'P') Rprg(filename);
+        }
+      else printf("Could not read card file\n");
+      }
     }
   }
 
