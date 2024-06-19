@@ -99,6 +99,8 @@ OBJS= \
 	sci.o \
 	sdev.o \
 	setflag.o \
+	setkaflag.o \
+	setkaflags.o \
 	setx.o \
 	sf.o \
 	shownumber.o \

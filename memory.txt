@@ -95,6 +95,11 @@ Flags
    53 - I/O
    54 - PSE, when set PAUSE is in progress
    55 - Printer existance
+       6       5       4       3       2       1       0     R_     REG_
+   +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
+d  |0     0|0     1|1     2|2     3|3     3|4 4 4 4|4     5| 00E      98
+   |0     7|8     5|6     3|4     1|2     9|0 3 4 7|8     5| 00E      98
+   +---v---+---v---+---v---+---v---+---v---+---v---+---v---+
 
 Statistics registers (EREG) Defaults 11-16
 EREG+0 Sum of X

@@ -66,7 +66,7 @@ int FindFile(char* filename) {
     ReadSector(s);
     while (p < 256) {
       if (sector[p] != 0x00) {
-        if (strcmp(filename, sector+p+1) == 0) return p;
+        if (strcmp(filename, (char*)(sector+p+1)) == 0) return p;
         }
       if (sector[p] == 0xff) flag = 0;
       p += 32;
@@ -297,6 +297,64 @@ void td_reada() {
     }
   }
 
+void td_readk() {
+  int i;
+  int address;
+  int rec;
+  int fp;
+  int p;
+  int regs;
+  int size;
+  int end;
+  char filename[32];
+  size = 0;
+  address = 0x0c0 * 7;
+  GetAlpha(filename);
+  filename[7] = 0;
+  if (strlen(filename) == 0) {
+    Message("NAME ERR");
+    Error();
+    return;
+    }
+  fp = FindFile(filename);
+  if (fp >= 0 && sector[fp] != 'K') {
+    Message("FL TYPE ERR");
+    Error();
+    return;
+    }
+  if (fp < 0) {
+    Message("FL NOT FOUND");
+    Error();
+    return;
+    }
+  rec = (sector[fp+14] << 8) | sector[fp+15];
+  regs = (sector[fp+10] << 8) | sector[fp+11];
+  end = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
+  if (0x0c0 + regs > end) {
+    Message("NO ROOM");
+    Error();
+    return;
+    }
+  address = 0x0c0 * 7;
+  while (ram[address+6] == 0xf0) {
+    for (i=0; i<=6; i++) ram[address+i] = 0x00;
+    address += 7;
+    }
+  p = 0;
+  address = 0x0c0 * 7;
+  ReadSector(rec);
+  while (size > 0) {
+    ram[address++] = sector[p++];
+    size --;
+    if (p == 256) {
+      rec++;
+      ReadSector(rec);
+      p = 0;
+      }
+    }
+  SetKaFlags();
+  }
+
 void td_readp() {
   int  i;
   int  fp;
@@ -438,6 +496,95 @@ void td_readrx() {
     b++;
     file_reg++;
     }
+  }
+
+void td_reads() {
+  int i;
+  int rec;
+  int btm;
+  int fp;
+  int ofs;
+  int r00_a;
+  int r00_b;
+  int end;
+  int src;
+  int dst;
+  char filename[32];
+  GetAlpha(filename);
+  if (strlen(filename) == 0) {
+    Message("NAME ERR");
+    Error();
+    return;
+    }
+  filename[7] = 0;
+  fp = FindFile(filename);
+  if (fp >= 0 && sector[fp] != 'S') {
+    Message("FL TYPE ERR");
+    Error();
+    return;
+    }
+  if (fp < 0) {
+    Message("FL NOT FOUND");
+    Error();
+    return;
+    }
+  rec = (sector[fp+14] << 8) | sector[fp+15];
+  ReadSector(rec);
+  r00_a = (ram[REG_C+2] << 4) | ((ram[REG_C+1] >> 4) & 0x0f);
+  r00_b = (sector[REG_C+2] << 4) | ((sector[REG_C+1] >> 4) & 0x0f);
+  for (i=0; i<REG_P+3; i++) ram[i] = sector[i];
+  for (i=2; i<=6; i++) ram[REG_D+i] = sector[REG_D+i];
+  ram[REG_D+1] &= 0x0f;
+  ram[REG_D+1] |= (sector[REG_D+1] & 0xf0);
+  ram[REG_C+6] = sector[REG_C+6];
+  ram[REG_C+5] = (ram[REG_C+5] & 0x0f) | (sector[REG_C+5] & 0xf0);
+  if (r00_a == r00_b) return;
+  if (r00_a > r00_b) {
+    btm = 0x0c0 * 7;
+    while (ram[btm+6] == 0xf0) btm += 7;
+    btm /= 7;
+    ofs = r00_a - r00_b;
+    end = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
+    if ((end - ofs) < btm) {
+      Message("NO ROOM");
+      Error();
+      return;
+      }
+    dst = (end-ofs) * 7;
+    src = end * 7;
+    while (dst < 0xe00) {
+      ram[dst] = (src < 0xe00) ? ram[src] : 0x00;
+      dst++;
+      src++;
+      }
+    ofs = -ofs;
+    }
+  else {
+    ofs = r00_b - r00_a;
+    src = ((0x1ff - ofs) * 7) + 6;
+    dst = (0x1ff * 7) + 6;
+    end = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
+    end *= 7;
+    while (src >= end) {
+      ram[dst--] = ram[src--];
+      }
+    end = 0x0c0 * 7;
+    while (ram[end + 6] == 0xf0) end += 7;
+    while (src >= end) ram[src--] = 0x00;
+    }
+  end = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
+  end += ofs;
+  ram[REG_C+1] &= 0xf0;
+  ram[REG_C+1] |= ((end >> 8) & 0x0f);
+  ram[REG_C+0] = end & 0xff;
+  ram[REG_C+2] = sector[REG_C+2];
+  ram[REG_C+1] &= 0x0f;
+  ram[REG_C+1] |= (sector[REG_C+1] & 0xf0);
+  end = ((ram[REG_B+1] & 0x0f) << 8) | ram[REG_B+0];
+  end += ofs;
+  ram[REG_B+1] &= 0xf0;
+  ram[REG_B+1] |= ((end >> 8) & 0x0f);
+  ram[REG_B+0] = end & 0xff;
   }
 
 void td_purge() {
@@ -1056,6 +1203,10 @@ void TapeDrive(byte function, int addr) {
     td_reada();
     }
 
+  if (function == 6) {                           /* READK */
+    td_readk();
+    }
+
   if (function == 7) {                           /* READP */
     td_readp();
     }
@@ -1066,6 +1217,10 @@ void TapeDrive(byte function, int addr) {
 
   if (function == 9) {                           /* READRX */
     td_readrx();
+    }
+
+  if (function == 10) {                          /* READS */
+    td_reads();
     }
 
   if (function == 11) {                          /* READSUB */

@@ -276,9 +276,11 @@ Tape Drive commands
     NEWM ___     - Non programmable
     PURGE          A="filename"
     READA          A="filename"
+    READK          A="filename"
     READP          A="filename"
     READR          A="filename"
     READRX         X=bbb.eee
+    READS          A="filename"
     READSUB        A="filename"
     RENAME         A="oldname,newname"
     SEC            A="filename"

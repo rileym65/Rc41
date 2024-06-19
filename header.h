@@ -220,6 +220,8 @@ extern int     Rtn(int address);
 extern void    Sci(byte n);
 extern void    Sdev();
 extern void    SetFlag(int f);
+extern void    SetKaFlag(byte flag, byte set);
+extern void    SetKaFlags();
 extern void    SetX(NUMBER n, int l, int s);
 extern void    Sf(byte n);
 extern void    ShowNumber(NUMBER n);
