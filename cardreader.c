@@ -11,7 +11,9 @@ int CardReader(byte function, int addr) {
   int file;
   int len;
   int p;
+  int address;
   char card[5];
+  char buffer[7];
   NUMBER a;
   NUMBER b;
   NUMBER x;
@@ -201,6 +203,52 @@ int CardReader(byte function, int addr) {
       }
     }
 
+  if (function == 10) {                          // WSTS
+    printf("Card file? ");
+    fgets(filename, 1023, stdin);
+    while (strlen(filename) > 0 && filename[strlen(filename)-1] < ' ')
+      filename[strlen(filename)-1] = 0;
+    file = open(filename, O_CREAT | O_TRUNC | O_WRONLY, 0666);
+    if (file >= 0) {
+      len = 11;
+      address = 0x0c0 * 7;
+      while (ram[address + 6] == 0xf0) {
+        address += 7;
+        len++;
+        }
+      card[0] = 'S';
+      card[1] = 0x00;
+      card[2] = 0x01;
+      card[3] = (len >> 8) & 0xff;
+      card[4] = len & 0xff;
+      write(file, card, 5);
+      address = 0;
+      for (i=0; i<9; i++) {
+        for (s=0; s<=6; s++)
+          buffer[6-s] = ram[address+s];
+        write(file, buffer, 7);
+        address += 7;
+        }
+      address = REG_C;
+      for (i=0; i<2; i++) {
+        for (s=0; s<=6; s++)
+          buffer[6-s] = ram[address+s];
+        write(file, buffer, 7);
+        address += 7;
+        }
+      len -= 11;
+      address = 0x0c0 * 7;
+      while (len > 0) {
+        for (s=0; s<=6; s++)
+          buffer[6-s] = ram[address+s];
+        write(file, buffer, 7);
+        address += 7;
+        len--;
+        }
+      close(file);
+      }
+    }
+
   if (function == 11) {                          // 7CLREG
     for (i=0; i<10; i++) Sto(ZERO, i);
     for (i=20; i<=25; i++) Sto(ZERO, i);
@@ -371,26 +419,74 @@ int CardReader(byte function, int addr) {
     ClearFlag(41);
     }
 
-  if (function == 37) {                          // RALL
-    printf("Card file? ");
-    fgets(filename, 1023, stdin);
-    while (strlen(filename) > 0 && filename[strlen(filename)-1] < ' ')
-      filename[strlen(filename)-1] = 0;
-    file = open(filename, O_RDONLY);
-    if (file >= 0) {
-      len = RAMTOP;
-      len *= 7;
-      read(file, card, 5);
-      if (card[0] != 'A') {
-        Message("CARD ERR");
-        }
-      else {
-        read(file, ram, len);
-        }
-      close(file);
-      }
-    }
-
   return addr;
+  }
+
+void Rall(char* filename) {
+  int file;
+  int len;
+  char card[5];
+  file = open(filename, O_RDONLY);
+  if (file >= 0) {
+    len = RAMTOP;
+    len *= 7;
+    read(file, card, 5);
+    read(file, ram, len);
+    close(file);
+    }
+  else {
+    Message("CARD ERR");
+    }
+  }
+
+void Rsts(char* filename) {
+  int i;
+  int j;
+  int file;
+  int adr;
+  int regs;
+  int old_r00;
+  int new_r00;
+  char card[5];
+  char buffer[7];
+  while (strlen(filename) > 0 && filename[strlen(filename)-1] < ' ')
+    filename[strlen(filename)-1] = 0;
+  file = open(filename, O_RDONLY);
+  if (file >= 0) {
+    read(file, card, 5);
+    regs = card[3] * 256 + card[4];
+    adr = 0;
+    for (i=0; i<9; i++) {
+      read(file, buffer, 7);
+      for (j=0; j<7; j++) ram[adr+6-j] = buffer[j];
+      adr += 7;
+      }
+    read(file, buffer, 7);
+    ram[REG_C+6] = buffer[0];
+    ram[REG_C+5] &= 0x0f;
+    ram[REG_C+5] |= (buffer[1] & 0xf0);
+    new_r00 = (buffer[4] << 4) | ((buffer[5] & 0xf0) >> 4);
+    read(file, buffer, 7);
+    for (i=0; i<6; i++) ram[REG_D+6-i] = buffer[i];
+    ram[REG_D+1] &= 0x0f;
+    ram[REG_D+1] |= buffer[5] & 0xf0;
+    adr = 0x0c0 * 7;
+    while (ram[adr+6] == 0xf0) {
+      for (i=0; i<=6; i++) ram[adr+i] = 0;
+      adr += 6;
+      }
+    adr = 0x0c0 * 7;
+    regs -= 11;
+    while (regs > 0) {
+      read(file, buffer, 7);
+      for (i=0; i<6; i++) ram[adr+6-i] = buffer[i];
+      adr += 7;
+      regs--;
+      }
+    close(file);
+    old_r00 = (ram[REG_C+2] << 4) | ((ram[REG_C+1] >> 4) & 0x0f);
+    Resize(old_r00, new_r00);
+    SetKaFlags();
+    }
   }
 
