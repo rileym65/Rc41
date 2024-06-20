@@ -220,6 +220,7 @@ int main(int argc, char** argv) {
   int   j;
   char  buffer[1024];
   char  token[32];
+  char  token2[32];
   int   isNumber;
   byte  b;
   char *pchar;
@@ -358,6 +359,11 @@ int main(int argc, char** argv) {
             }
           else if (strcasecmp(token,"PACK") == 0) {
             Pack();
+            }
+          else if (strcasecmp(token, "ASN") == 0) {
+            pchar = NextToken(pchar, token);
+            pchar = NextToken(pchar, token2);
+            Asn(token, token2);
             }
           else if (strcasecmp(token,"PRP") == 0) {
             pchar = NextToken(pchar, token);

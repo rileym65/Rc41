@@ -6,7 +6,6 @@ void Resize(int old_r00, int new_r00) {
   int end;
   int src;
   int dst;
-printf("%x -> %x\n",old_r00,new_r00);
   if (old_r00 == new_r00) return;
   if (old_r00 > new_r00) {
     btm = 0x0c0 * 7;

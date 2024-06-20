@@ -479,7 +479,7 @@ void Rsts(char* filename) {
     regs -= 11;
     while (regs > 0) {
       read(file, buffer, 7);
-      for (i=0; i<6; i++) ram[adr+6-i] = buffer[i];
+      for (i=0; i<=6; i++) ram[adr+6-i] = buffer[i];
       adr += 7;
       regs--;
       }

@@ -11,6 +11,7 @@ OBJS= \
 	addnumber.o \
 	arcl.o \
 	asin.o \
+	asn.o \
 	asto.o \
 	atan.o \
 	aton.o \

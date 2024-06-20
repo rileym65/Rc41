@@ -11,7 +11,7 @@ void SetKaFlags() {
   ram[REG_E+2] &= 0x0f;
   ram[REG_R+2] &= 0x0f;
   addr = 0x0c0 * 7;
-  while (ram[addr] == 0xf0) {
+  while (ram[addr+6] == 0xf0) {
     if (ram[addr+4] != 0x00) SetKaFlag(ram[addr+3], 1);
     if (ram[addr+1] != 0x00) SetKaFlag(ram[addr+0], 1);
     addr += 7;

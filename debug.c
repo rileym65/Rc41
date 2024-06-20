@@ -46,6 +46,40 @@ void Debug(char* cmd) {
     printf("\\stack          - Show stack registers\n");
     printf("\\stat           - Show all stat registers\n");
     }
+  if (strcasecmp(cmd, "keys") == 0) {
+    printf("     E-      Y^X      X^2      10^X     E^X   \n");
+    printf("  +------+ +------+ +------+ +------+ +------+\n");
+    printf("  |  E+  | | 1/X  | | SQRT | | LOG  | |  LN  |\n");
+    printf("  +------+ +------+ +------+ +------+ +------+\n");
+    printf("    CLE       %%       ASIN     ACOS     ATAN  \n");
+    printf("  +------+ +------+ +------+ +------+ +------+\n");
+    printf("  | X<>Y | | RDN  | | SIN  | | COS  | | TAN  |\n");
+    printf("  +------+ +------+ +------+ +------+ +------+\n");
+    printf("             ASN      LBL      GTO      BST   \n");
+    printf("  +------+ +------+ +------+ +------+ +------+\n");
+    printf("  |      | | XEQ  | | STO  | | RCL  | | SST  |\n");
+    printf("  +------+ +------+ +------+ +------+ +------+\n");
+    printf("         CAT          ISG      RTN      CLX   \n");
+    printf("  +---------------+ +------+ +------+ +------+\n");
+    printf("  |    ENTER^     | | CHS  | | EEX  | | <--  |\n");
+    printf("  +---------------+ +------+ +------+ +------+\n");
+    printf("    X=Y?         SF          CF         FS?   \n");
+    printf("  +------+    +------+    +------+    +------+\n");
+    printf("  |  -   |    |  7   |    |  8   |    |  9   |\n");
+    printf("  +------+    +------+    +------+    +------+\n");
+    printf("    X<=Y?       BEEP        P-R         R-P   \n");
+    printf("  +------+    +------+    +------+    +------+\n");
+    printf("  |  +   |    |  4   |    |  5   |    |  6   |\n");
+    printf("  +------+    +------+    +------+    +------+\n");
+    printf("    X>Y?        FIX         SCI         ENG   \n");
+    printf("  +------+    +------+    +------+    +------+\n");
+    printf("  |  *   |    |  1   |    |  2   |    |  3   |\n");
+    printf("  +------+    +------+    +------+    +------+\n");
+    printf("    X=0?         PI        LASTX        VIEW  \n");
+    printf("  +------+    +------+    +------+    +------+\n");
+    printf("  |  /   |    |  0   |    |  .   |    |  RS  |\n");
+    printf("  +------+    +------+    +------+    +------+\n");
+    }
   if (strcasecmp(cmd, "bj") == 0 && FlagSet(52) == 0) {
     addr = (ram[REG_B+1] << 8) | ram[REG_B+0];
     addr = FromPtr(addr);

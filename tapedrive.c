@@ -343,9 +343,10 @@ void td_readk() {
   p = 0;
   address = 0x0c0 * 7;
   ReadSector(rec);
+  size = regs * 7;
   while (size > 0) {
     ram[address++] = sector[p++];
-    size --;
+    size--;
     if (p == 256) {
       rec++;
       ReadSector(rec);
