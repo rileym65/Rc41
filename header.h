@@ -16,6 +16,7 @@
 #endif
 
 typedef unsigned char byte;
+typedef unsigned short word;
 
 #include "commands.h"
 #include "keys.h"

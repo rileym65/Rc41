@@ -5,8 +5,8 @@ void SetKaFlag(byte flag, byte set) {
   int f;
   int b;
   int o;
-  while (keys[i].code != 0xff && keys[i].code != flag) i++;
-  if (keys[i].code == 0xff) return;
+  while (keys[i].keycode != 0xff && keys[i].keycode != flag) i++;
+  if (keys[i].keycode == 0xff) return;
   f = keys[i].bit - 1;
   b = 6 - (f >> 3);
   o = 7 - (f & 0x07);
