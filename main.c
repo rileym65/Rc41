@@ -240,7 +240,7 @@ int main(int argc, char** argv) {
   Init();
   OpenTapeDrive("tape1.dat");
   if (ramClear == 0) {
-    file = open("hp41.ram", O_RDONLY);
+    file = open("rc41.ram", O_RDONLY);
     if (file > 0) {
       read(file, ram, sizeof(ram));
       close(file);
@@ -435,7 +435,7 @@ int main(int argc, char** argv) {
       }
     }
 
-  file = open("hp41.ram", O_WRONLY | O_CREAT | O_TRUNC, 0666);
+  file = open("rc41.ram", O_WRONLY | O_CREAT | O_TRUNC, 0666);
   if (file >= 0) {
     write(file, ram, sizeof(ram));
     close(file);
