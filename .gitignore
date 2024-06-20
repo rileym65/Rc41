@@ -1,9 +1,12 @@
-hp41
-hp41.ram
+rc41
+rc41.ram
 synth.txt
 trig.txt
+nolongerused
 x.x
 *.bak
+*.back
 *.crd
+*.dat
 *.o
 
