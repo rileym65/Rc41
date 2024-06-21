@@ -208,10 +208,15 @@ void td_dir() {
             else printf(" ");
         printf(" ");
         if (sector[p] == 'P') printf("PR");
-        if (sector[p] == 'D') printf("DA");
-        if (sector[p] == 'K') printf("KE");
-        if (sector[p] == 'S') printf("ST");
-        if (sector[p] == 'A') printf("WA");
+        else if (sector[p] == 'D') printf("DA");
+        else if (sector[p] == 'K') printf("KE");
+        else if (sector[p] == 'S') printf("ST");
+        else if (sector[p] == 'A') printf("WA");
+        else if (sector[p] != 0x00) {
+          Message("NO MEDM");
+          Error();
+          return;
+          }
         if (sector[p+9] != 0) {
           switch(sector[p+9]) {
             case 1: printf(",S "); break;
@@ -232,10 +237,13 @@ void td_dir() {
     if (p >= 256) {
       p = 0;
       s++;
-      if (s > 511) flag = 0;
+      if (s > 511) {
+        flag = 0;
+        Message("NO MEDM");
+        Error();
+        }
         else ReadSector(s);
       }
-
     }
   }
 

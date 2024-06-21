@@ -45,6 +45,7 @@ void Debug(char* cmd) {
     printf("\\size           - Show data register count\n");
     printf("\\stack          - Show stack registers\n");
     printf("\\stat           - Show all stat registers\n");
+    printf("\\tape filename  - Mount tape file\n");
     }
   if (strcasecmp(cmd, "keys") == 0) {
     printf("     E-      Y^X      X^2      10^X     E^X   \n");
@@ -165,5 +166,15 @@ printf("Base: %x, start: %x, end: %x\n",base,start,end);
       else printf("Could not read card file\n");
       }
     }
+
+  if (strncasecmp(cmd, "tape ", 5) == 0) {
+    cmd += 5;
+    p = 0;
+    while (*cmd == ' ') cmd++;
+    while (*cmd > ' ') filename[p++] = *cmd++;
+    filename[p] = 0;
+    OpenTapeDrive(filename);
+    }
+
   }
 
