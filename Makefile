@@ -58,6 +58,7 @@ OBJS= \
 	fsqc.o \
 	getalpha.o \
 	getbe.o \
+	getkaflag.o \
 	gto2.o \
 	gtoalpha.o \
 	gtoend.o \

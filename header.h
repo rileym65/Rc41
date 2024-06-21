@@ -179,6 +179,7 @@ extern int     FsQc(byte n);
 extern char*   GetAlpha(char* buffer);
 extern void    GetBE(NUMBER x, int *b, int* e);
 extern void    GetHms(NUMBER a, int* h, int* m, int *s, int *f);
+extern int     GetKaFlag(byte flag);
 extern int     Gto2(int address);
 extern int     GtoAlpha(int address);
 extern void    GtoEnd();

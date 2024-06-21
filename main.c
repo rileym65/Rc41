@@ -396,6 +396,41 @@ int main(int argc, char** argv) {
             ram[REG_E+0] = 0xff;
             ram[REG_E+1] |= 0x0f;
             }
+          else if (token[0] == '<' && token[strlen(token)-1] == '>') {
+printf("Key pressed\n");
+            i = 0;
+            while (keys[i].cmd != 0xff && strcasecmp(keys[i].key, token) != 0) i++;
+            if (keys[i].cmd != 0xff) {
+printf("key: %d\n",keys[i].cmd);
+              if (GetKaFlag(keys[i].keycode)) {
+printf("Assigned key\n");
+                }
+              else {
+                i = keys[i].cmd;
+                if (catalog[i].flags != 0xff) {
+                  if (catalog[i].cmd == 0x20) pchar = InputRcl(pchar);
+                  else if (catalog[i].cmd == 0x30) pchar = InputSto(pchar);
+                  else if (catalog[i].cmd == 0xb1) pchar = InputGtoXeq(pchar, 0xd0);
+                  else if (catalog[i].cmd == 0x1e) pchar = InputGtoXeq(pchar, 0xe0);
+                  else if (catalog[i].cmd == 0x01) pchar = InputLbl(pchar);
+                  else if (catalog[i].cmd == 0xc0) pchar = InputEnd(pchar);
+                  else {
+                    ram[REG_R+1] = catalog[i].cmd;
+                    if (catalog[i].flags & 0x3) {
+                      pchar = PostFix(catalog[i].flags, pchar, &b);
+                      ram[REG_R+0] = b;
+                      }
+                    }
+                  if (FlagSet(52)) ProgramStep(NULL);
+                    else if (ram[71] != 0) Exec(71);
+                  }
+                }
+
+              }
+            else {
+              Message("NONEXISTENT");
+              }
+            }
           else {
             while (catalog[i].flags != 0xff && strcasecmp(catalog[i].name, token) != 0) {
               i++;
