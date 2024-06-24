@@ -397,13 +397,46 @@ int main(int argc, char** argv) {
             ram[REG_E+1] |= 0x0f;
             }
           else if (token[0] == '<' && token[strlen(token)-1] == '>') {
-printf("Key pressed\n");
+printf("Key pressed: %s\n",token);
             i = 0;
-            while (keys[i].cmd != 0xff && strcasecmp(keys[i].key, token) != 0) i++;
+            while (keys[i].cmd != 0xff && strcasecmp(keys[i].key, token) != 0) {
+              i++;
+              }
             if (keys[i].cmd != 0xff) {
 printf("key: %d\n",keys[i].cmd);
               if (GetKaFlag(keys[i].keycode)) {
-printf("Assigned key\n");
+printf("Assigned key: %2x\n",keys[i].keycode);
+                addr = 0x0c0 * 7;
+                while (ram[addr+6] == 0xf0 &&
+                       ram[addr+0] != keys[i].keycode &&
+                       ram[addr+3] != keys[i].keycode) addr += 7;
+                if (ram[addr+6] != 0xf0) {
+                  Message("NONEXISTENT");
+                  }
+                else {
+                  if (ram[addr+0] == keys[i].keycode) {
+                    if (ram[addr+2] <= 0x0f) {
+                      ram[REG_R+1] = ram[addr+1];
+                      ram[REG_R+0] = 0x00;
+                      }
+                    else {
+                      ram[REG_R+1] = ram[addr+2];
+                      ram[REG_R+0] = ram[addr+1];
+                      }
+                    }
+                  else {
+                    if (ram[addr+5] <= 0x0f) {
+                      ram[REG_R+1] = ram[addr+4];
+                      ram[REG_R+0] = 0x00;
+                      }
+                    else {
+                      ram[REG_R+1] = ram[addr+5];
+                      ram[REG_R+0] = ram[addr+4];
+                      }
+                    }
+                  if (FlagSet(52)) ProgramStep(NULL);
+                    else if (ram[71] != 0) Exec(71);
+                  }
                 }
               else {
                 i = keys[i].cmd;
