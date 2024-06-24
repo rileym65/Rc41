@@ -18,17 +18,20 @@ int Exec(int addr) {
   cmd = 0;
   errFlag = 0;
   while (cmd == 0) cmd = ram[addr--];
-  if (cmd == 0x54 && FlagSet(22)) cmd = 0x1c;
+  if (running == 0 && cmd == 0x54 && FlagSet(22)) cmd = 0x1c;
   if (debug) {
     ProgramList(1, addr+1, buffer);
     printf("-->%s\n",buffer);
     }
-  if ((cmd < 0x10 || cmd > 0x1c) && FlagSet(22)) {
-    StoreNumber(Normalize(RecallNumber(R_X)), R_X);
-    ClearFlag(22);
-    ram[PENDING] = 'E';
+  if (running == 0) {
+    if ((cmd < 0x10 || cmd > 0x1c) && FlagSet(22)) {
+      StoreNumber(Normalize(RecallNumber(R_X)), R_X);
+      ClearFlag(22);
+      ram[PENDING] = 'E';
+      }
+    ram[PENDING] =  (FlagSet(22) == 0) ? 'E' : 'D';
     }
-  ram[PENDING] =  (FlagSet(22) == 0) ? 'E' : 'D';
+  else ram[PENDING] = 'E';
   switch (cmd) {
     case 0x00:                                             // NULL
          break;
@@ -82,7 +85,6 @@ int Exec(int addr) {
              AddNumber(ram[addr--] - 0x10);
              }
            StoreNumber(Normalize(RecallNumber(R_X)), R_X);
-           ClearFlag(22);
            ram[PENDING] = 'E';
            }
          else {
