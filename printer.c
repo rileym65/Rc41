@@ -10,7 +10,57 @@ void Print(byte b) {
     }
   }
 
+void DecodeInstruction(byte b1, byte b2) {
+  int i;
+  if (b1 >= 0xa0 && b1 <= 0xa7) {
+    i=0; 
+    while (reverse2[i].cmd != 0xff &&
+           (reverse2[i].cmd != b1 ||
+            reverse2[i].post != b2)) i++;
+    if (reverse2[i].cmd == 0xff) printf("UNKNOWN");
+      else printf("%s", reverse2[i].name);
+    return;
+    }
+  if (b1 < 0x10) {
+    i=0;
+    while (reverse[i].number != 0xff &&
+           reverse[i].number != b2) i++;
+    if (reverse[i].number == 0xff) printf("UNKNOWN");
+      else printf("%s", reverse[i].name);
+    return;
+    }
+  i=0;
+  while (reverse[i].number != 0xff &&
+         reverse[i].number != b1) i++;
+  if (reverse[i].number == 0xff) printf("UNKNOWN");
+    else printf("%s ", reverse[i].name);
+  if (reverse[i].number == 0xff) return;
+  if (b2 >= 0x80) printf("IND ");
+  b2 &= 0x7f;
+  if (b2 < 0x70) printf("%02",b2);
+  else
+    switch (b2) {
+      case 0x70: printf("T"); break;
+      case 0x71: printf("Z"); break;
+      case 0x72: printf("Y"); break;
+      case 0x73: printf("X"); break;
+      case 0x74: printf("L"); break;
+      case 0x75: printf("M"); break;
+      case 0x76: printf("N"); break;
+      case 0x77: printf("O"); break;
+      case 0x78: printf("P"); break;
+      case 0x79: printf("Q"); break;
+      case 0x7a: printf("|-"); break;
+      case 0x7b: printf("a"); break;
+      case 0x7c: printf("b"); break;
+      case 0x7d: printf("c"); break;
+      case 0x7e: printf("d"); break;
+      case 0x7f: printf("e"); break;
+      }
+  }
+
 void Printer(byte function) {
+  int    addr;
   int    i;
   int    m;
   int    n;
@@ -208,9 +258,34 @@ void Printer(byte function) {
         f++;
         }
       }
+    }
 
-  
-
+  else if (function == 12) {                          // PRKEYS
+    addr = 0x0c0 * 7;
+    if (ram[addr+6] != 0xf0)
+      printf("USER KEYS:NONE\n");
+    else {
+      printf("USER KEYS:\n");
+      while (ram[addr+6] == 0xf0) {
+        if (ram[addr+0] != 0) {
+          if ((ram[addr+0] & 0x0f) >= 0x01 && (ram[addr+0] & 0x0f) <= 0x08)
+            printf(" %02x: ",ram[addr+0]);
+          else
+            printf("-%02x: ",ram[addr+0] & 0xf7);
+          DecodeInstruction(ram[addr+2], ram[addr+1]);
+          printf("\n");
+          }
+        if (ram[addr+3] != 0) {
+          if ((ram[addr+3] & 0x0f) >= 0x01 && (ram[addr+3] & 0x0f) <= 0x08)
+            printf(" %02x: ",ram[addr+3]);
+          else
+            printf("-%02x: ",ram[addr+3] & 0xf7);
+          DecodeInstruction(ram[addr+5], ram[addr+4]);
+          printf("\n");
+          }
+        addr += 7;
+        }
+      }
     }
 
   else if (function == 16) {                          // PRREG

@@ -307,6 +307,7 @@ Printer commands
     PRBUF
     PRE
     PRFLAGS
+    PRKEYS
     PRP "name" - Non programmable
     PRREG
     PRREGX         X=bbb.eee

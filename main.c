@@ -218,6 +218,7 @@ int main(int argc, char** argv) {
   int   addr;
   int   i;
   int   j;
+  int   instBj;
   char  buffer[1024];
   char  token[32];
   char  token2[32];
@@ -228,11 +229,13 @@ int main(int argc, char** argv) {
   debug = 0;
   ramClear = 0;
   singleStep = 0;
+  instBj = 0;
   strcpy(printBuffer,"");
   printPosition = 0;
   ram[LIFT] = 'D';
   ram[PENDING] = 'D';
   for (i=1; i<argc; i++) {
+    if (strcmp(argv[i],"-bj") == 0) instBj = -1;
     if (strcmp(argv[i],"-d") == 0) debug = -1;
     if (strcmp(argv[i],"-rc") == 0) ramClear = -1;
     if (strcmp(argv[i],"-ss") == 0) { singleStep = -1; debug = -1; }
@@ -251,6 +254,30 @@ int main(int argc, char** argv) {
   else Message("MEMORY LOST");
   SetFlag(55);
   SetFlag(21);
+
+  if (instBj) {
+    printf("Installing Byte Jumper on <E+>\n");
+    addr = 0x0c0 * 7;
+    while (ram[addr+6] == 0xf0 &&
+           ram[addr+0] != 0x00 &&
+           ram[addr+3] != 0x00) addr += 7;
+printf("Address: %x\n",addr/7);
+    if (ram[addr+6] != 0xf0) {
+printf("New register\n");
+      ram[addr+6] = 0xf0;
+      }
+    SetKaFlag(1, 1);
+    if (ram[addr+0] == 0x00) {
+      ram[addr+0] = 0x01;
+      ram[addr+1] = 'A';
+      ram[addr+2] = 0xf1;
+      }
+    else {
+      ram[addr+3] = 0x01;
+      ram[addr+4] = 'A';
+      ram[addr+5] = 0xf1;
+      }
+    }
 
   while (on) {
     if (running) {
