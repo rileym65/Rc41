@@ -84,6 +84,7 @@ char *InputGtoXeq(char* line, byte base) {
         ProgramStep(buffer);
         }
       else {
+        ClearFlag(22);
         n = FindGlobal(token);
         if (n != 0) {
           n = ToPtr(n);

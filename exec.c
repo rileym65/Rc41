@@ -80,12 +80,7 @@ int Exec(int addr) {
     case 0x1b:                                             // EEX
     case 0x1c:                                             // CHS
          if (running) {
-           addr++;
-           while (ram[addr] >= 0x10 && ram[addr] <= 0x1c) {
-             AddNumber(ram[addr--] - 0x10);
-             }
-           StoreNumber(Normalize(RecallNumber(R_X)), R_X);
-           ram[PENDING] = 'E';
+           addr = ExecNumber(addr+1);
            }
          else {
            AddNumber(cmd - 0x10);

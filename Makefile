@@ -42,6 +42,7 @@ OBJS= \
 	error.o \
 	ex.o \
 	exec.o \
+	execnumber.o \
 	fact.o \
 	fcqc.o \
 	findend.o \

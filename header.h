@@ -162,6 +162,7 @@ extern void    EReg(byte post);
 extern void    Error();
 extern NUMBER  Ex(NUMBER a);
 extern int     Exec(int addr);
+extern int     ExecNumber(int address);
 extern NUMBER  Fact(NUMBER a);
 extern int     FcQc(byte n);
 extern int     FindEnd(int address);
