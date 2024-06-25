@@ -425,15 +425,12 @@ printf("New register\n");
             ram[REG_E+1] |= 0x0f;
             }
           else if (token[0] == '<' && token[strlen(token)-1] == '>') {
-printf("Key pressed: %s\n",token);
             i = 0;
             while (keys[i].cmd != 0xff && strcasecmp(keys[i].key, token) != 0) {
               i++;
               }
             if (keys[i].cmd != 0xff) {
-printf("key: %d\n",keys[i].cmd);
               if (GetKaFlag(keys[i].keycode)) {
-printf("Assigned key: %2x\n",keys[i].keycode);
                 addr = 0x0c0 * 7;
                 while (ram[addr+6] == 0xf0 &&
                        ram[addr+0] != keys[i].keycode &&

@@ -92,6 +92,8 @@ LINK NUMBER LOGE;
 LINK NUMBER ILOGE;
 LINK int    debug;
 LINK int    dp;
+LINK int    ex;
+LINK int    ps;
 LINK int    lift;
 LINK int    running;
 LINK int    on;

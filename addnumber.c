@@ -6,80 +6,54 @@ void AddNumber(char n) {
   ram[PENDING] = 'D';
   if (FlagSet(22) == 0) {
     dp = 0;
+    ps = 0;
+    ex = -1;
     SetFlag(22);
     x.sign = 0;
     x.esign = 0;
     for (i=0; i<10; i++) x.mantissa[i] = 0;
     x.exponent[0] = 0;
     x.exponent[1] = 0;
-    if (n < 10) {
-      x.mantissa[0] = n;
-      ram[REG_E+2] &= 0xf0;
-      ram[REG_E+2] |= 0x01;
-      ram[REG_E+1] &= 0x0f;
-      }
-    if (n == 10) {
-      ram[REG_E+2] &= 0xf0;
-      ram[REG_E+2] |= 0x00;
-      ram[REG_E+1] &= 0x0f;
-      ram[REG_E+1] |= 0x10;
-      x.esign = 9;
-      x.exponent[1] = 1;
-      }
-    if (n == 11) {
-      ram[REG_E+2] &= 0xf0;
-      ram[REG_E+2] |= 0x00;
-      ram[REG_E+1] &= 0x0f;
-      ram[REG_E+1] |= 0x20;
-      x.mantissa[0] = 1;
-      }
-    StoreNumber(x, R_X);
-    return;
     }
+  else x = RecallNumber(R_X);
   if (n < 10) {
-    x = RecallNumber(R_X);
-    if (ram[REG_E+1] &0x20) {
-      if ((ram[REG_E+2] & 0x0f) == 0) {
-        x.exponent[1] = n;
-        ram[REG_E+2]++;
-        }
-      if ((ram[REG_E+2] & 0x0f) == 1) {
-        x.exponent[0] = x.exponent[1];
-        x.exponent[1] = n;
-        ram[REG_E+2]++;
-        }
+    if (n == 0 && x.mantissa[0] == 0) {
+      if (dp != 0) ex--;
       }
     else {
-      if ((ram[REG_E+2] & 0x0f) < 10) {
-        x.mantissa[ram[REG_E+2] & 0x0f] = n;
-        ram[REG_E+2]++;
-        if ((ram[REG_E+1] & 0x10) == 0) {
-          x.exponent[1]++;
-          if (x.exponent[1] >= 10) {
-            x.exponent[0]++;
-            x.exponent[1] = 0;
-            }
+      if (ps >= 0) {
+        if (ps < 10) x.mantissa[ps++] = n;
+        if (dp == 0) ex++;
+        }
+      else {
+        if (x.exponent[0] != 0) {
+          Message("SIZE ERR");
+          return;
           }
+        x.exponent[0] = x.exponent[1];
+        x.exponent[1] = n;
         }
       }
-    StoreNumber(x, R_X);
     }
   if (n == 10) {
-    ram[REG_E+1] |= 0x10;
+    dp = -1;
     }
-  if (n == 11) {
-    if ((ram[REG_E+1] & 0x20) == 0x00) {
-      ram[REG_E+1] |= 0x20;
+  if (n == 11 && ps >= 0) {
+printf("Numeric EEX\n");
+    ps = -1;
+    if (x.mantissa[0] == 0) {
+      x.mantissa[0] = 1;
+      ex++;
       }
     }
   if (n == 12) {
-    x = RecallNumber(R_X);
-    if (ram[REG_E+1] & 0x20)
-      x.esign = (x.esign == 0) ? 9 : 0;
-    else
-      x.sign = (x.sign == 0) ? 9 : 0;
-    StoreNumber(x,R_X);
+printf("Numeric CHS\n");
+    if (ps >= 0) x.sign = (x.sign == 0) ? 9 : 0;
+      else x.esign = (x.esign == 0) ? 9 : 0;
     }
+
+
+  StoreNumber(x, R_X);
   }
 
 // 10 = .

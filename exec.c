@@ -13,6 +13,7 @@ int Exec(int addr) {
   double d;
   double x;
   double y;
+  NUMBER nm;
   char n[32];
   oaddr = addr;
   cmd = 0;
@@ -25,8 +26,16 @@ int Exec(int addr) {
     }
   if (running == 0) {
     if ((cmd < 0x10 || cmd > 0x1c) && FlagSet(22)) {
-      StoreNumber(Normalize(RecallNumber(R_X)), R_X);
       ClearFlag(22);
+      nm = RecallNumber(R_X);
+      i = (nm.exponent[0] * 10) + nm.exponent[1];
+      if (nm.esign) i = -i;
+      ex += i;
+      nm.esign = (ex < 0) ? 9 : 0;
+      if (ex < 0) ex = -ex;
+      nm.exponent[0] = ex / 10;
+      nm.exponent[1] = ex % 10;
+      StoreNumber(nm, R_X);
       ram[PENDING] = 'E';
       }
     ram[PENDING] =  (FlagSet(22) == 0) ? 'E' : 'D';
