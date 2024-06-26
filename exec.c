@@ -26,16 +26,7 @@ int Exec(int addr) {
     }
   if (running == 0) {
     if ((cmd < 0x10 || cmd > 0x1c) && FlagSet(22)) {
-      ClearFlag(22);
-      nm = RecallNumber(R_X);
-      i = (nm.exponent[0] * 10) + nm.exponent[1];
-      if (nm.esign) i = -i;
-      ex += i;
-      nm.esign = (ex < 0) ? 9 : 0;
-      if (ex < 0) ex = -ex;
-      nm.exponent[0] = ex / 10;
-      nm.exponent[1] = ex % 10;
-      StoreNumber(nm, R_X);
+      EndNumber();
       ram[PENDING] = 'E';
       }
     ram[PENDING] =  (FlagSet(22) == 0) ? 'E' : 'D';
@@ -860,6 +851,11 @@ int Exec(int addr) {
          for (j=0; j<6; j++)
            if (i >= REG_M) ram[i--] = 0; 
          break;
+    case 0x89:                                             // PSE
+         running = 0;
+         ram[REG_E+1] |= 0x0f;
+         ram[REG_E+0] = 0xff;
+         break;
     case 0x8a:                                             // CLRG
          Clrg();
          break;
@@ -1090,7 +1086,6 @@ int Exec(int addr) {
 //           running = 0;
 //           addr = oaddr;
            if (addr != 0) {
-printf("Return with address != 0\n");
              ram[REG_E+1] |= 0x0f;
              ram[REG_E+0] = 0xff;
              }

@@ -158,6 +158,7 @@ extern NUMBER  Div(NUMBER a, NUMBER b);
 extern NUMBER  DNumberToNumber(DNUMBER a);
 extern int     Dse(byte post);
 extern void    EMinus();
+extern void    EndNumber();
 extern void    Eng(byte n);
 extern void    EPlus();
 extern void    EReg(byte post);

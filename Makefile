@@ -36,6 +36,7 @@ OBJS= \
 	dse.o \
 	dsub.o \
 	eminus.o \
+	endnumber.o \
 	eng.o \
 	eplus.o \
 	ereg.o \

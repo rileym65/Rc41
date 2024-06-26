@@ -39,7 +39,6 @@ void AddNumber(char n) {
     dp = -1;
     }
   if (n == 11 && ps >= 0) {
-printf("Numeric EEX\n");
     ps = -1;
     if (x.mantissa[0] == 0) {
       x.mantissa[0] = 1;
@@ -47,12 +46,9 @@ printf("Numeric EEX\n");
       }
     }
   if (n == 12) {
-printf("Numeric CHS\n");
     if (ps >= 0) x.sign = (x.sign == 0) ? 9 : 0;
       else x.esign = (x.esign == 0) ? 9 : 0;
     }
-
-
   StoreNumber(x, R_X);
   }
 

@@ -84,7 +84,7 @@ char *InputGtoXeq(char* line, byte base) {
         ProgramStep(buffer);
         }
       else {
-        ClearFlag(22);
+        if (FlagSet(22)) EndNumber();
         n = FindGlobal(token);
         if (n != 0) {
           n = ToPtr(n);
@@ -415,11 +415,7 @@ printf("New register\n");
             TapeDrive(3, atoi(token));
             }
           else if (strcasecmp(token,"RS") == 0) {
-            if (FlagSet(22)) {
-              StoreNumber(Normalize(RecallNumber(R_X)), R_X);
-              ram[LIFT] = 'E';
-              ClearFlag(22);
-              }
+            if (FlagSet(22)) EndNumber();
             running = -1;
             ram[REG_E+0] = 0xff;
             ram[REG_E+1] |= 0x0f;
