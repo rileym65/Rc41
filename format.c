@@ -37,7 +37,9 @@ char* Format(NUMBER a, char* dest) {
   if (mode == 2) {                                               /* FIX */
     if (a.esign != 0) {
       *dest++ = '0';
-      if (FlagSet(28)) *dest++ = '.'; else *dest++ = ',';
+      if (decimals != 0) {
+        if (FlagSet(28)) *dest++ = '.'; else *dest++ = ',';
+        }
       d = 0;
       for (i=1; i<a.exponent[1]; i++) {
         if (d < decimals) {
@@ -60,7 +62,9 @@ char* Format(NUMBER a, char* dest) {
         *dest++ = a.mantissa[i+1] + '0';
         d++;
         }
-      if (FlagSet(28)) *dest++ = '.'; else *dest++ = ',';
+      if (decimals != 0) {
+        if (FlagSet(28)) *dest++ = '.'; else *dest++ = ',';
+        }
       for (i=0; i<decimals; i++) {
         if (d < 10) {
           if (d+a.exponent[1] >= 10) *dest++ = '0';
@@ -73,7 +77,9 @@ char* Format(NUMBER a, char* dest) {
 
   if (mode == 0) {                                               /* SCI */
     *dest++ = a.mantissa[0] + '0';
-    if (FlagSet(28)) *dest++ = '.'; else *dest++ = ',';
+    if (decimals != 0) {
+      if (FlagSet(28)) *dest++ = '.'; else *dest++ = ',';
+      }
     for (i=0; i<7; i++)
       if (i < decimals) *dest++ = a.mantissa[i+1] + '0';
     for (i=0; i<7-decimals; i++)
@@ -92,7 +98,9 @@ char* Format(NUMBER a, char* dest) {
       if (a.esign) e++; else e--;
       d++;
       }
-    if (FlagSet(28)) *dest++ = '.'; else *dest++ = ',';
+    if (decimals != 0) {
+      if (FlagSet(28)) *dest++ = '.'; else *dest++ = ',';
+      }
     for (i=0; i<decimals; i++) {
       if (d < 9) {
         *dest++ = a.mantissa[d] + '0';

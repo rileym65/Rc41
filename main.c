@@ -231,6 +231,7 @@ int main(int argc, char** argv) {
   ramClear = 0;
   singleStep = 0;
   instBj = 0;
+  useLcd = 0;
   strcpy(printBuffer,"");
   printPosition = 0;
   ram[LIFT] = 'D';
@@ -240,6 +241,7 @@ int main(int argc, char** argv) {
     if (strcmp(argv[i],"-d") == 0) debug = -1;
     if (strcmp(argv[i],"-rc") == 0) ramClear = -1;
     if (strcmp(argv[i],"-ss") == 0) { singleStep = -1; debug = -1; }
+    if (strcmp(argv[i],"-lcd") == 0) useLcd = 0xff;
     }
   Init();
   OpenTapeDrive("tape1.dat");
@@ -298,6 +300,7 @@ printf("New register\n");
       }
     else {
       printf("\n[%s]\n",Display(screen));
+      if (useLcd) DrawLcd(Display(screen));
       if (debug) ShowStatRegs(0);
       ClearFlag(50);
       if (FlagSet(52)) printf("PRGM");

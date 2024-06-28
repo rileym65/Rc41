@@ -106,6 +106,7 @@ LINK char   printBuffer[1024];
 LINK int    printPosition;
 LINK int    linksCleared;
 LINK int    errFlag;
+LINK char   useLcd;
 
 #ifdef MAIN
 NUMBER  S_ONE  = { 0, { 1,0,0,0,0,0,0,0,0,0 }, 0, { 0,0 } };
@@ -156,6 +157,7 @@ extern void    Del(char* token);
 extern char*   Display(char* buffer);
 extern NUMBER  Div(NUMBER a, NUMBER b);
 extern NUMBER  DNumberToNumber(DNUMBER a);
+extern void    DrawLcd();
 extern int     Dse(byte post);
 extern void    EMinus();
 extern void    EndNumber();

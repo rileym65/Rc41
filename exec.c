@@ -639,24 +639,28 @@ int Exec(int addr) {
            }
          break;
     case 0x68:                                             // INT
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          StoreNumber(a, R_L);
          a = Integer(a);
          StoreNumber(a, R_X);
          break;
     case 0x69:                                             // FRC
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          StoreNumber(a, R_L);
          a = Fractional(a);
          StoreNumber(a, R_X);
          break;
     case 0x6a:                                             // D-R
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          StoreNumber(a, R_L);
          a = Mul(a, DTOR);
          StoreNumber(a, R_X);
          break;
     case 0x6b:                                             // R-D
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          StoreNumber(a, R_L);
          a = Mul(a, RTOD);

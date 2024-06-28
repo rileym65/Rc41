@@ -11,6 +11,10 @@ char* Postfix(byte i, int adr, char* buffer) {
   if (b >= 0x80) strcat(buffer,"IND ");
   b &= 0x7f;
   if ((reverse[i].size & 0xf0) == 0x90) {
+    if (b < 100) {
+      sprintf(tmp,"%02d",b);
+      strcat(buffer,tmp);
+      }
     if (b >= 102 && b <= 111) {
       tmp[0] = b - 102 + 'A';
       tmp[1] = 0;
