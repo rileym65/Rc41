@@ -889,8 +889,6 @@ return;
     strcpy(filename,progname);
     }
   filename[7] = 0;
-printf("Progname: %s\n", progname);
-printf("Filename: %s\n", filename);
   if (strlen(filename) == 0 || strlen(progname) == 0) {
     Message("NAME ERR");
     Error();
