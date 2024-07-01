@@ -321,8 +321,19 @@ printf("New register\n");
           if (token[i] != '.' && (token[i] < '0' || token[i] > '9')) isNumber = 0;
         if (isNumber) {
           if (FlagSet(52)) {
+            if (!FlagSet(22)) {
+              ram[REG_R+1] = 0x00;
+              ProgramStep(NULL);
+              }
             SetFlag(22);
-            ProgramStep(token);
+            for (i=0; i<strlen(token); i++) {
+              if (token[i] >= '0' && token[i] <= '9')
+                ram[REG_R+1] = token[i] - '0' + 0x10;
+              else if (token[i] == '.') ram[REG_R+1] = 0x1a;
+              else ram[REG_R+1] = 0x00;
+              ProgramStep(NULL);
+              }
+//            ProgramStep(token);
             }
           else {
             for (i=0; i<strlen(token); i++) {
@@ -473,13 +484,17 @@ printf("New register\n");
                   else if (catalog[i].cmd == 0xc0) pchar = InputEnd(pchar);
                   else {
                     ram[REG_R+1] = catalog[i].cmd;
+                    if (FlagSet(22) && ram[REG_R+1] == 0x54)
+                      ram[REG_R+1] = 0x1c;
                     if (catalog[i].flags & 0x3) {
                       pchar = PostFix(catalog[i].flags, pchar, &b);
                       ram[REG_R+0] = b;
                       }
                     }
-                  if (FlagSet(52)) ProgramStep(NULL);
-                    else if (ram[71] != 0) Exec(71);
+                  if (FlagSet(52)) {
+                    if (ram[REG_R+1] != 0x00) ProgramStep(NULL);
+                    }
+                  else if (ram[71] != 0) Exec(71);
                   }
                 }
 
@@ -501,13 +516,17 @@ printf("New register\n");
               else if (catalog[i].cmd == 0xc0) pchar = InputEnd(pchar);
               else {
                 ram[REG_R+1] = catalog[i].cmd;
+                if (FlagSet(22) && ram[REG_R+1] == 0x54)
+                  ram[REG_R+1] = 0x1c;
                 if (catalog[i].flags & 0x3) {
                   pchar = PostFix(catalog[i].flags, pchar, &b);
                   ram[REG_R+0] = b;
                   }
                 }
-              if (FlagSet(52)) ProgramStep(NULL);
-                else if (ram[71] != 0) Exec(71);
+              if (FlagSet(52)) {
+                if (ram[REG_R+1] != 0x00) ProgramStep(NULL);
+                }
+              else if (ram[71] != 0) Exec(71);
               }
             else {
               i = 0;
@@ -516,8 +535,10 @@ printf("New register\n");
               else {
                 ram[REG_R+1] = catalog2[i].cmd;
                 ram[REG_R+0] = catalog2[i].post;
-                if (FlagSet(52)) ProgramStep(NULL);
-                  else if (ram[71] != 0) Exec(71);
+                if (FlagSet(52)) {
+                  if (ram[REG_R+1] != 0x00) ProgramStep(NULL);
+                  }
+                else if (ram[71] != 0) Exec(71);
                 }
               }
 

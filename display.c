@@ -3,6 +3,7 @@
 char* Display(char* buffer) {
   int i;
   int p;
+  int e;
   NUMBER a;
   if (FlagSet(52)) {
     ProgramLine(buffer);
@@ -24,6 +25,15 @@ char* Display(char* buffer) {
     }
   else {
     a = RecallNumber(R_X);
+    if (FlagSet(22)) {
+      e = (a.exponent[0] * 10) + a.exponent[1];
+      if (a.esign) e = -e;
+      e += ex;
+      a.esign = (e >= 0) ? 0 : 9;
+      if (e < 0) e = -e;
+      a.exponent[0] = e / 10;
+      a.exponent[1] = e % 10;
+      }
     Format(a,buffer);
     }
   while (strlen(buffer) < 12) strcat(buffer," ");

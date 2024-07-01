@@ -28,7 +28,7 @@ int ExecNumber(int address) {
       if (mode == 'E') {
         ex = (ex * 10) + (ram[address] - 0x10);
         }
-      if (mode == 'Z' && ram[address] == 0x10) e--;
+      if (mode == 'Z' && ram[address] == 0x10 && dp != 0) e--;
       }
     if (ram[address] == 0x1a && mode != 'E') {
       if (dp == 0) dp = 0xff;

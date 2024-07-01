@@ -70,9 +70,11 @@ int ProgramNumber(int adr, char* buffer) {
   char esign;
   mode = 'M';
   p = 0;
-  b = ram[adr];
   sign = ' ';
   esign = ' ';
+  while (ram[adr] >= 0x10 && ram[adr] <= 0x1c) adr++;
+  adr--;
+  b = ram[adr];
   while (b >= 0x10 && b <= 0x1c) {
     if (b <= 0x19) {
       if (mode == 'M') mant[p++] = '0' + b - 0x10;
@@ -87,8 +89,8 @@ int ProgramNumber(int adr, char* buffer) {
         }
       }
     if (b == 0x1c) {
-      if (mode == 'M') sign = (sign = ' ') ? '-' : ' ';
-        else esign = (esign = ' ') ? '-' : ' ';
+      if (mode == 'M') sign = (sign == ' ') ? '-' : ' ';
+        else esign = (esign == ' ') ? '-' : ' ';
       }
     adr--;
     b = ram[adr];
@@ -99,7 +101,7 @@ int ProgramNumber(int adr, char* buffer) {
   if (mode == 'E') {
     expn[p] = 0;
     strcat(buffer," E");
-    if (esign == '-') strcat(buffer,'-');
+    if (esign == '-') strcat(buffer,"-");
     strcat(buffer,expn);
     }
   return adr;

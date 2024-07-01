@@ -71,7 +71,7 @@ void ProgramStep(char* line) {
   int l;
   int d;
   byteCount = 0;
-  if (ram[REG_R+1] == 0x00 && line == NULL) return;
+//  if (ram[REG_R+1] == 0x00 && line == NULL) return;
   addr = (ram[REG_B+1] << 8) | ram[REG_B+0];
   reg = (addr & 0xfff);
   byt = (addr >> 12) & 0xf;
@@ -96,11 +96,13 @@ void ProgramStep(char* line) {
   addr = (byt << 12) | reg;
   ram[REG_B+1] = (addr >> 8) & 0xff;
   ram[REG_B+0] = addr & 0xff;
-  if (line == NULL) ClearFlag(22);
-  if (!FlagSet(22)) ProgramByte(ram[REG_R+1]);
+  if (ram[REG_R+1] < 0x10 || ram[REG_R+1] > 0x1c) ClearFlag(22);
+//  if (!FlagSet(22)) ProgramByte(ram[REG_R+1]);
+  ProgramByte(ram[REG_R+1]);
   if (line != NULL) {
     if (line[0] == '.' || (line[0] >= '0' && line[0] <= '9')) {
-      ProgramByte(0x00);
+      if (!FlagSet(22)) ProgramByte(0x00);
+      SetFlag(22);
       for (i=0; i<strlen(line); i++) {
         if (line[i] == '.') ProgramByte(0x1a);
         else if (line[i] >= '0' && line[i] <= '9')
@@ -108,6 +110,7 @@ void ProgramStep(char* line) {
         }
       }
     if (line[0] == '"') {
+      ClearFlag(22);
       for (i=0; i<strlen(line); i++) {
         if (line[i] != '"') {
           if (line[i] > 'e' && line[i] <= 'z') ProgramByte(line[i]-32);
@@ -118,6 +121,7 @@ void ProgramStep(char* line) {
         }
       }
     if (strncasecmp(line, "LBL ",4) == 0) {
+      ClearFlag(22);
       ProgramByte(0x00);
       ProgramByte(0xf1);
       ProgramByte(0x00);
@@ -131,6 +135,7 @@ void ProgramStep(char* line) {
       Link(start-1);
       }
     if (strncasecmp(line, "GTO ",4) == 0) {
+      ClearFlag(22);
       ProgramByte(0xf0);
       i = 5;
       while (line[i] != 0 && line[i] != '"') {
@@ -141,6 +146,7 @@ void ProgramStep(char* line) {
         }
       }
     if (strcasecmp(line, "END") == 0) {
+      ClearFlag(22);
       ProgramByte(0x00);
       ProgramByte(0x0d);
       Link(start-1);
@@ -158,7 +164,7 @@ void ProgramStep(char* line) {
   addr = (byt << 12) | reg;
   ram[REG_B+1] = (addr >> 8) & 0xff;
   ram[REG_B+0] = addr & 0xff;
-  lineNumber++;
+  if (!FlagSet(22)) lineNumber++;
   ram[REG_E+0] = lineNumber & 0xff;
   ram[REG_E+1] &= 0xf0;
   ram[REG_E+1] |= ((lineNumber >> 8) & 0x0f);
