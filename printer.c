@@ -69,6 +69,7 @@ void Printer(byte function) {
   int    f;
   int    s;
   int    e;
+  int    c;
   int    reg;
   int    r00;
   int    r[6];
@@ -263,29 +264,29 @@ void Printer(byte function) {
 
   else if (function == 12) {                          // PRKEYS
     addr = 0x0c0 * 7;
-    if (ram[addr+6] != 0xf0)
-      printf("USER KEYS:NONE\n");
-    else {
-      printf("USER KEYS:\n");
-      while (ram[addr+6] == 0xf0) {
-        if (ram[addr+0] != 0) {
-          if ((ram[addr+0] & 0x0f) >= 0x01 && (ram[addr+0] & 0x0f) <= 0x08)
-            printf(" %02x: ",ram[addr+0]);
-          else
-            printf("-%02x: ",ram[addr+0] & 0xf7);
-          DecodeInstruction(ram[addr+2], ram[addr+1]);
-          printf("\n");
-          }
-        if (ram[addr+3] != 0) {
-          if ((ram[addr+3] & 0x0f) >= 0x01 && (ram[addr+3] & 0x0f) <= 0x08)
-            printf(" %02x: ",ram[addr+3]);
-          else
-            printf("-%02x: ",ram[addr+3] & 0xf7);
-          DecodeInstruction(ram[addr+5], ram[addr+4]);
-          printf("\n");
-          }
-        addr += 7;
+    c = 0;
+    while (ram[addr+6] == 0xf0) {
+      if (ram[addr+0] != 0) {
+        if (c == 0) printf("USER KEYS:\n");
+        c++;
+        if ((ram[addr+0] & 0x0f) >= 0x01 && (ram[addr+0] & 0x0f) <= 0x08)
+          printf(" %02x: ",ram[addr+0]);
+        else
+          printf("-%02x: ",ram[addr+0] & 0xf7);
+        DecodeInstruction(ram[addr+2], ram[addr+1]);
+        printf("\n");
         }
+      if (ram[addr+3] != 0) {
+        if (c == 0) printf("USER KEYS:\n");
+        c++;
+        if ((ram[addr+3] & 0x0f) >= 0x01 && (ram[addr+3] & 0x0f) <= 0x08)
+          printf(" %02x: ",ram[addr+3]);
+        else
+          printf("-%02x: ",ram[addr+3] & 0xf7);
+        DecodeInstruction(ram[addr+5], ram[addr+4]);
+        printf("\n");
+        }
+      addr += 7;
       }
     addr = (ram[REG_C+2] << 4) | ((ram[REG_C+1] & 0xf0) >> 4);
     addr = (addr * 7) - 1;
@@ -293,7 +294,10 @@ void Printer(byte function) {
       if (ram[addr] >= 0xc0 && ram[addr] < 0xce) {
         if (ram[addr-2] >= 0xf0) {
           if (ram[addr-3] != 0x00) {
-            printf(" %02x: \"",ram[addr-3]);
+            if (c == 0) printf("USER KEYS:\n");
+            c++;
+            if ((ram[addr-3] & 0x0f) <= 0x08) printf(" %02x: \"",ram[addr-3]);
+              else printf("-%02x: \"",ram[addr-3] & 0xf7);
             for (i=1; i<(ram[addr-2]&0x0f); i++)
               if (ram[addr-3-i] == 0) printf("_");
                 else printf("%c",ram[addr-3-i]);
@@ -304,6 +308,7 @@ void Printer(byte function) {
       addr -= isize(addr);
       }
     end = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
+    if (c == 0) printf("USER KEYS:NONE\n");
 
     }
 
