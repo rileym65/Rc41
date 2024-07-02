@@ -216,6 +216,9 @@ char *InputSto(char* line) {
   }
 
 int main(int argc, char** argv) {
+  int   adr;
+  int   dst;
+  int   flag;
   int   addr;
   int   i;
   int   j;
@@ -446,7 +449,32 @@ printf("New register\n");
                        ram[addr+0] != keys[i].keycode &&
                        ram[addr+3] != keys[i].keycode) addr += 7;
                 if (ram[addr+6] != 0xf0) {
-                  Message("NONEXISTENT");
+                  adr = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
+                  adr = FromPtr(adr) + 2;
+                  flag = 0;
+                  while (flag == 0) {
+                    if (ram[adr] >= 0xc0 && ram[adr] <= 0xcd &&
+                        ram[adr-2] >= 0xf0 && ram[adr-3] == keys[i].keycode) {
+                      flag = 1;
+                      }
+                    else {
+                      dst = ((ram[adr] & 0x0f) << 8) | ram[adr-1];
+                      dst = ((dst & 0x1ff) * 7) + ((dst >> 9) & 0x7);
+                      if (dst == 0) flag = 2;
+                      else adr += dst - 1;
+                      }
+                    }
+                  if (flag == 1) {
+                    adr = ToPtr(adr+1);
+                    ram[REG_B+1] = (adr >> 8) & 0xff;
+                    ram[REG_B+0] = adr & 0xff;
+                    ram[REG_E+1] |= 0x0f;
+                    ram[REG_E+0] = 0xff;
+                    if (FlagSet(22)) EndNumber();
+                    running = -1;
+                    }
+                  else
+                    Message("NONEXISTENT");
                   }
                 else {
                   if (ram[addr+0] == keys[i].keycode) {

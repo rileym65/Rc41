@@ -43,6 +43,13 @@ void Asn(char* command, char* key) {
       }
     }
   if (cat == 0) {
+    addr = FindGlobal(cmd);
+    if (addr != 0) {
+       addr--;
+       cat = 3;
+       }
+    }
+  if (cat == 0) {
     Message("NONEXISTENT");
     Error();
     return;
@@ -57,6 +64,13 @@ printf("Found in catalog %d\n",cat);
   if (keys[ky].keycode == 0xff) {
     Message("NONEXISTENT");
     Error();
+    return;
+    }
+  if (cat == 3) {
+printf("%02x %02x %02x %02x %02x\n",ram[addr],ram[addr-1],ram[addr-2],ram[addr-3],ram[addr-4]);
+printf("Found key: %d %02x\n",ky,keys[ky].keycode);
+    ram[addr-3] = keys[ky].keycode;
+    SetKaFlag(keys[ky].keycode, 1);
     return;
     }
 printf("Found key: %d %02x\n",ky,keys[ky].keycode);
