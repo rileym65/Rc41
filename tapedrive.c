@@ -196,6 +196,7 @@ void td_dir() {
   int p;
   s = 2;
   if (written) WriteSector(sectorNumber);
+  printf("\n");
   printf("NAME    TYPE    REGS\n");
   flag = -1;
   while (flag) {
@@ -372,7 +373,9 @@ void td_readp() {
   int  p;
   int  end;
   int  adr;
+  int  sadr;
   int  nabc;
+  byte b;
   char filename[32];
   GetAlpha(filename);
   if (strlen(filename) == 0) {
@@ -396,6 +399,7 @@ void td_readp() {
   end = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
   end = (end * 7) + 2;
   adr = FindStart(end);
+  sadr = adr;
   for (i=end+1; i<=adr; i++) ram[i] = 0x00;
   p = 0;
   ReadSector(rec);
@@ -412,6 +416,21 @@ void td_readp() {
     size--;
     }
   ReLink();
+
+  end = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
+  end = (end * 7) + 2;
+  while (ram[sadr] == 0x00) sadr--;
+  while (ram[sadr] < 0xc0 || ram[sadr] > 0xcd || ram[sadr-2] >= 0xf0) {
+    if (ram[sadr] >= 0xc0 && ram[sadr] <= 0xcd && ram[sadr-2] >= 0xf0) {
+      if (ram[sadr-3] != 0x00) {
+        b = ram[sadr-3];
+        UnAsn(b, 3);
+        ram[sadr-3] = b;
+        SetKaFlag(b, 1);
+        }
+      }
+    sadr -= isize(sadr);
+    }
   }
 
 void td_readr() {

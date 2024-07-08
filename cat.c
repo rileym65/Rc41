@@ -4,6 +4,7 @@ void Cat(char* token) {
   int addr;
   int i;
   int end;
+  printf("\n");
   if (strcmp(token, "1") == 0) {
     addr = (ram[REG_C+2] << 4) | ((ram[REG_C+1] & 0xf0) >> 4);
     addr = (addr * 7) - 1;

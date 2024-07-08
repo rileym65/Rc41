@@ -125,6 +125,7 @@ OBJS= \
 	tointeger.o \
 	tone.o \
 	toptr.o \
+	unasn.o \
 	view.o \
 	wprg.o \
 	ytox.o

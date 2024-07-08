@@ -54,7 +54,6 @@ void Asn(char* command, char* key) {
     Error();
     return;
     }
-printf("Found in catalog %d\n",cat);
   ky =0;
   flag = -1;
   while (flag) {
@@ -66,14 +65,12 @@ printf("Found in catalog %d\n",cat);
     Error();
     return;
     }
+  UnAsn(keys[ky].keycode, 3);
   if (cat == 3) {
-printf("%02x %02x %02x %02x %02x\n",ram[addr],ram[addr-1],ram[addr-2],ram[addr-3],ram[addr-4]);
-printf("Found key: %d %02x\n",ky,keys[ky].keycode);
     ram[addr-3] = keys[ky].keycode;
     SetKaFlag(keys[ky].keycode, 1);
     return;
     }
-printf("Found key: %d %02x\n",ky,keys[ky].keycode);
   addr = 0x0c0 * 7;
   flag =-1;
   while (flag) {
@@ -82,13 +79,10 @@ printf("Found key: %d %02x\n",ky,keys[ky].keycode);
     if (ram[addr+2] == 0x00) flag = 0;
     if (flag) addr += 7;
     }
-printf("Available register found at %x\n",addr / 7);
   if (ram[addr+6] != 0xf0) {
-printf("New assignment register\n");
     for (i=0; i<6; i++) ram[addr+i] = 0x00;
     ram[addr+6] = 0xf0;
     }
-printf("%02x %02x %02x",b1, b2, keys[ky].keycode);
   if (ram[addr+2] == 0x00) {
     ram[addr+2] = b1;
     ram[addr+1] = b2;

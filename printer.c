@@ -37,7 +37,7 @@ void DecodeInstruction(byte b1, byte b2) {
   if (reverse[i].number == 0xff) return;
   if (b2 >= 0x80) printf("IND ");
   b2 &= 0x7f;
-  if (b2 < 0x70) printf("%02",b2);
+  if (b2 < 0x70) printf("%02d",b2);
   else
     switch (b2) {
       case 0x70: printf("T"); break;
@@ -226,6 +226,7 @@ void Printer(byte function) {
     }
 
   else if (function == 11) {                     // PRFLAGS
+    printf("\n");
     if (printPosition != 0) {
       printf("%s\n",printBuffer);
       printBuffer[0] = 0;
@@ -263,6 +264,7 @@ void Printer(byte function) {
     }
 
   else if (function == 12) {                          // PRKEYS
+    printf("\n");
     addr = 0x0c0 * 7;
     c = 0;
     while (ram[addr+6] == 0xf0) {
@@ -416,6 +418,7 @@ void Printer(byte function) {
     }
 
   else if (function == 19) {                          // PRSTK
+    printf("\n");
     if (printPosition != 0) {
       printf("%s\n",printBuffer);
       printBuffer[0] = 0;

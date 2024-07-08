@@ -253,6 +253,7 @@ extern NUMBER  TensCompliment(NUMBER a);
 extern int     ToInteger(NUMBER a);
 extern void    Tone(byte n);
 extern int     ToPtr(int addr);
+extern void    UnAsn(int keycode, int flag);
 extern void    View(byte post);
 extern void    Wprg(char* name);
 extern NUMBER  YtoX(NUMBER y, NUMBER x);
