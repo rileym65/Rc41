@@ -11,7 +11,6 @@ void Wprg(char* filename) {
   address = FromPtr(address);
   address = FindStart(address);
   end = FindEnd(address);
-printf("%x -> %x\n",address,end);
   file = open(filename, O_CREAT | O_TRUNC | O_WRONLY, 0666);
   if (file >= 0) {
     end -= 2;
