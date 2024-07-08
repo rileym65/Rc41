@@ -10,49 +10,54 @@ void Asn(char* command, char* key) {
   int  b1;
   int  b2;
   char cmd[32];
-  if (command[0] != '"' || command[strlen(command)-1] != '"') {
-    Message("NONEXISTENT");
-    Error();
-    return;
+  if (strcmp(command,"\"\"") == 0) {
+    cat = 4;
     }
-  strcpy(cmd, command+1);
-  cmd[strlen(cmd)-1] = 0;
-  entry = 0;
-  flag = -1;
-  cat = 0;
-  while (flag) {
-    if (strcasecmp(cmd, catalog[entry].name) == 0) flag = 0;
-      else if (catalog[++entry].flags == 0xff) flag = 0;
-    }
-  if (catalog[entry].flags != 0xff) {
-    cat = 1;
-    b1 = 0x04;
-    b2 = catalog[entry].cmd;
-    }
-  if (cat == 0) {
+  else {
+    if (command[0] != '"' || command[strlen(command)-1] != '"') {
+      Message("NONEXISTENT");
+      Error();
+      return;
+      }
+    strcpy(cmd, command+1);
+    cmd[strlen(cmd)-1] = 0;
     entry = 0;
     flag = -1;
+    cat = 0;
     while (flag) {
-      if (strcasecmp(cmd, catalog2[entry].name) == 0) flag = 0;
-        else if (catalog2[++entry].flags == 0xff) flag = 0;
+      if (strcasecmp(cmd, catalog[entry].name) == 0) flag = 0;
+        else if (catalog[++entry].flags == 0xff) flag = 0;
       }
-    if (catalog2[entry].flags != 0xff) {
-      cat = 2;
-      b1 = catalog2[entry].cmd;
-      b2 = catalog2[entry].post;
+    if (catalog[entry].flags != 0xff) {
+      cat = 1;
+      b1 = 0x04;
+      b2 = catalog[entry].cmd;
       }
-    }
-  if (cat == 0) {
-    addr = FindGlobal(cmd);
-    if (addr != 0) {
-       addr--;
-       cat = 3;
-       }
-    }
-  if (cat == 0) {
-    Message("NONEXISTENT");
-    Error();
-    return;
+    if (cat == 0) {
+      entry = 0;
+      flag = -1;
+      while (flag) {
+        if (strcasecmp(cmd, catalog2[entry].name) == 0) flag = 0;
+          else if (catalog2[++entry].flags == 0xff) flag = 0;
+        }
+      if (catalog2[entry].flags != 0xff) {
+        cat = 2;
+        b1 = catalog2[entry].cmd;
+        b2 = catalog2[entry].post;
+        }
+      }
+    if (cat == 0) {
+      addr = FindGlobal(cmd);
+      if (addr != 0) {
+         addr--;
+         cat = 3;
+         }
+      }
+    if (cat == 0) {
+      Message("NONEXISTENT");
+      Error();
+      return;
+      }
     }
   ky =0;
   flag = -1;
@@ -66,6 +71,7 @@ void Asn(char* command, char* key) {
     return;
     }
   UnAsn(keys[ky].keycode, 3);
+  if (cat == 4) return;
   if (cat == 3) {
     ram[addr-3] = keys[ky].keycode;
     SetKaFlag(keys[ky].keycode, 1);
