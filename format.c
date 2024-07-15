@@ -37,7 +37,7 @@ char* Format(NUMBER a, char* dest) {
   if (mode == 2) {                                               /* FIX */
     if (a.esign != 0) {
       *dest++ = '0';
-      if (decimals != 0) {
+      if (decimals != 0 || FlagSet(29)) {
         if (FlagSet(28)) *dest++ = '.'; else *dest++ = ',';
         }
       d = 0;
@@ -62,7 +62,7 @@ char* Format(NUMBER a, char* dest) {
         *dest++ = a.mantissa[i+1] + '0';
         d++;
         }
-      if (decimals != 0) {
+      if (decimals != 0 || FlagSet(29)) {
         if (FlagSet(28)) *dest++ = '.'; else *dest++ = ',';
         }
       for (i=0; i<decimals; i++) {
