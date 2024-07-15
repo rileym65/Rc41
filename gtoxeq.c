@@ -17,7 +17,7 @@ int GtoXeq(int address) {
   addr = (ram[REG_B+1] << 8) | ram[REG_B+0];
   addr = FromPtr(addr) - 1;
   if (address >= 0x0c0 && ram[addr-1] != 0) {
-    jump = ((ram[addr] * 0x0f) << 8) | ram[addr-1];
+    jump = ((ram[addr] & 0x0f) << 8) | ram[addr-1];
     jump = ((jump & 0x1ff) * 7) + ((jump >> 9) & 0x07);
     if (ram[addr-2] < 0x80) jump = -jump;
     addr += jump;
@@ -32,7 +32,7 @@ int GtoXeq(int address) {
   last = addr;
   flag = -1;
   while (flag) {
-    if (lbl < 15 && ((ram[addr-1] & 0x7f) == lbl+1)) flag = 0;
+    if (lbl < 15 && ((ram[addr] & 0x7f) == lbl+1)) flag = 0;
     else if (lbl > 14 && (ram[addr] == 0xcf) && ((ram[addr-1] & 0x7f) == lbl)) flag = 0;
     else if (ram[addr] >= 0xc0 && ram[addr] <= 0xcd &&
              ram[addr-2] < 0xf0) {
@@ -49,7 +49,7 @@ int GtoXeq(int address) {
     }
   addr++;
   if (address >= 0x0c0) {
-    dif = (last)-(addr);
+    dif = last-addr;
     ofs = 0;
     if (dif < 0) {
       dif = -dif;
