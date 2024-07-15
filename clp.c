@@ -17,6 +17,9 @@ void Clp(char* name) {
   printf("\n");
   while (ram[address] == 0x00) address--;
   while (address >= end) {
+    if (ram[address] >= 0xc0 && ram[address] <=0xcd && ram[address-2] >= 0xf0 && ram[address-3] != 0x00) {
+      SetKaFlag(ram[address-3], 0);
+      }
     if (ram[address] >= 0xc0 && ram[address] <=0xcd) {
       s = ((ram[address] & 0x0f) <<8) | ram[address-1];
       size += (((s & 0x1ff) * 7) + (s >> 9));
