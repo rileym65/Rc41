@@ -107,6 +107,7 @@ LINK int    printPosition;
 LINK int    linksCleared;
 LINK int    errFlag;
 LINK char   useLcd;
+LINK char   valid;
 
 #ifdef MAIN
 NUMBER  S_ONE  = { 0, { 1,0,0,0,0,0,0,0,0,0 }, 0, { 0,0 } };

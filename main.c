@@ -20,65 +20,86 @@ char *NextToken(char* line, char* token) {
   return line;
   }
 
-
-char *PostFix(byte flags, char* line, byte *b) {
+char *Special(char* line) {
   int   n;
+  int   ind;
+  byte  cmd;
+  word  flags;
   char  token[32];
-  line = NextToken(line, token);
-  if (token[0] >= '0' && token[0] <= '9') {
-    n = atoi(token);
-    if (n < 0) n = 0;
-    if (n > 99) n = 99;
-    *b = n;
-    }
-  else if (strcasecmp(token, "L") == 0) *b = 0x74;
-  else if (strcasecmp(token, "X") == 0) *b = 0x73;
-  else if (strcasecmp(token, "Y") == 0) *b = 0x72;
-  else if (strcasecmp(token, "Z") == 0) *b = 0x71;
-  else if (strcasecmp(token, "T") == 0) *b = 0x70;
-  else if (strcasecmp(token, "ind") == 0) {
-  line = NextToken(line, token);
-    if (token[0] >= '0' && token[0] <= '9') {
+  char  buffer[64];
+  cmd = ram[REG_R+1];
+  flags = reverse[cmd].flags;
+  ind = 0;
+  if ((flags & 0x03) != 0) {
+    if (*line == 0) {
+      }
+    else 
+      line = NextToken(line, token);
+    if ((flags & 0x08) != 0 && strcasecmp(token,"IND") == 0) {
+      ind = 0x80;
+      if (*line == 0) {
+        }
+      else 
+        line = NextToken(line, token);
+      }
+    if (token[0] >= '0' && token[0] <= '9'){
+      if (ind) token[2] = 0;
+        else token[flags & 0x03] = 0;
       n = atoi(token);
-      if (n < 0) n = 0;
-      if (n > 99) n = 99;
-      *b = n+128;
       }
-    else if (strcasecmp(token, "L") == 0) *b = 0xf4;
-    else if (strcasecmp(token, "X") == 0) *b = 0xf3;
-    else if (strcasecmp(token, "Y") == 0) *b = 0xf2;
-    else if (strcasecmp(token, "Z") == 0) *b = 0xf1;
-    else if (strcasecmp(token, "T") == 0) *b = 0xf0;
+    if ((flags & 0x04) == 0x04 || ind != 0) {
+      if (strcasecmp(token, "L") == 0) n = 0x74;
+      if (strcasecmp(token, "X") == 0) n = 0x73;
+      if (strcasecmp(token, "Y") == 0) n = 0x72;
+      if (strcasecmp(token, "Z") == 0) n = 0x71;
+      if (strcasecmp(token, "T") == 0) n = 0x70;
+      }
+    if ((flags & 0x60) != 0) {
+      if (token[0] >= 'A' && token[0] <= 'J') n = token[0] - 'A' + 102;
+      if (token[0] >= 'a' && token[0] <= 'e') n = token[0] - 'a' + 123;
+      }
     }
-  return line;
-  }
-
-char *InputGtoXeq(char* line, byte base) {
-  int n;
-  char token[256];
-  char buffer[300];
-  line = NextToken(line, token);
-  if (token[0] == '.') {
-    if (token[1] == '.') {
-      GtoEnd();
-//      n = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
-//      ram[REG_B+0] = n & 0xff;
-//      ram[REG_B+1] = 0x30 | ((n >> 8) & 0x0f);
-//      ram[REG_E+0] = 0x00;
-//      ram[REG_E+1] &= 0xf0;
-      Pack();
-      }
-    else if (token[1] == '"') {
-      }
-    else {
-      n = atoi(token+1);
-      GotoLine(n);
-      }
-    ram[REG_R+1] = 0x00;
-    }
-  else {
+  else
+    n = 0;
+  if ((flags & 0xe0) == 0x20) {                  // LBL
     if (token[0] == '"') {
-      ram[REG_R+1] = (base == 0xd0) ? 0x1d : 0x1e;
+      ram[REG_R+1] = 0xc0;
+      if (FlagSet(52)) {
+        sprintf(buffer,"LBL %s",token);
+        ProgramStep(buffer);
+        }
+      ram[REG_R+1] = 0x00;
+      valid = 0x00;
+      return line;
+      }
+    }
+  else if ((flags & 0xe0) == 0x40) {             // GTO
+    if (token[0] == '.') {
+      if (token[1] == '.') {
+        GtoEnd();
+        Pack();
+        }
+      else if (token[1] == '"') {
+        n = FindGlobal(token+1);
+        if (n != 0) {
+          n = ToPtr(n);
+          ram[REG_B+1] = (n >> 8) & 0xff;
+          ram[REG_B+0] = n & 0xff;
+          ram[REG_E+1] |= 0x0f;
+          ram[REG_E+0] = 0xff;
+          ram[REG_E+0] = 0xff;
+          ram[REG_E+1] |= 0x0f;
+          }
+        }
+      else {
+        n = atoi(token+1);
+        GotoLine(n);
+        }
+      ram[REG_R+1] = 0x00;
+      valid = 0;
+      }
+    else if (token[0] == '"') {
+      ram[REG_R+1] = 0x1d;
       if (FlagSet(52)) {
         sprintf(buffer,"GTO %s",token);
         ProgramStep(buffer);
@@ -92,125 +113,114 @@ char *InputGtoXeq(char* line, byte base) {
           ram[REG_B+0] = n & 0xff;
           ram[REG_E+1] |= 0x0f;
           ram[REG_E+0] = 0xff;
-          if (base == 0xe0) {
-            running = -1;
-            ram[REG_E+0] = 0xff;
-            ram[REG_E+1] |= 0x0f;
-            }
+          ram[REG_E+0] = 0xff;
+          ram[REG_E+1] |= 0x0f;
           }
         }
       ram[REG_R+1] = 0x00;
+      valid = 0x00;
+      return line;
       }
-    if (strcasecmp(token, "IND") == 0) {
-      line = NextToken(line, token);
-      n = atoi(token);
+    if (ind != 0) {
       ram[REG_R+1] = 0xae;
-      if (base == 0xd0) ram[REG_R+0] = n;
-        else ram[REG_R+0] = n | 0x80;
+      ram[REG_R+0] = n;
       }
-    else if (token[0] >= '0' && token[0] <= '9') {
-      n = atoi(token);
-      if (n <= 14 && base == 0xd0) {
-        ram[REG_R+1] = 0xb1+n;
-        ram[REG_R+0] = 0;
-        }
-      else {
-        ram[REG_R+1] = base;
-        ram[REG_R+0] = 0;
-        ram[REG_E+2] &= 0xf0;
-        ram[REG_E+2] |= ((n & 0x70) >> 4);
-        ram[REG_E+1] &= 0x0f;
-        ram[REG_E+1] |= ((n & 0x0f) << 4);
-        }
-      }
-    else if (token[0] >= 'A' && token[0] <= 'J') {
-      n = token[0] - 'A' + 102;
-      ram[REG_R+1] = base;
-      ram[REG_R+0] = 0;
-      ram[REG_E+2] &= 0xf0;
-      ram[REG_E+2] |= ((n & 0x70) >> 4);
-      ram[REG_E+1] &= 0x0f;
-      ram[REG_E+1] |= ((n & 0x0f) << 4);
-      }
-    else if (token[0] >= 'a' && token[0] <= 'e') {
-      n = token[0] - 'a' + 123;
-      ram[REG_R+1] = base;
-      ram[REG_R+0] = 0;
-      ram[REG_E+2] &= 0xf0;
-      ram[REG_E+2] |= ((n & 0x70) >> 4);
-      ram[REG_E+1] &= 0x0f;
-      ram[REG_E+1] |= ((n & 0x0f) << 4);
-      }
-    }
-  return line;
-  }
-
-char *InputLbl(char* line) {
-  int n;
-  char token[256];
-  char buffer[300];
-  line = NextToken(line, token);
-  if (token[0] >= '0' && token[0] <= '9') {
-    n = atoi(token);
-    if (n <= 14) {
-      ram[REG_R+1] = 0x01+n;
+    else if (n < 15) {
+      ram[REG_R+1] = 0xb1+n;
       ram[REG_R+0] = 0;
       }
     else {
-      ram[REG_R+1] = 0xcf;
-      ram[REG_R+0] = n & 0x7f;
+      ram[REG_R+1] = (ind == 0) ? 0xd0 : 0xae;
+      ram[REG_R+0] = 0;
+      ram[REG_E+2] &= 0xf0;
+      ram[REG_E+2] |= ((n & 0x70) >> 4);
+      ram[REG_E+1] &= 0x0f;
+      ram[REG_E+1] |= ((n & 0x0f) << 4);
       }
+    return line;
     }
-  else if (token[0] >= 'A' && token[0] <= 'J') {
-    ram[REG_R+1] = 0xcf;
-    ram[REG_R+0] = token[0] - 'A' + 102;
-    }
-  else if (token[0] >= 'a' && token[0] <= 'e') {
-    ram[REG_R+1] = 0xcf;
-    ram[REG_R+0] = token[0] - 'a' + 123;
-    }
-  else if (token[0] == '"') {
-    ram[REG_R+1] = 0xc0;
-    if (FlagSet(52)) {
-      sprintf(buffer,"LBL %s",token);
-      ProgramStep(buffer);
+  else if ((flags & 0xe0) == 0x60) {             // XEQ
+    if (token[0] == '"') {
+      ram[REG_R+1] = 0x1e;
+      if (FlagSet(52)) {
+        sprintf(buffer,"GTO %s",token);
+        ProgramStep(buffer);
+        }
+      else {
+        if (FlagSet(22)) EndNumber();
+        n = FindGlobal(token);
+        if (n != 0) {
+          n = ToPtr(n);
+          ram[REG_B+1] = (n >> 8) & 0xff;
+          ram[REG_B+0] = n & 0xff;
+          ram[REG_E+1] |= 0x0f;
+          ram[REG_E+0] = 0xff;
+          running = -1;
+          ram[REG_E+0] = 0xff;
+          ram[REG_E+1] |= 0x0f;
+          }
+        }
+      ram[REG_R+1] = 0x00;
+      valid = 0x00;
+      return line;
       }
-    ram[REG_R+1] = 0x00;
+    if (ind != 0) {
+      ram[REG_R+1] = 0xae;
+      ram[REG_R+0] = n | 0x80;
+      }
+    else {
+      ram[REG_R+1] = 0xe0;
+      ram[REG_R+0] = 0;
+      ram[REG_E+2] &= 0xf0;
+      ram[REG_E+2] |= ((n & 0x70) >> 4);
+      ram[REG_E+1] &= 0x0f;
+      ram[REG_E+1] |= ((n & 0x0f) << 4);
+      }
+    return line;
     }
-  return line;
-  }
+  n |= ind;
+  switch (cmd) {
+    case 0x01:
+              if (n < 15) {                      // LBL
+                ram[REG_R+1] = 0x01 + n;
+                }
+              else {
+                ram[REG_R+1] = 0xcf;
+                ram[REG_R+0] = n & 0x7f;
+                }
+              break;
 
-char *InputRcl(char* line) {
-  byte  n;
-  line = PostFix(0x12, line, &n);
-  if (n < 16) {
-    ram[REG_R+1] = 0x20 + n;
-    }
-  else {
-    ram[REG_R+1] = 0x90;
-    ram[REG_R+0] = n;
-    }
-  return line;
-  }
-
-char *InputEnd(char* line) {
-  ram[REG_R+1] = 0xc0;
-  if (FlagSet(52)) {
-    ProgramStep("END");
-    }
-  ram[REG_R+1] = 0x00;
-  return line;
-  }
-
-char *InputSto(char* line) {
-  byte  n;
-  line = PostFix(0x12, line, &n);
-  if (n < 16) {
-    ram[REG_R+1] = 0x30 + n;
-    }
-  else {
-    ram[REG_R+1] = 0x91;
-    ram[REG_R+0] = n;
+    case 0x20:                                   // RCL
+              if (n < 16) {
+                ram[REG_R+1] = 0x20 + n;
+                }
+              else {
+                ram[REG_R+1] = 0x90;
+                ram[REG_R+0] = n;
+                }
+              break;
+                
+    case 0x30:                                   // STO
+              if (n < 16) {
+                ram[REG_R+1] = 0x30 + n;
+                }
+              else {
+                ram[REG_R+1] = 0x91;
+                ram[REG_R+0] = n;
+                }
+              break;
+                
+    case 0xc0:                                   // END
+              ram[REG_R+1] = 0xc0;
+              if (FlagSet(52)) {
+                ProgramStep("END");
+                }
+              ram[REG_R+1] = 0x00;
+              valid = 0x00;
+                
+      default:
+              ram[REG_R+0] = n;
+              break;
     }
   return line;
   }
@@ -227,7 +237,6 @@ int main(int argc, char** argv) {
   char  token[32];
   char  token2[32];
   int   isNumber;
-  byte  b;
   char *pchar;
   int   file;
   debug = 0;
@@ -267,9 +276,7 @@ int main(int argc, char** argv) {
     while (ram[addr+6] == 0xf0 &&
            ram[addr+0] != 0x00 &&
            ram[addr+3] != 0x00) addr += 7;
-printf("Address: %x\n",addr/7);
     if (ram[addr+6] != 0xf0) {
-printf("New register\n");
       ram[addr+6] = 0xf0;
       }
     SetKaFlag(1, 1);
@@ -286,6 +293,10 @@ printf("New register\n");
     }
 
   while (on) {
+
+/* ****************************** */
+/* ***** Program is running ***** */
+/* ****************************** */
     if (running) {
       addr = (ram[REG_B+1] << 8) | ram[REG_B+0];
       addr = FromPtr(addr) - 1;
@@ -297,10 +308,12 @@ printf("New register\n");
         }
       else {
         running = 0;
-//        ram[REG_E+0] = 0xff;
-//        ram[REG_E+1] |= 0x0f;
         }
       }
+
+/* ****************************** */
+/* ***** No program running ***** */
+/* ****************************** */
     else {
       printf("\n[%s]\n",Display(screen));
       if (useLcd) DrawLcd(Display(screen));
@@ -313,15 +326,28 @@ printf("New register\n");
         buffer[strlen(buffer)-1] = 0;
       pchar = buffer;
       while (*pchar == ' ') pchar++;
+
+/* ******************************** */
+/* ***** Check for \ commands ***** */
+/* ******************************** */
       if (*pchar == '\\') {
         Debug(pchar);
         *pchar = 0;
         }
+
+/* ******************************** */
+/* ***** Process command line ***** */
+/* ******************************** */
       while (*pchar != 0) {
+        valid = 0;
         pchar = NextToken(pchar, token);
         isNumber = -1;
         for (i=0; i<strlen(token); i++)
           if (token[i] != '.' && (token[i] < '0' || token[i] > '9')) isNumber = 0;
+
+/* ******************************************* */
+/* ***** Process token if it is a number ***** */
+/* ******************************************* */
         if (isNumber) {
           if (FlagSet(52)) {
             if (!FlagSet(22)) {
@@ -346,6 +372,10 @@ printf("New register\n");
               }
             }
           }
+
+/* **************************************** */
+/* ***** Check and process ALPHA mode ***** */
+/* **************************************** */
         else if (token[0] == '"') {
           if (FlagSet(52)) {
             ram[REG_R+1] = 0xf0;
@@ -365,20 +395,17 @@ printf("New register\n");
               }
             }
   
-  
-  //        i = 1;
-  //        ram[REG_R+1] = 0xf0;
-  //        while (token[i] != '"' && token[i] != 0) {
-  //          ram[REG_R+1]++;
-  //          ram[REG_R+1-i] = token[i];
-  //          if (ram[REG_R+1-i] > 'e' &&
-  //              ram[REG_R+1-i] <= 'z') ram[REG_R+1-i] -= 32;
-  //          i++;
-  //          }
-  //        Exec(0x100a);
           }
+
+/* ******************************************************* */
+/* ***** If not a number or Alpha mode, then command ***** */
+/* ******************************************************* */
         else {
           i = 0;
+
+/* ********************************************* */
+/* ***** Process non programmable commands ***** */
+/* ********************************************* */
           if (strcasecmp(token,"PRGM") == 0) {
             linksCleared = 0;
             if (FlagSet(52)) ClearFlag(52);
@@ -437,18 +464,61 @@ printf("New register\n");
             ram[REG_E+0] = 0xff;
             ram[REG_E+1] |= 0x0f;
             }
+
+/* ********************************************************* */
+/* ***** Process specific calculator key being pressed ***** */
+/* ********************************************************* */
           else if (token[0] == '<' && token[strlen(token)-1] == '>') {
             i = 0;
             while (keys[i].cmd != 0xff && strcasecmp(keys[i].key, token) != 0) {
               i++;
               }
             if (keys[i].cmd != 0xff) {
+
+              /* ************************* */
+              /* ***** Is key ASNed? ***** */
+              /* ************************* */
               if (GetKaFlag(keys[i].keycode)) {
+
+                /* ******************************************* */
+                /* ***** Search key assignment registers ***** */
+                /* ******************************************* */
                 addr = 0x0c0 * 7;
                 while (ram[addr+6] == 0xf0 &&
                        ram[addr+0] != keys[i].keycode &&
                        ram[addr+3] != keys[i].keycode) addr += 7;
-                if (ram[addr+6] != 0xf0) {
+
+                /* *********************************************** */
+                /* ***** Process if key found in KA register ***** */
+                /* *********************************************** */
+                if (ram[addr+6] == 0xf0) {
+                  valid = 0xff;
+                  if (ram[addr+0] == keys[i].keycode) {
+                    if (ram[addr+2] <= 0x0f) {
+                      ram[REG_R+1] = ram[addr+1];
+                      ram[REG_R+0] = 0x00;
+                      }
+                    else {
+                      ram[REG_R+1] = ram[addr+2];
+                      ram[REG_R+0] = ram[addr+1];
+                      }
+                    }
+                  else {
+                    if (ram[addr+5] <= 0x0f) {
+                      ram[REG_R+1] = ram[addr+4];
+                      ram[REG_R+0] = 0x00;
+                      }
+                    else {
+                      ram[REG_R+1] = ram[addr+5];
+                      ram[REG_R+0] = ram[addr+4];
+                      }
+                    }
+                  }
+
+                /* *************************************************** */
+                /* ***** If not in KA registers, search programs ***** */
+                /* *************************************************** */
+                else {
                   adr = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
                   adr = FromPtr(adr) + 2;
                   flag = 0;
@@ -473,104 +543,77 @@ printf("New register\n");
                     if (FlagSet(22)) EndNumber();
                     running = -1;
                     }
+
+                  /* ****************************************** */
+                  /* ***** If still not found, then error ***** */
+                  /* ****************************************** */
                   else
                     Message("NONEXISTENT");
                   }
-                else {
-                  if (ram[addr+0] == keys[i].keycode) {
-                    if (ram[addr+2] <= 0x0f) {
-                      ram[REG_R+1] = ram[addr+1];
-                      ram[REG_R+0] = 0x00;
-                      }
-                    else {
-                      ram[REG_R+1] = ram[addr+2];
-                      ram[REG_R+0] = ram[addr+1];
-                      }
-                    }
-                  else {
-                    if (ram[addr+5] <= 0x0f) {
-                      ram[REG_R+1] = ram[addr+4];
-                      ram[REG_R+0] = 0x00;
-                      }
-                    else {
-                      ram[REG_R+1] = ram[addr+5];
-                      ram[REG_R+0] = ram[addr+4];
-                      }
-                    }
-                  if (FlagSet(52)) ProgramStep(NULL);
-                    else if (ram[71] != 0) Exec(71);
-                  }
                 }
+
+              /* ************************************************** */
+              /* ***** Use stadndard command if key not ASNed ***** */
+              /* ************************************************** */
               else {
                 i = keys[i].cmd;
                 if (catalog[i].flags != 0xff) {
-                  if (catalog[i].cmd == 0x20) pchar = InputRcl(pchar);
-                  else if (catalog[i].cmd == 0x30) pchar = InputSto(pchar);
-                  else if (catalog[i].cmd == 0xb1) pchar = InputGtoXeq(pchar, 0xd0);
-                  else if (catalog[i].cmd == 0x1e) pchar = InputGtoXeq(pchar, 0xe0);
-                  else if (catalog[i].cmd == 0x01) pchar = InputLbl(pchar);
-                  else if (catalog[i].cmd == 0xc0) pchar = InputEnd(pchar);
-                  else {
-                    ram[REG_R+1] = catalog[i].cmd;
-                    if (FlagSet(22) && ram[REG_R+1] == 0x54)
-                      ram[REG_R+1] = 0x1c;
-                    if (catalog[i].flags & 0x3) {
-                      pchar = PostFix(catalog[i].flags, pchar, &b);
-                      ram[REG_R+0] = b;
-                      }
-                    }
-                  if (FlagSet(52)) {
-                    if (ram[REG_R+1] != 0x00) ProgramStep(NULL);
-                    }
-                  else if (ram[71] != 0) Exec(71);
+                  valid = 0xff;
+                  ram[REG_R+1] = catalog[i].cmd;
+                  if (FlagSet(22) && ram[REG_R+1] == 0x54)
+                    ram[REG_R+1] = 0x1c;
                   }
                 }
 
               }
+            /* ************************************************* */
+            /* ***** Error if specified key does not exist ***** */
+            /* ************************************************* */
             else {
               Message("NONEXISTENT");
               }
             }
+
+/* ******************************************** */
+/* ***** Otherwise process normal command ***** */
+/* ******************************************** */
           else {
-            while (catalog[i].flags != 0xff && strcasecmp(catalog[i].name, token) != 0) {
+            while (catalog[i].flags != 0xff &&
+                   strcasecmp(catalog[i].name, token) != 0) {
               i++;
               }
             if (catalog[i].flags != 0xff) {
-              if (catalog[i].cmd == 0x20) pchar = InputRcl(pchar);
-              else if (catalog[i].cmd == 0x30) pchar = InputSto(pchar);
-              else if (catalog[i].cmd == 0xb1) pchar = InputGtoXeq(pchar, 0xd0);
-              else if (catalog[i].cmd == 0x1e) pchar = InputGtoXeq(pchar, 0xe0);
-              else if (catalog[i].cmd == 0x01) pchar = InputLbl(pchar);
-              else if (catalog[i].cmd == 0xc0) pchar = InputEnd(pchar);
-              else {
+              valid = 0xff;
                 ram[REG_R+1] = catalog[i].cmd;
+                ram[REG_R+0] = 0x00;
                 if (FlagSet(22) && ram[REG_R+1] == 0x54)
                   ram[REG_R+1] = 0x1c;
-                if (catalog[i].flags & 0x3) {
-                  pchar = PostFix(catalog[i].flags, pchar, &b);
-                  ram[REG_R+0] = b;
-                  }
+              }
+            else {
+              i = 0;
+              while (catalog2[i].flags != 0xff &&
+                     strcasecmp(catalog2[i].name, token) != 0) i++;
+              if (catalog2[i].flags == 0xff) Message("NONEXISTENT");
+              else {
+                valid = 0xff;
+                ram[REG_R+1] = catalog2[i].cmd;
+                ram[REG_R+0] = catalog2[i].post;
                 }
+              }
+            }
+
+          if (valid) {
+            if (ram[REG_R+0] == 0x00 &&
+                reverse[ram[REG_R+1]].flags != 0) pchar = Special(pchar);
+            if (valid) {
               if (FlagSet(52)) {
                 if (ram[REG_R+1] != 0x00) ProgramStep(NULL);
                 }
               else if (ram[71] != 0) Exec(71);
               }
-            else {
-              i = 0;
-              while (catalog2[i].flags != 0xff && strcasecmp(catalog2[i].name, token) != 0) i++;
-              if (catalog2[i].flags == 0xff) Message("NONEXISTENT");
-              else {
-                ram[REG_R+1] = catalog2[i].cmd;
-                ram[REG_R+0] = catalog2[i].post;
-                if (FlagSet(52)) {
-                  if (ram[REG_R+1] != 0x00) ProgramStep(NULL);
-                  }
-                else if (ram[71] != 0) Exec(71);
-                }
-              }
-
             }
+
+
           }
         }
       }
