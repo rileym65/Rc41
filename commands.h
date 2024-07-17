@@ -7,16 +7,32 @@
        2 - 3 character input
        3 - allow stack
        4 - indirect
-       5
+       5 - alpha
        6
        7 - Not in program
+
+   bit 0 \ 00  - no arg
+       1 / 01  - 1 digit arg
+           10  - 2 digit arg
+           11  - 3 digit arg
+       2       - allow stack (X,Y,Z,T,L)
+       3       - allow indirect
+       4       - alpha arg
+       5 \ 000 - no special handling
+       6 / 001 - LBL handling
+       7   010 - GTO handling
+           011 - XEQ handling
+           100 - RCL handling
+           101 - STO handling
+           110 - END handling
+      15       - not in program
 */
 
 typedef struct {
   char *name;
   byte  cmd;
   int   key;
-  byte  flags;
+  word  flags;
   } CATALOG;
 
 #ifdef MAIN

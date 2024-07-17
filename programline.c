@@ -221,16 +221,12 @@ sprintf(buffer, "b=%02x, size=%d",b,reverse[b].size);
   }
 
 char* ProgramLine(char* buffer) {
-  int i;
   int addr;
   int reg;
   int byt;
-  int b;
-  int b2;
   int adr;
   int lineNumber;
   int end;
-  char tmp[256];
   addr = (ram[REG_B+1] << 8) | ram[REG_B+0];
   reg = (addr & 0xfff);
   byt = (addr >> 12) & 0xf;

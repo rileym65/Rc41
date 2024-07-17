@@ -13,7 +13,6 @@ int Exec(int addr) {
   double d;
   double x;
   double y;
-  NUMBER nm;
   char n[32];
   oaddr = addr;
   cmd = 0;

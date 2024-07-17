@@ -6,14 +6,14 @@ void Rprg(char *filename) {
   int sadr;
   int nabc;
   int len;
-  int regs;
+//  int regs;
   byte b;
   unsigned char card[7];
   file = open(filename, O_RDONLY);
   if (file >= 0) {
     read(file, card, 7);
     len = (card[5] << 8) | card[6];
-    regs = (len + 6) / 7;
+//    regs = (len + 6) / 7;
     GtoEnd();
     address = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
     address *= 7;

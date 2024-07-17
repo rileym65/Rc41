@@ -61,7 +61,7 @@ void DecodeInstruction(byte b1, byte b2) {
 
 void Printer(byte function) {
   int    addr;
-  int    end;
+//  int    end;
   int    i;
   int    m;
   int    n;
@@ -309,9 +309,7 @@ void Printer(byte function) {
         }
       addr -= isize(addr);
       }
-    end = ((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0];
     if (c == 0) printf("USER KEYS:NONE\n");
-
     }
 
   else if (function == 16) {                          // PRREG
