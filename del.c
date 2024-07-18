@@ -4,7 +4,9 @@ void Del(char* token) {
   int addr;
   int n;
   int s;
+  char relink;
   int lineNumber;
+  relink = 'N';
   if (FlagSet(52) == 0) return;
   n = atoi(token);
   lineNumber = ((ram[REG_E+1] & 0x0f) << 8) | ram[REG_E+0];
@@ -17,6 +19,7 @@ void Del(char* token) {
   addr--;
   while (n > 0) {
     while (ram[addr] == 0x00) addr--;
+    if (ram[addr] >= 0xc0 && ram[addr] <= 0xcd && ram[addr-2] >= 0xf0) relink = 'Y';
     if (ram[addr] >= 0xc0 && ram[addr] <= 0xcd && ram[addr-2] < 0xf0) n = 0;
     else {
       s = isize(addr);
@@ -27,6 +30,7 @@ void Del(char* token) {
       n--;
       }
     }
+  if (relink == 'Y') ReLink();
   GotoLine(lineNumber);
   }
 
