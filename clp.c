@@ -49,6 +49,7 @@ void Clp(char* name) {
       }
     ram[address-2] |= 0x0d;
     }
+  ReLink();
   Pack();
   }
 
