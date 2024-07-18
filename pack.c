@@ -6,7 +6,7 @@ void Pack() {
   int cur;
   int addr;
   int next;
-  int last;
+  int r00;
   int total;
   int count;
   int pack;
@@ -16,14 +16,15 @@ void Pack() {
   printf("PACKING\n");
   prg = FromPtr((ram[REG_B+1] << 8) | ram[REG_B+0]);
   end = (((ram[REG_C+1] & 0x0f) << 8) | ram[REG_C+0]) * 7 + 2;
-  last = ((ram[REG_C+2] << 4) | ((ram[REG_C+1] >> 4) & 0x0f));
-  last = last * 7;
+  r00 = ((ram[REG_C+2] << 4) | ((ram[REG_C+1] >> 4) & 0x0f));
+  r00 = r00 * 7;
   cur = end;
   pack = 0;
-  while (cur < last) {
+  while (cur < r00) {
     next = ((ram[cur] << 8) | ram[cur-1]) & 0xfff;
     if (next == 0x000) {
-      next = last - 1;
+      next = r00;
+      pack = -1;
       }
     else
       next = cur + (((next & 0x1ff) * 7) + ((next >> 9) & 0x7)) - 1;
@@ -35,7 +36,6 @@ void Pack() {
         ram[cur-2] |= 0x09;
         }
       }
-
     if (pack) {
       addr = next;
       total = 0;
@@ -79,7 +79,7 @@ void Pack() {
       }
 
     cur = next;
-    if (cur == last-1) cur = last;
+    if (cur == r00-1) cur = r00;
     }
   count = 0;
   while ((end % 7) != 2) {
@@ -103,5 +103,6 @@ void Pack() {
   prg = ToPtr(prg);
   ram[REG_B+1] = (prg >> 8) & 0xff;
   ram[REG_B+0] = (prg & 0xff);
+  ReLink();
   }
 
