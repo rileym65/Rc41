@@ -1272,42 +1272,50 @@ int Exec(int addr) {
          break;
     case 0xaa:                                             // FS?C
          flag = FsQc(ram[addr--]);
-         if (addr < 0x0c0) {
-           if (flag) Message("YES");
-             else Message("NO");
-           }
-         else {
-           if (flag == 0) addr =Skip(addr);
+         if (errFlag == 0) {
+           if (addr < 0x0c0) {
+             if (flag) Message("YES");
+               else Message("NO");
+             }
+           else {
+             if (flag == 0) addr =Skip(addr);
+             }
            }
          break;
     case 0xab:                                             // FC?C
          flag = FsQc(ram[addr--]);
-         if (addr < 0x0c0) {
-           if (flag) Message("NO");
-             else Message("YES");
-           }
-         else {
-           if (flag != 0) addr =Skip(addr);
+         if (errFlag == 0) {
+           if (addr < 0x0c0) {
+             if (flag) Message("NO");
+               else Message("YES");
+             }
+           else {
+             if (flag != 0) addr =Skip(addr);
+             }
            }
          break;
     case 0xac:                                             // FS?
          flag = Fs(ram[addr--]);
-         if (addr < 0x0c0) {
-           if (flag) Message("YES");
-             else Message("NO");
-           }
-         else {
-           if (flag == 0) addr =Skip(addr);
+         if (errFlag == 0) {
+           if (addr < 0x0c0) {
+             if (flag) Message("YES");
+               else Message("NO");
+             }
+           else {
+             if (flag == 0) addr =Skip(addr);
+             }
            }
          break;
     case 0xad:                                             // FC?
          flag = Fs(ram[addr--]);
-         if (addr < 0x0c0) {
-           if (flag) Message("NO");
-             else Message("YES");
-           }
-         else {
-           if (flag != 0) addr =Skip(addr);
+         if (errFlag == 0) {
+           if (addr < 0x0c0) {
+             if (flag) Message("NO");
+               else Message("YES");
+             }
+           else {
+             if (flag != 0) addr =Skip(addr);
+             }
            }
          break;
     case 0xae:                                             // GTO/XEQ IND

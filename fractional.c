@@ -16,8 +16,8 @@ NUMBER Fractional(NUMBER a) {
   if (IsZero(a)) return ZERO;
   a.esign = 9;
   e = -e;
-  a.exponent[0] = e / 100;
-  a.exponent[1] = e % 100;
+  a.exponent[0] = e / 10;
+  a.exponent[1] = e % 10;
   return a;
   }
 
