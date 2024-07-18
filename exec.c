@@ -231,87 +231,129 @@ int Exec(int addr) {
          ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          b = RecallNumber(R_Y);
-         c = Add(a,b);
-         StoreNumber(c,R_X);
-         StoreNumber(a,R_L);
-         a = RecallNumber(R_Z);
-         StoreNumber(a,R_Y);
-         a = RecallNumber(R_T);
-         StoreNumber(a,R_Z);
+         if ((a.sign == 0 || a.sign == 9) && (b.sign == 0 || b.sign == 9)) {
+           c = Add(a,b);
+           StoreNumber(c,R_X);
+           StoreNumber(a,R_L);
+           a = RecallNumber(R_Z);
+           StoreNumber(a,R_Y);
+           a = RecallNumber(R_T);
+           StoreNumber(a,R_Z);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x41:                                             // -
          ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          b = RecallNumber(R_Y);
-         c = Sub(b,a);
-         StoreNumber(c,R_X);
-         StoreNumber(a,R_L);
-         a = RecallNumber(R_Z);
-         StoreNumber(a,R_Y);
-         a = RecallNumber(R_T);
-         StoreNumber(a,R_Z);
+         if ((a.sign == 0 || a.sign == 9) && (b.sign == 0 || b.sign == 9)) {
+           c = Sub(b,a);
+           StoreNumber(c,R_X);
+           StoreNumber(a,R_L);
+           a = RecallNumber(R_Z);
+           StoreNumber(a,R_Y);
+           a = RecallNumber(R_T);
+           StoreNumber(a,R_Z);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x42:                                             // *
          ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          b = RecallNumber(R_Y);
-         c = Mul(a,b);
-         StoreNumber(c,R_X);
-         StoreNumber(a,R_L);
-         a = RecallNumber(R_Z);
-         StoreNumber(a,R_Y);
-         a = RecallNumber(R_T);
-         StoreNumber(a,R_Z);
+         if ((a.sign == 0 || a.sign == 9) && (b.sign == 0 || b.sign == 9)) {
+           c = Mul(a,b);
+           StoreNumber(c,R_X);
+           StoreNumber(a,R_L);
+           a = RecallNumber(R_Z);
+           StoreNumber(a,R_Y);
+           a = RecallNumber(R_T);
+           StoreNumber(a,R_Z);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x43:                                             // /
          ram[LIFT] = 'D';
          b = RecallNumber(R_X);
          a = RecallNumber(R_Y);
-         c = Div(a,b);
-         StoreNumber(c,R_X);
-         StoreNumber(b,R_L);
-         a = RecallNumber(R_Z);
-         StoreNumber(a,R_Y);
-         a = RecallNumber(R_T);
-         StoreNumber(a,R_Z);
+         if ((a.sign == 0 || a.sign == 9) && (b.sign == 0 || b.sign == 9)) {
+           c = Div(a,b);
+           StoreNumber(c,R_X);
+           StoreNumber(b,R_L);
+           a = RecallNumber(R_Z);
+           StoreNumber(a,R_Y);
+           a = RecallNumber(R_T);
+           StoreNumber(a,R_Z);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x44:                                             // X<Y?
          a = RecallNumber(R_X);
          b = RecallNumber(R_Y);
-         c = Sub(a, b);
-         if (addr < 0x0c0) {
-           if (c.sign != 0) Message("YES");
-             else Message("NO");
+         if ((a.sign == 0 || a.sign == 9) && (b.sign == 0 || b.sign == 9)) {
+           c = Sub(a, b);
+           if (addr < 0x0c0) {
+             if (c.sign != 0) Message("YES");
+               else Message("NO");
+             }
+           else {
+             if (c.sign == 0) addr = Skip(addr);
+             }
            }
          else {
-           if (c.sign == 0) addr = Skip(addr);
+           Message("ALPHA DATA");
+           Error();
            }
          break;
     case 0x45:                                             // X>Y?
          b = RecallNumber(R_X);
          a = RecallNumber(R_Y);
-         c = Sub(a, b);
-         if (addr < 0x0c0) {
-           if (c.sign != 0) Message("YES");
-             else Message("NO");
+         if ((a.sign == 0 || a.sign == 9) && (b.sign == 0 || b.sign == 9)) {
+           c = Sub(a, b);
+           if (addr < 0x0c0) {
+             if (c.sign != 0) Message("YES");
+               else Message("NO");
+             }
+           else {
+             if (c.sign == 0) addr = Skip(addr);
+             }
            }
          else {
-           if (c.sign == 0) addr = Skip(addr);
+           Message("ALPHA DATA");
+           Error();
            }
          break;
     case 0x46:                                             // X<=Y?
          a = RecallNumber(R_X);
          b = RecallNumber(R_Y);
-         c = Sub(a, b);
-         flag = 0;
-         if (c.sign != 0) flag = -1;
-         if (IsZero(c)) flag = -1;
-         if (addr < 0x0c0) {
-           if (flag) Message("YES");
-             else Message("NO");
+         if ((a.sign == 0 || a.sign == 9) && (b.sign == 0 || b.sign == 9)) {
+           c = Sub(a, b);
+           flag = 0;
+           if (c.sign != 0) flag = -1;
+           if (IsZero(c)) flag = -1;
+           if (addr < 0x0c0) {
+             if (flag) Message("YES");
+               else Message("NO");
+             }
+           else {
+             if (flag == 0) addr = Skip(addr);
+             }
            }
          else {
-           if (flag == 0) addr = Skip(addr);
+           Message("ALPHA DATA");
+           Error();
            }
          break;
     case 0x47:                                             // E+
@@ -330,365 +372,594 @@ int Exec(int addr) {
          ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          b = RecallNumber(R_Y);
-         StoreNumber(a, R_L);
-         a = HmsPlus(a, b);
-         StoreNumber(a, R_X);
-         a = RecallNumber(R_Z);
-         StoreNumber(a,R_Y);
-         a = RecallNumber(R_T);
-         StoreNumber(a,R_Z);
+         if ((a.sign == 0 || a.sign == 9) && (b.sign == 0 || b.sign == 9)) {
+           StoreNumber(a, R_L);
+           a = HmsPlus(a, b);
+           StoreNumber(a, R_X);
+           a = RecallNumber(R_Z);
+           StoreNumber(a,R_Y);
+           a = RecallNumber(R_T);
+           StoreNumber(a,R_Z);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x4a:                                             // HMS-
          ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          b = RecallNumber(R_Y);
-         StoreNumber(a, R_L);
-         a = HmsMinus(a, b);
-         StoreNumber(a, R_X);
-         a = RecallNumber(R_Z);
-         StoreNumber(a,R_Y);
-         a = RecallNumber(R_T);
-         StoreNumber(a,R_Z);
+         if ((a.sign == 0 || a.sign == 9) && (b.sign == 0 || b.sign == 9)) {
+           StoreNumber(a, R_L);
+           a = HmsMinus(a, b);
+           StoreNumber(a, R_X);
+           a = RecallNumber(R_Z);
+           StoreNumber(a,R_Y);
+           a = RecallNumber(R_T);
+           StoreNumber(a,R_Z);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x4b:                                             // MOD
          b = RecallNumber(R_X);
          a = RecallNumber(R_Y);
-         c = Mod(a,b);
-         StoreNumber(c,R_X);
-         StoreNumber(b,R_L);
-         a = RecallNumber(R_Z);
-         StoreNumber(a,R_Y);
-         a = RecallNumber(R_T);
-         StoreNumber(a,R_Z);
+         if ((a.sign == 0 || a.sign == 9) && (b.sign == 0 || b.sign == 9)) {
+           c = Mod(a,b);
+           StoreNumber(c,R_X);
+           StoreNumber(b,R_L);
+           a = RecallNumber(R_Z);
+           StoreNumber(a,R_Y);
+           a = RecallNumber(R_T);
+           StoreNumber(a,R_Z);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x4c:                                             // %
          a = RecallNumber(R_Y);
          b = RecallNumber(R_X);
-         StoreNumber(b, R_L);
-         i = b.exponent[0] * 10 + b.exponent[1];
-         if (b.esign) i = -i;
-         i -= 2;
-         b.esign = (i < 0) ? 9 : 0;
-         if (i < 0) i = -i;
-         b.exponent[0] = i / 10;
-         b.exponent[1] = i % 10;
-         c = Mul(a, b);
-         StoreNumber(c,R_X);
-         a = RecallNumber(R_Z);
-         StoreNumber(a,R_Y);
-         a = RecallNumber(R_T);
-         StoreNumber(a,R_Z);
+         if ((a.sign == 0 || a.sign == 9) && (b.sign == 0 || b.sign == 9)) {
+           StoreNumber(b, R_L);
+           i = b.exponent[0] * 10 + b.exponent[1];
+           if (b.esign) i = -i;
+           i -= 2;
+           b.esign = (i < 0) ? 9 : 0;
+           if (i < 0) i = -i;
+           b.exponent[0] = i / 10;
+           b.exponent[1] = i % 10;
+           c = Mul(a, b);
+           StoreNumber(c,R_X);
+           a = RecallNumber(R_Z);
+           StoreNumber(a,R_Y);
+           a = RecallNumber(R_T);
+           StoreNumber(a,R_Z);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x4d:                                             // %ch
          a = RecallNumber(R_Y);
          b = RecallNumber(R_X);
-         StoreNumber(b, R_L);
-         c = Sub(b, a);
-         i = c.exponent[0] * 10 + c.exponent[1];
-         if (c.esign) i = -i;
-         i += 2;
-         c.esign = (i < 0) ? 9 : 0;
-         if (i < 0) i = -i;
-         c.exponent[0] = i / 10;
-         c.exponent[1] = i % 10;
-         c = Div(c, a);
-         StoreNumber(c,R_X);
-         a = RecallNumber(R_Z);
-         StoreNumber(a,R_Y);
-         a = RecallNumber(R_T);
-         StoreNumber(a,R_Z);
+         if ((a.sign == 0 || a.sign == 9) && (b.sign == 0 || b.sign == 9)) {
+           StoreNumber(b, R_L);
+           c = Sub(b, a);
+           i = c.exponent[0] * 10 + c.exponent[1];
+           if (c.esign) i = -i;
+           i += 2;
+           c.esign = (i < 0) ? 9 : 0;
+           if (i < 0) i = -i;
+           c.exponent[0] = i / 10;
+           c.exponent[1] = i % 10;
+           c = Div(c, a);
+           StoreNumber(c,R_X);
+           a = RecallNumber(R_Z);
+           StoreNumber(a,R_Y);
+           a = RecallNumber(R_T);
+           StoreNumber(a,R_Z);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x4e:                                             // P-R
          a = RecallNumber(R_X);
-         NtoA(a, n);
-         x = atof(n);
-         b = RecallNumber(R_Y);
-         if (FlagSet(43) == 0 && FlagSet(42) == 0) b = Mul(b, DTOR);
-         else if (FlagSet(42)) b = Mul(b, GTOR);
-         NtoA(b, n);
-         y = atof(n);
-         d = cos(y) * x;
-         sprintf(n,"%.12e",d);
-         a = AtoN(n);
-         SetX(a, 1, 0);
-         d = sin(y) * x;
-         sprintf(n,"%.12e",d);
-         a = AtoN(n);
-         StoreNumber(a, R_Y);
+         if (a.sign == 0 || a.sign == 9) {
+           NtoA(a, n);
+           x = atof(n);
+           b = RecallNumber(R_Y);
+           if (FlagSet(43) == 0 && FlagSet(42) == 0) b = Mul(b, DTOR);
+           else if (FlagSet(42)) b = Mul(b, GTOR);
+           NtoA(b, n);
+           y = atof(n);
+           d = cos(y) * x;
+           sprintf(n,"%.12e",d);
+           a = AtoN(n);
+           SetX(a, 1, 0);
+           d = sin(y) * x;
+           sprintf(n,"%.12e",d);
+           a = AtoN(n);
+           StoreNumber(a, R_Y);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x4f:                                             // R-P
          a = RecallNumber(R_X);
-         NtoA(a, n);
-         x = atof(n);
-         b = RecallNumber(R_Y);
-         NtoA(b, n);
-         y = atof(n);
-         d = sqrt(x*x+y*y);
-         sprintf(n,"%.12e",d);
-         a = AtoN(n);
-         SetX(a, 1, 0);
-         d = asin(y/d);
-         if (x < 0 && y >= 0) d = M_PI - d;
-         if (x < 0 && y < 0) d = -(M_PI + d);
-         sprintf(n,"%.12e",d);
-         a = AtoN(n);
-         if (FlagSet(43) == 0 && FlagSet(42) == 0) a = Mul(a, RTOD);
-         else if (FlagSet(42)) a = Mul(a, RTOG);
-         StoreNumber(a, R_Y);
+         if (a.sign == 0 || a.sign == 9) {
+           NtoA(a, n);
+           x = atof(n);
+           b = RecallNumber(R_Y);
+           NtoA(b, n);
+           y = atof(n);
+           d = sqrt(x*x+y*y);
+           sprintf(n,"%.12e",d);
+           a = AtoN(n);
+           SetX(a, 1, 0);
+           d = asin(y/d);
+           if (x < 0 && y >= 0) d = M_PI - d;
+           if (x < 0 && y < 0) d = -(M_PI + d);
+           sprintf(n,"%.12e",d);
+           a = AtoN(n);
+           if (FlagSet(43) == 0 && FlagSet(42) == 0) a = Mul(a, RTOD);
+           else if (FlagSet(42)) a = Mul(a, RTOG);
+           StoreNumber(a, R_Y);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
 
     case 0x50:                                             // LN
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         a = Ln(a);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           a = Ln(a);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x51:                                             // X^2
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         a = Mul(a,a);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           a = Mul(a,a);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x52:                                             // SQRT
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         a = Sqrt(a);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           a = Sqrt(a);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x53:                                             // Y^X
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         b = RecallNumber(R_Y);
-         a = YtoX(a, b);
-         StoreNumber(a, R_X);
-         a = RecallNumber(R_Z);
-         StoreNumber(a,R_Y);
-         a = RecallNumber(R_T);
-         StoreNumber(a,R_Z);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           b = RecallNumber(R_Y);
+           a = YtoX(a, b);
+           StoreNumber(a, R_X);
+           a = RecallNumber(R_Z);
+           StoreNumber(a,R_Y);
+           a = RecallNumber(R_T);
+           StoreNumber(a,R_Z);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x54:                                             // CHS
          ram[LIFT] = 'D';
          a = RecallNumber(R_X);
-         a.sign = (a.sign == 0) ? 9 : 0;
-         SetX(a, 0, 0);
+         if (a.sign == 0 || a.sign == 9) {
+           a.sign = (a.sign == 0) ? 9 : 0;
+           SetX(a, 0, 0);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x55:                                             // E^X
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         a = Ex(a);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           a = Ex(a);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x56:                                             // LOG
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         a = Ln(a);
-         a = Mul(a, LOGE);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           a = Ln(a);
+           a = Mul(a, LOGE);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x57:                                             // 10^X
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         a = Mul(a, ILOGE);
-         a = Ex(a);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           a = Mul(a, ILOGE);
+           a = Ex(a);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x58:                                             // E^X-1
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         a = Ex(a);
-         a = Sub(a, ONE);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           a = Ex(a);
+           a = Sub(a, ONE);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x59:                                             // SIN
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         if (FlagSet(43) == 0 && FlagSet(42) == 0) a = Mul(a, DTOR);
-         else if (FlagSet(42)) a = Mul(a, GTOR);
-         a = Sin(a);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           if (FlagSet(43) == 0 && FlagSet(42) == 0) a = Mul(a, DTOR);
+           else if (FlagSet(42)) a = Mul(a, GTOR);
+           a = Sin(a);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x5a:                                             // COS
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         if (FlagSet(43) == 0 && FlagSet(42) == 0) a = Mul(a, DTOR);
-         else if (FlagSet(42)) a = Mul(a, GTOR);
-         a = Cos(a);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           if (FlagSet(43) == 0 && FlagSet(42) == 0) a = Mul(a, DTOR);
+           else if (FlagSet(42)) a = Mul(a, GTOR);
+           a = Cos(a);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x5b:                                             // TAN
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         if (FlagSet(43) == 0 && FlagSet(42) == 0) a = Mul(a, DTOR);
-         else if (FlagSet(42)) a = Mul(a, GTOR);
-         a = Tan(a);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           if (FlagSet(43) == 0 && FlagSet(42) == 0) a = Mul(a, DTOR);
+           else if (FlagSet(42)) a = Mul(a, GTOR);
+           a = Tan(a);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x5c:                                             // ASIN
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         a = Asin(a);
-         if (FlagSet(43) == 0 && FlagSet(42) == 0) a = Mul(a, RTOD);
-         else if (FlagSet(42)) a = Mul(a, RTOG);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           a = Asin(a);
+           if (FlagSet(43) == 0 && FlagSet(42) == 0) a = Mul(a, RTOD);
+           else if (FlagSet(42)) a = Mul(a, RTOG);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x5d:                                             // ACOS
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         a = Acos(a);
-         if (FlagSet(43) == 0 && FlagSet(42) == 0) a = Mul(a, RTOD);
-         else if (FlagSet(42)) a = Mul(a, RTOG);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           a = Acos(a);
+           if (FlagSet(43) == 0 && FlagSet(42) == 0) a = Mul(a, RTOD);
+           else if (FlagSet(42)) a = Mul(a, RTOG);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x5e:                                             // ATAN
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         a = Atan(a);
-//         NtoA(a, n);
-//         d = atof(n);
-//         d = atan(d);
-//         sprintf(n,"%.12e",d);
-//         a = AtoN(n);
-         if (FlagSet(43) == 0 && FlagSet(42) == 0) a = Mul(a, RTOD);
-         else if (FlagSet(42)) a = Mul(a, RTOG);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           a = Atan(a);
+           if (FlagSet(43) == 0 && FlagSet(42) == 0) a = Mul(a, RTOD);
+           else if (FlagSet(42)) a = Mul(a, RTOG);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x5f:                                             // DEC
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         a = Dec(a);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           a = Dec(a);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
 
     case 0x60:                                             // 1/X
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         a = Div(ONE,a);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           a = Div(ONE,a);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x61:                                             // ABS
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         a.sign = 0;
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           a.sign = 0;
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x62:                                             // FACT
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         a = Fact(a);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           a = Fact(a);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x63:                                             // X<>0?
          a = RecallNumber(R_X);
-         flag = 0;
-         for (i=0; i<10; i++)
-           if (a.mantissa[i] != 0) flag = -1;
-         if (addr < 0x0c0) {
-           if (flag) Message("YES");
-             else Message("NO");
+         if (a.sign == 0 || a.sign == 9) {
+           flag = 0;
+           for (i=0; i<10; i++)
+             if (a.mantissa[i] != 0) flag = -1;
+           if (addr < 0x0c0) {
+             if (flag) Message("YES");
+               else Message("NO");
+             }
+           else {
+             if (flag == 0) addr = Skip(addr);
+             }
            }
          else {
-           if (flag == 0) addr = Skip(addr);
+           Message("ALPHA DATA");
+           Error();
            }
          break;
     case 0x64:                                             // X>0?
          a = RecallNumber(R_X);
-         flag = 0;
-         for (i=0; i<10; i++)
-           if (a.mantissa[i] != 0) flag = -1;
-         if (a.sign) flag = 0;
-         if (addr < 0x0c0) {
-           if (flag) Message("YES");
-             else Message("NO");
+         if (a.sign == 0 || a.sign == 9) {
+           flag = 0;
+           for (i=0; i<10; i++)
+             if (a.mantissa[i] != 0) flag = -1;
+           if (a.sign) flag = 0;
+           if (addr < 0x0c0) {
+             if (flag) Message("YES");
+               else Message("NO");
+             }
+           else {
+             if (flag == 0) addr = Skip(addr);
+             }
            }
          else {
-           if (flag == 0) addr = Skip(addr);
+           Message("ALPHA DATA");
+           Error();
            }
          break;
     case 0x65:                                             // LN1+X
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         a = Ln1PlusX(a);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           a = Ln1PlusX(a);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x66:                                             // X<0?
          a = RecallNumber(R_X);
-         flag = 0;
-         for (i=0; i<10; i++)
-           if (a.mantissa[i] != 0) flag = -1;
-         if (a.sign == 0) flag = 0;
-         if (addr < 0x0c0) {
-           if (flag) Message("YES");
-             else Message("NO");
+         if (a.sign == 0 || a.sign == 9) {
+           flag = 0;
+           for (i=0; i<10; i++)
+             if (a.mantissa[i] != 0) flag = -1;
+           if (a.sign == 0) flag = 0;
+           if (addr < 0x0c0) {
+             if (flag) Message("YES");
+               else Message("NO");
+             }
+           else {
+             if (flag == 0) addr = Skip(addr);
+             }
            }
          else {
-           if (flag == 0) addr = Skip(addr);
+           Message("ALPHA DATA");
+           Error();
            }
          break;
     case 0x67:                                             // X=0?
          a = RecallNumber(R_X);
-         flag = -1;
-         for (i=0; i<10; i++)
-           if (a.mantissa[i] != 0) flag = 0;
-         if (addr < 0x0c0) {
-           if (flag) Message("YES");
-             else Message("NO");
+         if (a.sign == 0 || a.sign == 9) {
+           flag = -1;
+           for (i=0; i<10; i++)
+             if (a.mantissa[i] != 0) flag = 0;
+           if (addr < 0x0c0) {
+             if (flag) Message("YES");
+               else Message("NO");
+             }
+           else {
+             if (flag == 0) addr = Skip(addr);
+             }
            }
          else {
-           if (flag == 0) addr = Skip(addr);
+           Message("ALPHA DATA");
+           Error();
            }
          break;
     case 0x68:                                             // INT
          ram[LIFT] = 'D';
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         a = Integer(a);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           a = Integer(a);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x69:                                             // FRC
          ram[LIFT] = 'D';
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         a = Fractional(a);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           a = Fractional(a);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x6a:                                             // D-R
          ram[LIFT] = 'D';
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         a = Mul(a, DTOR);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           a = Mul(a, DTOR);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x6b:                                             // R-D
          ram[LIFT] = 'D';
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         a = Mul(a, RTOD);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           a = Mul(a, RTOD);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x6c:                                             // HMS
          ram[LIFT] = 'D';
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         a = Hms(a);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           a = Hms(a);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x6d:                                             // HR
          ram[LIFT] = 'D';
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         a = Hr(a);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           a = Hr(a);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x6e:                                             // RND
          a = RecallNumber(R_X);
-         StoreNumber(a, R_L);
-         Rnd();
+         if (a.sign == 0 || a.sign == 9) {
+           StoreNumber(a, R_L);
+           Rnd();
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
     case 0x6f:                                             // OCT
          a = RecallNumber(R_X);
          StoreNumber(a, R_L);
-         a = Oct(a);
-         StoreNumber(a, R_X);
+         if (a.sign == 0 || a.sign == 9) {
+           a = Oct(a);
+           StoreNumber(a, R_X);
+           }
+         else {
+           Message("ALPHA DATA");
+           Error();
+           }
          break;
 
     case 0x70:                                             // CLE
@@ -790,18 +1061,24 @@ int Exec(int addr) {
          break;
     case 0x7b:                                             // X<=0?
          a = RecallNumber(R_X);
-         if (a.sign) flag = -1;
-         else {
-           flag = -1;
-           for (i=0; i<10; i++)
-             if (a.mantissa[i] != 0) flag = 0;
+         if (a.sign == 0 || a.sign == 9) {
+           if (a.sign) flag = -1;
+           else {
+             flag = -1;
+             for (i=0; i<10; i++)
+               if (a.mantissa[i] != 0) flag = 0;
+             }
+           if (addr < 0x0c0) {
+             if (flag) Message("YES");
+               else Message("NO");
+             }
+           else {
+             if (flag == 0) addr = Skip(addr);
+             }
            }
-         if (addr < 0x0c0) {
-           if (flag) Message("YES");
-             else Message("NO");
-           }
          else {
-           if (flag == 0) addr = Skip(addr);
+           Message("ALPHA DATA");
+           Error();
            }
          break;
     case 0x7c:                                             // MEAN

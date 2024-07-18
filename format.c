@@ -10,6 +10,23 @@ char* Format(NUMBER a, char* dest) {
   
   start = dest;
 
+  if (a.sign == 0x01) {
+    if (a.mantissa[1] != 0x00 || a.mantissa[2] != 0x00)
+      *dest++ = ((a.mantissa[1] << 4) | (a.mantissa[2]));
+    if (a.mantissa[3] != 0x00 || a.mantissa[4] != 0x00)
+      *dest++ = ((a.mantissa[3] << 4) | (a.mantissa[4]));
+    if (a.mantissa[5] != 0x00 || a.mantissa[6] != 0x00)
+      *dest++ = ((a.mantissa[5] << 4) | (a.mantissa[6]));
+    if (a.mantissa[7] != 0x00 || a.mantissa[8] != 0x00)
+      *dest++ = ((a.mantissa[7] << 4) | (a.mantissa[8]));
+    if (a.mantissa[9] != 0x00 || a.esign != 0x00)
+      *dest++ = ((a.mantissa[9] << 4) | a.esign);
+    if (a.exponent[0] != 0x00 || a.exponent[1] != 0x00)
+      *dest++ = ((a.exponent[0] << 4) | (a.exponent[1]));
+    *dest = 0;
+    return start;
+    }
+
   if (a.sign >= 0xf) {
     if (a.mantissa[0] > 0) *dest++ = ((a.mantissa[1] << 4) | (a.mantissa[2]));
     if (a.mantissa[0] > 1) *dest++ = ((a.mantissa[3] << 4) | (a.mantissa[4]));

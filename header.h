@@ -111,7 +111,9 @@ LINK char   valid;
 
 #ifdef MAIN
 NUMBER  S_ONE  = { 0, { 1,0,0,0,0,0,0,0,0,0 }, 0, { 0,0 } };
-DNUMBER S_PI   = { 0, { 3,1,4,1,5,9,2,6,5,3 }, 0, { 0,0 } };
+NUMBER  S_TWO  = { 0, { 2,0,0,0,0,0,0,0,0,0 }, 0, { 0,0 } };
+NUMBER  S_PI   = { 0, { 3,1,4,1,5,9,2,6,5,3 }, 0, { 0,0 } };
+NUMBER  S_PI2  = { 0, { 1,5,7,0,7,9,6,3,2,6 }, 0, { 0,0 } };
 DNUMBER D_ZERO = { 0, { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 0, { 0,0,0 } };
 DNUMBER D_HALF = { 0, { 5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 9, { 0,0,1 } };
 DNUMBER D_ONE  = { 0, { 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 0, { 0,0,0 } };
@@ -121,6 +123,7 @@ DNUMBER D_PI2  = { 0, { 1,5,7,0,7,9,6,3,2,6,7,9,4,8,9,6,6,1,9,2 }, 0, { 0,0,0 } 
 #else
 extern NUMBER S_ONE;
 extern NUMBER S_PI;
+extern NUMBER S_PI2;
 extern DNUMBER D_PI;
 extern DNUMBER D_PI2;
 extern DNUMBER D_ZERO;

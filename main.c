@@ -21,23 +21,66 @@ char *NextToken(char* line, char* token) {
   }
 
 char *Special(char* line) {
+  int   i;
   int   n;
   int   ind;
   byte  cmd;
+  int   lineNumber;
   word  flags;
   char  token[32];
   char  buffer[64];
   cmd = ram[REG_R+1];
   flags = reverse[cmd].flags;
   ind = 0;
+  if (FlagSet(52)) {
+    lineNumber = ram[REG_E+0] + ((ram[REG_E+1] &0x0f) << 8);
+    if (lineNumber == 0xfff) {
+      FixLineNumber();
+      lineNumber = ram[REG_E+0] + ((ram[REG_E+1] &0x0f) << 8);
+      }
+    lineNumber++;
+    }
+
   if ((flags & 0x03) != 0) {
     if (*line == 0) {
+      n = 0;
+      while (reverse[cmd].name[n] != 0 && reverse[cmd].name[n] != ' ') {
+        token[n] = reverse[cmd].name[n];
+        n++;
+        }
+      token[n] = 0;
+      if (FlagSet(52)) sprintf(buffer, "%02d %s ",lineNumber, token);
+        else sprintf(buffer,"%s ",token);
+      for (i=0; i<(reverse[cmd].flags & 0x03); i++) strcat(buffer,"_");
+      while (strlen(buffer) < 12) strcat(buffer," ");
+      printf("[%s]\n",buffer);
+      if (useLcd) DrawLcd(buffer);
+      fgets(line, 1023, stdin);
+      while (strlen(line) > 0 && line[strlen(line)-1] < ' ')
+        line[strlen(line)-1] = 0;
+      line = NextToken(line, token);
       }
     else 
       line = NextToken(line, token);
     if ((flags & 0x08) != 0 && strcasecmp(token,"IND") == 0) {
       ind = 0x80;
       if (*line == 0) {
+        n = 0;
+        while (reverse[cmd].name[n] != 0 && reverse[cmd].name[n] != ' ') {
+          token[n] = reverse[cmd].name[n];
+          n++;
+          }
+        token[n] = 0;
+        if (FlagSet(52)) sprintf(buffer,"%02d %s IND ",lineNumber, token);
+          else sprintf(buffer,"%s IND ", token);
+        for (i=0; i<(reverse[cmd].flags & 0x03); i++) strcat(buffer,"_");
+        while (strlen(buffer) < 12) strcat(buffer," ");
+        printf("[%s]\n",buffer);
+        if (useLcd) DrawLcd(buffer);
+        fgets(line, 1023, stdin);
+        while (strlen(line) > 0 && line[strlen(line)-1] < ' ')
+          line[strlen(line)-1] = 0;
+        line = NextToken(line, token);
         }
       else 
         line = NextToken(line, token);

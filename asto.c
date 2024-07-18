@@ -33,7 +33,7 @@ void Asto(int rreg) {
   p = (REG_P) + 2;
   while (p > (REG_M) && ram[p] == 0) p--;
   if (p == (REG_M) && ram[p] == 0) {
-    ram[reg+6] = 0xf0;
+    ram[reg+6] = 0x10;
     for (i=0; i<6; i++) ram[reg+i] = 0x00;
     }
   else {
@@ -41,10 +41,10 @@ void Asto(int rreg) {
     if (l > 6) l = 6;
     for (i=0; i<6; i++) ram[reg+i] = 0x00;
     i = 5;
-    ram[reg+6] = 0xf0 + l;
+    ram[reg+6] = 0x10;
     while (l > 0) {
-      ram[reg+i] = ram[p--];
-      i--;
+      for (i=5; i>0; i--) ram[reg+i] = ram[reg+i-1];
+      ram[reg] = ram[p--];
       l--;
       }
     }

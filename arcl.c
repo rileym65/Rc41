@@ -31,10 +31,13 @@ void Arcl(int rreg) {
     return;
     }
   for (i=0; i<32; i++) buffer[i] = 0;
-  if (ram[reg * 7 + 6] >= 0xf0) {
+  if (ram[reg * 7 + 6] == 0x10) {
     for (i=0; i<8; i++) buffer[i] = 0;
-    for (i=0; i<ram[reg * 7 + 6]-0xf0; i++)
-      buffer[i] = ram[reg * 7 +5 - i];
+    p = 0;
+    for (i=5; i>=0; i--)
+      if (ram[reg*7+i] != 0x00)
+        buffer[p++] = ram[reg * 7 + i];
+    buffer[p] = 0;
     }
   else {
     n = RecallNumber(reg);
