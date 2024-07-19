@@ -37,7 +37,6 @@ NUMBER Oct(NUMBER a) {
     n >>= 3;
     i--;
     }
-  printf("-->%s\n",tmp);
   a = AtoN(tmp);
   return a;
   }
