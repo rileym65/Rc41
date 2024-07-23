@@ -238,6 +238,7 @@ void DrawLcd(char* msg) {
       else if ((charset[b] & 0x3fc0) == 0x2400) printf(")");
       else if ((charset[b] & 0x3fc0) == 0x1800) printf("(");
       else if ((charset[b] & 0x3fc0) == 0x0100) printf(" ");
+      else if ((charset[b] & 0x3fc0) == 0x0e00) printf("V");
       else if ((charset[b] & 0x3fc0) != 0x0000) printf("+");
       else printf(" ");
       if (charset[b] & 0x0080) printf("-"); else printf(" ");
