@@ -15,7 +15,7 @@
           -------------
                 3
     g fedc ba98 7654 3210
-        1          1 1
+        11  1 1      11 1
 
   ---
  |\|/|o
@@ -27,6 +27,12 @@
  |\|/|o
  +-V-+
  |/|\|o
+ +---+/
+
+ +-+--
+  \|  o
+   +  
+  / \|o
  +---+/
 */
 
@@ -68,7 +74,7 @@ u_int32_t charset[130] = {   0x00001,     /* 00 */
                              0x003ce,     /* 23 # */
                              0x003ed,     /* 24 $ */
                              0x03ce4,     /* 25 % */
-                             0x03c0d,     /* 26 & */
+                             0x0350d,     /* 26 & */
                              0x00100,     /* 27 ' */
                              0x01800,     /* 28 ( */
                              0x02400,     /* 29 ) */
@@ -170,6 +176,7 @@ void DrawLcd(char* msg) {
 /* ***** Line 1 ***** */
   for (i=0; i<strlen(msg); i++) {
     b = msg[i];
+    if (b == 0xff) b = 0;
     if (b != ':' && b != ';' && b != '.' && b != ',') {
       if (b > 129) b = 128;
       if (charset[b] & 0x0001) {
@@ -195,6 +202,7 @@ void DrawLcd(char* msg) {
 /* ***** Line 2 ***** */
   for (i=0; i<strlen(msg); i++) {
     b = msg[i];
+    if (b == 0xff) b = 0;
     if (b != ':' && b != ';' && b != '.' && b != ',') {
       if (b > 129) b = 128;
       if (charset[b] & 0x0020) printf("|"); else printf(" ");
@@ -212,10 +220,12 @@ void DrawLcd(char* msg) {
 /* ***** Line 3 ***** */
   for (i=0; i<strlen(msg); i++) {
     b = msg[i];
+    if (b == 0xff) b = 0;
     if (b != ':' && b != ';' && b != '.' && b != ',') {
       if (b > 129) b = 128;
       if (charset[b] & 0x0030) {
-        if ((charset[b] & 0x0040) != 0) printf("+"); else printf("|");
+        if ((charset[b] & 0x70) == 0x20) printf(" ");
+        else if ((charset[b] & 0x0040) != 0) printf("+"); else printf("|");
         }
       else printf(" ");
       if (charset[b] & 0x0040) printf("-"); else printf(" ");
@@ -225,6 +235,9 @@ void DrawLcd(char* msg) {
       else if ((charset[b] & 0x3fc0) == 0x00c0) printf("-");
       else if ((charset[b] & 0x3fc0) == 0x3c00) printf("X");
       else if ((charset[b] & 0x3fc0) == 0x0c00) printf("V");
+      else if ((charset[b] & 0x3fc0) == 0x2400) printf(")");
+      else if ((charset[b] & 0x3fc0) == 0x1800) printf("(");
+      else if ((charset[b] & 0x3fc0) == 0x0100) printf(" ");
       else if ((charset[b] & 0x3fc0) != 0x0000) printf("+");
       else printf(" ");
       if (charset[b] & 0x0080) printf("-"); else printf(" ");
@@ -240,6 +253,7 @@ void DrawLcd(char* msg) {
 /* ***** Line 4 ***** */
   for (i=0; i<strlen(msg); i++) {
     b = msg[i];
+    if (b == 0xff) b = 0;
     if (b != ':' && b != ';' && b != '.' && b != ',') {
       if (b > 129) b = 128;
       if (charset[b] & 0x0010) printf("|"); else printf(" ");
@@ -259,6 +273,7 @@ void DrawLcd(char* msg) {
 /* ***** Line 1 ***** */
   for (i=0; i<strlen(msg); i++) {
     b = msg[i];
+    if (b == 0xff) b = 0;
     if (b != ':' && b != ';' && b != '.' && b != ',') {
       if (b > 129) b = 128;
       if ((charset[b] & 0x2018) == 0x0008) printf("-");

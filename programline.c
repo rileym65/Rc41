@@ -133,7 +133,10 @@ char* ProgramList(int lineNumber, int adr, char* buffer) {
       else {
         if (lineNumber < 100) sprintf(buffer, "%02d ", lineNumber);
           else sprintf(buffer,"%d ", lineNumber);
-        strcat(buffer,"LBL\"");
+        strcat(buffer,"LBL");
+        tmp[0] = 0x60;
+        tmp[1] = 0x00;
+        strcat(buffer, tmp);
         adr -= 2;
         b = ram[adr] - 1;
         b &= 0xf;
@@ -193,7 +196,9 @@ char* ProgramList(int lineNumber, int adr, char* buffer) {
         sprintf(tmp, "%s", reverse[b].name);
         strcat(buffer, tmp);
         b = ram[--adr] & 0x0f;
-        strcat(buffer,"\"");
+        tmp[0] = 0x60;
+        tmp[1] = 0x00;
+        strcat(buffer, tmp);
         for (i=0; i<b; i++) {
           tmp[0] = ram[--adr];
           tmp[1] = 0;
@@ -202,12 +207,12 @@ char* ProgramList(int lineNumber, int adr, char* buffer) {
         }
       else if (b >= 0xf0) {
         adr--;
-        buffer[strlen(buffer)-1] = '"';
+        buffer[strlen(buffer)-1] = 0x60;
         tmp[1] = 0;
         for (i=0; i<(b&0x0f); i++) {
-          if (ram[adr] == 0x7f) { tmp[0] = '|'; adr--; }
-          else if (ram[adr] == 0x00) { tmp[0] = '_'; adr--; }
-          else if (ram[adr] < ' ' || ram[adr] > 0x7e) {
+          if (ram[adr] == 0x7f) { tmp[0] = 0x7f; adr--; }
+          else if (ram[adr] == 0x00) { tmp[0] = 0xff; adr--; }
+          else if (ram[adr] > 0x7f) {
             tmp[0] = '*'; adr--;
             }
             else tmp[0] = ram[adr--];

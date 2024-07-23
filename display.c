@@ -17,7 +17,8 @@ char* Display(char* buffer) {
     p = 0;
     while (i >= REG_M) {
       if (ram[i] == 0x00) buffer[p++] = '_';
-      else if (ram[i] < 32 || ram[i] > 0x7e) buffer[p++] = '#';
+      else if (ram[i] == 0x00) buffer[p++] = 0xff;
+//      else if (ram[i] < 32 || ram[i] > 0x7e) buffer[p++] = '#';
       else buffer[p++] = ram[i];
       i--;
       }

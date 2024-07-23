@@ -14,7 +14,7 @@ void Prp(char* name) {
   while (ram[address] == 0x00) address--;
   while (address >= end) {
     ProgramList(lineNumber, address, line);
-    printf("%s\n",line);
+    printf("%s\n",Text(line));
     lineNumber++;
     address -= isize(address);
     while (ram[address] == 0x00) address--;

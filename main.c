@@ -20,6 +20,20 @@ char *NextToken(char* line, char* token) {
   return line;
   }
 
+char* Text(char* buffer) {
+  int i;
+  for (i=0; i<strlen(buffer); i++) {
+    if (buffer[i] == 0x7f) buffer[i] = '|';
+    if (buffer[i] == 0x60) buffer[i] = '"';
+    if (buffer[i] == 0x7e) buffer[i] = 'E';
+    if ((buffer[i] & 0xff) == 0xff) buffer[i] = '_';
+    if ((buffer[i] & 0xff) < 0x20) buffer[i] = '#';
+    if (buffer[i] == 0x00) buffer[i] = '_';
+    if (buffer[i] & 0x80) buffer[i] = '#';
+    }
+  return buffer;
+  }
+
 char *Special(char* line) {
   int   i;
   int   n;
@@ -358,8 +372,10 @@ int main(int argc, char** argv) {
 /* ***** No program running ***** */
 /* ****************************** */
     else {
-      printf("\n[%s]\n",Display(screen));
-      if (useLcd) DrawLcd(Display(screen));
+      Display(screen);
+      strcpy(buffer, screen);
+      printf("\n[%s]\n",Text(buffer));
+      if (useLcd) DrawLcd(screen);
       if (debug) ShowStatRegs(0);
       ClearFlag(50);
       if (FlagSet(52)) printf("PRGM");

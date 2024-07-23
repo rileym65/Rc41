@@ -9,9 +9,9 @@ void Aview() {
   p = 0;
   m = REG_P + 2;
   while (m >= REG_M) {
-    if (ram[m] == 0 && n) buffer[p++] = '_';
+    if (ram[m] == 0 && n) buffer[p++] = 0xff;
     else if (ram[m] == 0) ;
-    else if (ram[m] < ' ' || ram[m] > 0x7e) buffer[p++] = '#';
+//    else if (ram[m] < ' ' || ram[m] > 0x7e) buffer[p++] = '#';
     else buffer[p++] = ram[m];
     if (ram[m] != 0) n = -1;
 
