@@ -3,17 +3,12 @@
 void EReg(byte post) {
   int base;
   int e;
+  post = GetPost(post);
+  if (errFlag) return;
   base = ram[REG_C+2] << 4;
   base |= ((ram[REG_C+1] >> 4) & 0xf);
-  e = 0xffff;
-  if (post <0x70) e = post;
-  if (post >= 0x80 && post <= 0xef) {
-    e = ToInteger(RecallNumber(base + (post & 0x7f)));
-    }
-  if (post >= 0xf0 && post <= 0xff) {
-    e = ToInteger(RecallNumber(post & 0x0f));
-    }
-  if (base+e > 0xfff-6) {
+  e = post;
+  if (base+e > 0x1ff-6) {
     Message("NONEXISTENT");
     Error();
     return;

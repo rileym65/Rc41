@@ -522,6 +522,7 @@ int Exec(int addr) {
          break;
 
     case 0x50:                                             // LN
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          if (a.sign == 0 || a.sign == 9) {
            StoreNumber(a, R_L);
@@ -534,6 +535,7 @@ int Exec(int addr) {
            }
          break;
     case 0x51:                                             // X^2
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          if (a.sign == 0 || a.sign == 9) {
            StoreNumber(a, R_L);
@@ -546,6 +548,7 @@ int Exec(int addr) {
            }
          break;
     case 0x52:                                             // SQRT
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          if (a.sign == 0 || a.sign == 9) {
            StoreNumber(a, R_L);

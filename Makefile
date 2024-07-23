@@ -61,6 +61,7 @@ OBJS= \
 	getalpha.o \
 	getbe.o \
 	getkaflag.o \
+	getpost.o \
 	gto2.o \
 	gtoalpha.o \
 	gtoend.o \
