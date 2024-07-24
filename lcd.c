@@ -294,7 +294,7 @@ void DrawLcd(char* msg) {
       else if ((charset[b] & 0x100c) == 0x000c) printf("+");
       else printf(" ");
 
-      if (msg[i+1] == ',') printf("/");
+      if (msg[i+1] == ',' || msg[i+1] == ';') printf("/");
       else printf(" ");
       }
     }

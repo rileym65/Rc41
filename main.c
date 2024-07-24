@@ -373,9 +373,13 @@ int main(int argc, char** argv) {
 /* ****************************** */
     else {
       Display(screen);
-      strcpy(buffer, screen);
-      printf("\n[%s]\n",Text(buffer));
-      if (useLcd) DrawLcd(screen);
+      if (useLcd) {
+        DrawLcd(screen);
+        }
+      else {
+        strcpy(buffer, screen);
+        printf("\n[%s]\n",Text(buffer));
+        }
       if (debug) ShowStatRegs(0);
       ClearFlag(50);
       if (FlagSet(52)) printf("PRGM");

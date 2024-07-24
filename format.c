@@ -6,6 +6,7 @@ char* Format(NUMBER a, char* dest) {
   int e;
   int mode;
   int decimals;
+  int comma;
   char *start;
   
   start = dest;
@@ -27,17 +28,6 @@ char* Format(NUMBER a, char* dest) {
     return start;
     }
 
-  if (a.sign >= 0xf) {
-    if (a.mantissa[0] > 0) *dest++ = ((a.mantissa[1] << 4) | (a.mantissa[2]));
-    if (a.mantissa[0] > 1) *dest++ = ((a.mantissa[3] << 4) | (a.mantissa[4]));
-    if (a.mantissa[0] > 2) *dest++ = ((a.mantissa[5] << 4) | (a.mantissa[6]));
-    if (a.mantissa[0] > 3) *dest++ = ((a.mantissa[7] << 4) | (a.mantissa[8]));
-    if (a.mantissa[0] > 4) *dest++ = ((a.mantissa[9] << 4) | (a.esign));
-    if (a.mantissa[0] > 5) *dest++ = ((a.exponent[0] << 4) | (a.exponent[1]));
-    *dest = 0;
-    return start;
-    }
-
   if (a.sign) *dest++ = '-'; else *dest++ = ' ';
   decimals = 0;
   if (FlagSet(36)) decimals |= 8;
@@ -48,6 +38,8 @@ char* Format(NUMBER a, char* dest) {
   if ((FlagSet(40) == 0) && (FlagSet(41) == 0)) mode = 0;
   if ((FlagSet(40) == 0) && (FlagSet(41) != 0)) mode = 1;
   if ((FlagSet(40) != 0) && (FlagSet(41) == 0)) mode = 2;
+
+  e = a.exponent[0] * 10 + a.exponent[1];
 
   if (mode == 2 && a.exponent[0] > 0) mode = 0;
 
@@ -75,7 +67,15 @@ char* Format(NUMBER a, char* dest) {
       d = 0;
       *dest++ = a.mantissa[0] + '0';
       d++;
+      comma = e - 3;
+      if (comma > 0) comma = comma % 3;
       for (i=0; i<a.exponent[1]; i++) {
+        if (comma == 0 && FlagSet(29)) {
+          if (FlagSet(28)) *dest++ = ',';
+            else *dest++ = '.';
+          comma = 3;
+          }
+        if (comma > 0) comma--;
         *dest++ = a.mantissa[i+1] + '0';
         d++;
         }
