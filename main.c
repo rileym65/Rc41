@@ -24,6 +24,7 @@ char* Text(char* buffer) {
   int i;
   for (i=0; i<strlen(buffer); i++) {
     if (buffer[i] == 0x7f) buffer[i] = '|';
+    if (buffer[i] == 0x7a) buffer[i] = '|';
     if (buffer[i] == 0x60) buffer[i] = '"';
     if (buffer[i] == 0x7e) buffer[i] = 'E';
     if ((buffer[i] & 0xff) == 0xff) buffer[i] = '_';

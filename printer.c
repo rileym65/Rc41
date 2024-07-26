@@ -50,7 +50,7 @@ void DecodeInstruction(byte b1, byte b2) {
       case 0x77: printf("O"); break;
       case 0x78: printf("P"); break;
       case 0x79: printf("Q"); break;
-      case 0x7a: printf("|-"); break;
+      case 0x7a: printf("|"); break;
       case 0x7b: printf("a"); break;
       case 0x7c: printf("b"); break;
       case 0x7d: printf("c"); break;

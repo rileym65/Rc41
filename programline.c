@@ -20,6 +20,11 @@ char* Postfix(byte i, int adr, char* buffer) {
       tmp[1] = 0;
       strcat(buffer,tmp);
       }
+    if (b == 122) {
+      tmp[0] = 122;
+      tmp[1] = 0;
+      strcat(buffer,tmp);
+      }
     if (b >= 123 && b <= 127) {
       tmp[0] = b - 123 + 'a';
       tmp[1] = 0;
@@ -36,7 +41,11 @@ char* Postfix(byte i, int adr, char* buffer) {
   else if (b == 119) strcat(buffer,"O");
   else if (b == 120) strcat(buffer,"P");
   else if (b == 121) strcat(buffer,"Q");
-  else if (b == 122) strcat(buffer,"|-");
+  else if (b == 122) {
+    tmp[0] = 122;
+    tmp[1] = 0;
+    strcat(buffer,tmp);
+    }
   else if (b == 123) strcat(buffer,"a");
   else if (b == 124) strcat(buffer,"b");
   else if (b == 125) strcat(buffer,"c");
