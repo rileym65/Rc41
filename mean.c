@@ -14,7 +14,12 @@ void Mean() {
   StoreNumber(x, R_L);
   y = RecallNumber(base+0);
   x = RecallNumber(base+5);
-  if (IsZero(x)) {
+  if (x.sign != 0 && x.sign != 9) {
+    Message("ALPHA DATA");
+    Error();
+    return;
+    }
+  if (IsZero(x) || x.sign == 9) {
     Message("DATA ERROR");
     Error();
     return;
