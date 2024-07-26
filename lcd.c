@@ -300,6 +300,20 @@ void DrawLcd(char* msg) {
     }
   printf("\n");
 
+  printf("        ");
+  if (FlagSet(27)) printf("USER  "); else printf("      ");
+  if (FlagSet(42)) printf("GRAD  ");
+  else if (FlagSet(43)) printf(" RAD  ");
+  else printf("      ");
+  if (FlagSet(47)) printf("SHIFT  "); else printf("       ");
+  if (FlagSet(0)) printf("0 "); else printf("  ");
+  if (FlagSet(1)) printf("1 "); else printf("  ");
+  if (FlagSet(2)) printf("2 "); else printf("  ");
+  if (FlagSet(3)) printf("3 "); else printf("  ");
+  if (FlagSet(4)) printf("4 "); else printf("  ");
+  if (FlagSet(52)) printf("PRGM  "); else printf("      ");
+  if (FlagSet(48)) printf("ALPHA  "); else printf("       ");
+
   printf("\n");
 
   }
