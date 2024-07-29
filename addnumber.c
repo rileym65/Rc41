@@ -2,54 +2,43 @@
 
 void AddNumber(char n) {
   int i;
+  int p;
+  p = -1;
   NUMBER x;
   ram[PENDING] = 'D';
   if (FlagSet(22) == 0) {
-    dp = 0;
-    ps = 0;
-    ex = -1;
+    for (i=REG_P+3; i<REG_R; i++) ram[i] = 0xff;
+    ram[REG_E+1] &= 0x0f;
+    ram[REG_E+2] |= 0x0f;
     SetFlag(22);
-    x.sign = 0;
-    x.esign = 0;
-    for (i=0; i<10; i++) x.mantissa[i] = 0;
-    x.exponent[0] = 0;
-    x.exponent[1] = 0;
     }
-  else x = RecallNumber(R_X);
-  if (n < 10) {
-    if (n == 0 && x.mantissa[0] == 0) {
-      if (dp != 0) ex--;
+  if (n < 10) {                                       /* digit */
+    if (ram[REG_P+5] == 11) {
+      if (ram[REG_P+4] == 0xff) ram[REG_P+4] = n;
+      else if (ram[REG_P+3] == 0xff) ram[REG_P+3] = n;
       }
     else {
-      if (ps >= 0) {
-        if (ps < 10) x.mantissa[ps++] = n;
-        if (dp == 0) ex++;
-        }
-      else {
-        if (x.exponent[0] != 0) {
-          Message("SIZE ERR");
-          return;
-          }
-        x.exponent[0] = x.exponent[1];
-        x.exponent[1] = n;
-        }
+      p = 0;
+      while (p < 10 && ram[REG_Q+6-p] != 0xff) p++;
+      if (p < 10) ram[REG_Q+6-p] = n;
       }
     }
-  if (n == 10) {
-    dp = -1;
+  if (n == 11) {                                      /* EEX */
+    if (ram[REG_P+5] == 0xff) ram[REG_P+5] = 11;
     }
-  if (n == 11 && ps >= 0) {
-    ps = -1;
-    if (x.mantissa[0] == 0) {
-      x.mantissa[0] = 1;
-      ex++;
+  if (n == 12) {                                      /* CHS */
+    if (ram[REG_P+5] == 11) ram[REG_E+1] ^= 0x20;
+      else ram[REG_E+1] ^= 0x10;
+    }
+  if (n == 10) {                                      /* . */
+    if ((ram[REG_E+2] & 0x0f) == 0x0f && ram[REG_P+5] != 11) {
+      p = 0;
+      while (p < 10 && ram[REG_Q+6-p] != 0xff) p++;
+      ram[REG_E+2] &= 0xf0;
+      ram[REG_E+2] |= p;
       }
     }
-  if (n == 12) {
-    if (ps >= 0) x.sign = (x.sign == 0) ? 9 : 0;
-      else x.esign = (x.esign == 0) ? 9 : 0;
-    }
-  StoreNumber(x, R_X);
+
   }
 
 // 10 = .

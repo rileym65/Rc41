@@ -5,6 +5,7 @@ char* Display(char* buffer) {
   int p;
   int e;
   NUMBER a;
+  char tmp[2];
   if (FlagSet(52)) {
     ProgramLine(buffer);
     }
@@ -23,6 +24,34 @@ char* Display(char* buffer) {
       i--;
       }
     buffer[p] = 0;
+    }
+  if (FlagSet(22)) {
+    if (ram[REG_E+1] & 0x10) strcpy(buffer,"-");
+      else strcpy(buffer," ");
+    p = 0;
+    tmp[1] = 0;
+    while (p < 10) {
+      if (p == (ram[REG_E+2] & 0x0f)) strcat(buffer,".");
+      if (ram[REG_Q+6-p] != 0xff &&
+          ram[REG_Q+6-p] != 11) {
+        tmp[0] = '0' + ram[REG_Q+6-p];
+        strcat(buffer, tmp);
+        p++;
+        }
+      else {
+        p = 10;
+        }
+      }
+    if (ram[REG_P+5] == 11) {
+      while (strlen(buffer) < 8) strcat(buffer," ");
+      if (ram[REG_E+1] & 0x20) strcat(buffer,"-");
+        else strcat(buffer," ");
+      p = strlen(buffer);
+      if (ram[REG_P+4] != 0xff) buffer[p++] = '0' + ram[REG_P+4];
+      if (ram[REG_P+3] != 0xff) buffer[p++] = '0' + ram[REG_P+3];
+      buffer[p] = 0;
+      }
+
     }
   else {
     a = RecallNumber(R_X);
