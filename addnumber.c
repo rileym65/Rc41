@@ -5,7 +5,7 @@ void AddNumber(char n) {
   int p;
   p = -1;
   NUMBER x;
-  ram[PENDING] = 'D';
+  ram[PENDING] = 'E';
   if (FlagSet(22) == 0) {
     for (i=REG_P+3; i<REG_R; i++) ram[i] = 0xff;
     ram[REG_E+1] &= 0x0f;

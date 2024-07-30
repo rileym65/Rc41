@@ -7,7 +7,6 @@ void Sdev() {
   int base;
   int ofs;
   NUMBER a;
-  char   tmp[32];
   NUMBER x;
   NUMBER x2;
   NUMBER n;

@@ -602,6 +602,7 @@ int Exec(int addr) {
            }
          break;
     case 0x56:                                             // LOG
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          if (a.sign == 0 || a.sign == 9) {
            StoreNumber(a, R_L);
@@ -615,6 +616,7 @@ int Exec(int addr) {
            }
          break;
     case 0x57:                                             // 10^X
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          if (a.sign == 0 || a.sign == 9) {
            StoreNumber(a, R_L);
@@ -628,6 +630,7 @@ int Exec(int addr) {
            }
          break;
     case 0x58:                                             // E^X-1
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          if (a.sign == 0 || a.sign == 9) {
            StoreNumber(a, R_L);
@@ -641,6 +644,7 @@ int Exec(int addr) {
            }
          break;
     case 0x59:                                             // SIN
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          if (a.sign == 0 || a.sign == 9) {
            StoreNumber(a, R_L);
@@ -655,6 +659,7 @@ int Exec(int addr) {
            }
          break;
     case 0x5a:                                             // COS
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          if (a.sign == 0 || a.sign == 9) {
            StoreNumber(a, R_L);
@@ -669,6 +674,7 @@ int Exec(int addr) {
            }
          break;
     case 0x5b:                                             // TAN
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          if (a.sign == 0 || a.sign == 9) {
            StoreNumber(a, R_L);
@@ -683,6 +689,7 @@ int Exec(int addr) {
            }
          break;
     case 0x5c:                                             // ASIN
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          if (a.sign == 0 || a.sign == 9) {
            StoreNumber(a, R_L);
@@ -697,6 +704,7 @@ int Exec(int addr) {
            }
          break;
     case 0x5d:                                             // ACOS
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          if (a.sign == 0 || a.sign == 9) {
            StoreNumber(a, R_L);
@@ -711,6 +719,7 @@ int Exec(int addr) {
            }
          break;
     case 0x5e:                                             // ATAN
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          if (a.sign == 0 || a.sign == 9) {
            StoreNumber(a, R_L);

@@ -25,7 +25,7 @@ char* Display(char* buffer) {
       }
     buffer[p] = 0;
     }
-  if (FlagSet(22)) {
+  else if (FlagSet(22)) {
     if (ram[REG_E+1] & 0x10) strcpy(buffer,"-");
       else strcpy(buffer," ");
     p = 0;

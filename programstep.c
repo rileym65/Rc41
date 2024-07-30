@@ -83,10 +83,13 @@ void ProgramStep(char* line) {
     }
   else {
     adr--;
-    while (ram[adr] == 0) adr--;
-    if (ram[adr] < 0xc0 || ram[adr] > 0xcd || ram[adr-2] >= 0xf0) {
-      adr -= isize(adr);
-      }
+    if (!FlagSet(22)) {
+      while (ram[adr] == 0) adr--;
+      if (ram[adr] < 0xc0 || ram[adr] > 0xcd || ram[adr-2] >= 0xf0) {
+        adr -= isize(adr);
+        }
+      } 
+    else adr--;
     }
   start = adr+1;
   pend = FindEnd(adr);

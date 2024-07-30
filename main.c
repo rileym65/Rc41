@@ -465,35 +465,43 @@ int main(int argc, char** argv) {
 /* ***** If not a number or Alpha mode, then command ***** */
 /* ******************************************************* */
         else {
+//          if (FlagSet(52)) ClearFlag(22);
           i = 0;
 
 /* ********************************************* */
 /* ***** Process non programmable commands ***** */
 /* ********************************************* */
           if (strcasecmp(token,"PRGM") == 0) {
+            ClearFlag(22);
             linksCleared = 0;
             if (FlagSet(52)) ClearFlag(52);
               else SetFlag(52);
             }
           else if (strcasecmp(token,"SST") == 0) {
+            ClearFlag(22);
             Sst();
             }
           else if (strcasecmp(token,"BST") == 0) {
+            ClearFlag(22);
             Bst();
             }
           else if (strcasecmp(token,"CAT") == 0) {
+            ClearFlag(22);
             pchar = NextToken(pchar, token);
             Cat(token);
             }
           else if (strcasecmp(token,"DEL") == 0) {
+            ClearFlag(22);
             pchar = NextToken(pchar, token);
             Del(token);
             }
           else if (strcasecmp(token,"SIZE") == 0) {
+            ClearFlag(22);
             pchar = NextToken(pchar, token);
             Size(token);
             }
           else if (strcasecmp(token,"PACK") == 0) {
+            ClearFlag(22);
             Pack();
             }
           else if (strcasecmp(token, "ASN") == 0) {
