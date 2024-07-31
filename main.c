@@ -208,6 +208,8 @@ char *Special(char* line) {
         if (FlagSet(22)) EndNumber();
         n = FindGlobal(token);
         if (n != 0) {
+          for (i=0; i<7; i++) ram[REG_B+i] = 0x00;
+          for (i=0; i<7; i++) ram[REG_A+i] = 0x00;
           n = ToPtr(n);
           ram[REG_B+1] = (n >> 8) & 0xff;
           ram[REG_B+0] = n & 0xff;
@@ -608,6 +610,8 @@ int main(int argc, char** argv) {
                     }
                   if (flag == 1) {
                     adr = ToPtr(adr+1);
+                    for (i=0; i<7; i++) ram[REG_B+i] = 0x00;
+                    for (i=0; i<7; i++) ram[REG_A+i] = 0x00;
                     ram[REG_B+1] = (adr >> 8) & 0xff;
                     ram[REG_B+0] = adr & 0xff;
                     ram[REG_E+1] |= 0x0f;

@@ -734,6 +734,7 @@ int Exec(int addr) {
            }
          break;
     case 0x5f:                                             // DEC
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          if (a.sign == 0 || a.sign == 9) {
            StoreNumber(a, R_L);
@@ -962,6 +963,7 @@ int Exec(int addr) {
            }
          break;
     case 0x6f:                                             // OCT
+         ram[LIFT] = 'D';
          a = RecallNumber(R_X);
          StoreNumber(a, R_L);
          if (a.sign == 0 || a.sign == 9) {
@@ -1020,6 +1022,7 @@ int Exec(int addr) {
          StoreNumber(a, R_X);
          break;
     case 0x77:                                             // CLX
+         ram[LIFT] = 'D';
          StoreNumber(ZERO,R_X);
          ram[PENDING] = 'D';
          break;
